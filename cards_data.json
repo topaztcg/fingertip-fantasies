@@ -1,0 +1,138 @@
+[
+    {
+        "id": "raiden_ei",
+        "name": "Raiden Ei",
+        "description": "Stressed out Inazuman Archon, Violent Squirts and rubs.",
+        "hp": 10,
+        "max_hp": 10,
+        "energy_max": 5,
+        "unlocked": true,
+        "image_path": "assets/cards\\raiden_ei\\image.png",
+        "videos": {
+            "normal": "assets/cards\\raiden_ei\\video_normal.mp4",
+            "skill": "assets/cards\\raiden_ei\\video_skill.mp4",
+            "ult": "assets/cards\\raiden_ei\\video_ult.mp4"
+        },
+        "moves": {
+            "normal": {
+                "name": "Divine Rub",
+                "dmg": "1",
+                "desc": "A divine rub from the shogun's own hands on her own pussy."
+            },
+            "skill": {
+                "name": "Shogun's Overflowing Pleasure",
+                "dmg": "3",
+                "cost": "2",
+                "desc": "She's leaking, she can't hold it back anymore. The stress is getting to her, the stress of being an archon."
+            },
+            "ult": {
+                "name": "Divine Squirt of Tenshukaku",
+                "dmg": "6",
+                "cost": "5",
+                "desc": "Raiden Shogun's stress release in form of a squirt"
+            }
+        }
+    },
+    {
+        "id": "lara_croft",
+        "name": "Lara Croft",
+        "description": "Stressed out tomb raider and squirter, wears shorts and rubs against anything she finds. Her shorts are always filled with squirt and sweat",
+        "hp": 10,
+        "max_hp": 10,
+        "energy_max": 6,
+        "unlocked": true,
+        "image_path": "assets/cards\\lara_croft\\image.png",
+        "videos": {
+            "normal": "assets/cards\\lara_croft\\video_normal.mp4",
+            "skill": "assets/cards\\lara_croft\\video_skill.mp4",
+            "ult": "assets/cards\\lara_croft\\video_ult.mp4"
+        },
+        "moves": {
+            "normal": {
+                "name": "Sweaty Rub",
+                "dmg": "1",
+                "desc": "A rub with sweaty hands and wet shorts on Lara's pussy."
+            },
+            "skill": {
+                "name": "Tomb Leak",
+                "dmg": "2",
+                "cost": "2",
+                "desc": "Lara's pussy leaking through the tomb."
+            },
+            "ult": {
+                "name": "Ancient Squirt Water",
+                "dmg": "7",
+                "cost": "6",
+                "desc": "Devastating Squirt that aweakens tombs, her pussy violently squirts streams of squirt."
+            }
+        }
+    },
+    {
+        "id": "topaz",
+        "name": "Topaz",
+        "description": "Debt Collector of the IPC too addicted to wealth. Her pussy leaks for money and the sound of money makes it rain",
+        "hp": 10,
+        "max_hp": 10,
+        "energy_max": 7,
+        "unlocked": true,
+        "image_path": "assets/cards\\topaz\\image.png",
+        "videos": {
+            "normal": "assets/cards\\topaz\\video_normal.mp4",
+            "skill": "assets/cards\\topaz\\video_skill.mp4",
+            "ult": "assets/cards\\topaz\\video_ult.mp4"
+        },
+        "moves": {
+            "normal": {
+                "name": "Wealthy Rub",
+                "dmg": "1",
+                "desc": "A Careful and arrogant rub on a money hungry pussy by gloved hands of topaz herself"
+            },
+            "skill": {
+                "name": "Greedy Leak",
+                "dmg": "3",
+                "cost": "3",
+                "desc": "She feels money is coming, and her face says it. Her pussy is getting ready for the coins to flow in"
+            },
+            "ult": {
+                "name": "Pussy Stocks Explosion",
+                "dmg": "6",
+                "cost": "6",
+                "desc": "The pussy smelled too much money and starts violently squirting, the power hungry bitch's stress is released"
+            }
+        }
+    },
+    {
+        "id": "cantarella",
+        "name": "Cantarella",
+        "description": "Dominant and stressed out matriarch of the Fisali family, just like her poisons her stress and horniness are bottled up behind the dominant and rich persona until she breaks and it all comes out violently",
+        "hp": 10,
+        "max_hp": 10,
+        "energy_max": 4,
+        "unlocked": true,
+        "image_path": "assets/cards\\cantarella\\image.png",
+        "videos": {
+            "normal": "assets/cards\\cantarella\\video_normal.mp4",
+            "skill": "assets/cards\\cantarella\\video_skill.mp4",
+            "ult": "assets/cards\\cantarella\\video_ult.mp4"
+        },
+        "moves": {
+            "normal": {
+                "name": "Toxic Pussy Ride",
+                "dmg": "1",
+                "desc": "Cantarella dominating a dick as her persona switches momentarily between dominant and about to break"
+            },
+            "skill": {
+                "name": "Double Pussy Rubs",
+                "dmg": "3",
+                "cost": "2",
+                "desc": "A assisted double pussy rub, the tortured slaves make for good pussy throb enablers"
+            },
+            "ult": {
+                "name": "Rich Bitch's Squirt",
+                "dmg": "7",
+                "cost": "5",
+                "desc": "Cantarella's rich and corrupt pussy is finally brought to justice by Changli as she screams and squirts"
+            }
+        }
+    }
+]

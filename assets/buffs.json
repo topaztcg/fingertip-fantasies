@@ -1,0 +1,32 @@
+[
+    {
+        "id": "dildo",
+        "name": "Dildo",
+        "type": "BUFF_ATK",
+        "category": "BUFF",
+        "val": 2,
+        "duration": 1,
+        "desc": "A thick black dildo that's sure to enhance the attack of any pussy for one turn",
+        "color": [
+            255,
+            100,
+            100
+        ],
+        "image_path": "assets/buff_images\\black_dildo.png"
+    },
+    {
+        "id": "vibrator",
+        "name": "Vibrator",
+        "type": "HEAL",
+        "category": "BUFF",
+        "val": 2,
+        "duration": 0,
+        "desc": "A pink vibrator that will heal any ego damaged pussy and relax it",
+        "color": [
+            100,
+            255,
+            100
+        ],
+        "image_path": "assets/buff_images\\pink_vibrator.png"
+    }
+]

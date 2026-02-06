@@ -1,0 +1,313 @@
+{
+    "owner": "ClihQueen",
+    "date": "2026-01-20_21-42-57",
+    "winner": "ENEMY",
+    "decks": {
+        "player": [
+            "raiden_ei",
+            "topaz",
+            "lara_croft"
+        ],
+        "enemy": [
+            "raiden_ei",
+            "topaz",
+            "lara_croft"
+        ]
+    },
+    "actions": [
+        {
+            "actor_team": "player",
+            "actor_idx": 2,
+            "target_idx": 0,
+            "move": "normal",
+            "dmg": 1
+        },
+        {
+            "actor_team": "player",
+            "actor_idx": 1,
+            "target_idx": 0,
+            "move": "normal",
+            "dmg": 1
+        },
+        {
+            "actor_team": "player",
+            "actor_idx": 0,
+            "target_idx": 0,
+            "move": "normal",
+            "dmg": 1
+        },
+        {
+            "actor_team": "enemy",
+            "actor_idx": 0,
+            "target_idx": 0,
+            "move": "normal",
+            "dmg": 1
+        },
+        {
+            "actor_team": "enemy",
+            "actor_idx": 1,
+            "target_idx": 0,
+            "move": "normal",
+            "dmg": 1
+        },
+        {
+            "actor_team": "enemy",
+            "actor_idx": 2,
+            "target_idx": 0,
+            "move": "normal",
+            "dmg": 1
+        },
+        {
+            "actor_team": "player",
+            "actor_idx": 0,
+            "target_idx": 0,
+            "move": "normal",
+            "dmg": 1
+        },
+        {
+            "actor_team": "player",
+            "actor_idx": 1,
+            "target_idx": 0,
+            "move": "normal",
+            "dmg": 1
+        },
+        {
+            "actor_team": "player",
+            "actor_idx": 2,
+            "target_idx": 0,
+            "move": "normal",
+            "dmg": 1
+        },
+        {
+            "actor_team": "enemy",
+            "actor_idx": 0,
+            "target_idx": 0,
+            "move": "normal",
+            "dmg": 1
+        },
+        {
+            "actor_team": "enemy",
+            "actor_idx": 1,
+            "target_idx": 0,
+            "move": "normal",
+            "dmg": 1
+        },
+        {
+            "actor_team": "enemy",
+            "actor_idx": 2,
+            "target_idx": 0,
+            "move": "normal",
+            "dmg": 1
+        },
+        {
+            "actor_team": "player",
+            "actor_idx": 0,
+            "target_idx": 0,
+            "move": "normal",
+            "dmg": 1
+        },
+        {
+            "actor_team": "player",
+            "actor_idx": 1,
+            "target_idx": 0,
+            "move": "normal",
+            "dmg": 1
+        },
+        {
+            "actor_team": "player",
+            "actor_idx": 2,
+            "target_idx": 0,
+            "move": "normal",
+            "dmg": 1
+        },
+        {
+            "actor_team": "enemy",
+            "actor_idx": 0,
+            "target_idx": 0,
+            "move": "skill",
+            "dmg": 3
+        },
+        {
+            "actor_team": "enemy",
+            "actor_idx": 1,
+            "target_idx": 0,
+            "move": "normal",
+            "dmg": 1
+        },
+        {
+            "actor_team": "enemy",
+            "actor_idx": 2,
+            "target_idx": 1,
+            "move": "skill",
+            "dmg": 2
+        },
+        {
+            "actor_team": "player",
+            "actor_idx": 1,
+            "target_idx": 0,
+            "move": "normal",
+            "dmg": 1
+        },
+        {
+            "actor_team": "player",
+            "actor_idx": 2,
+            "target_idx": 1,
+            "move": "skill",
+            "dmg": 2
+        },
+        {
+            "actor_team": "enemy",
+            "actor_idx": 1,
+            "target_idx": 1,
+            "move": "skill",
+            "dmg": 3
+        },
+        {
+            "actor_team": "enemy",
+            "actor_idx": 2,
+            "target_idx": 1,
+            "move": "normal",
+            "dmg": 1
+        },
+        {
+            "actor_team": "player",
+            "actor_idx": 1,
+            "target_idx": 1,
+            "move": "normal",
+            "dmg": 1
+        },
+        {
+            "actor_team": "player",
+            "actor_idx": 2,
+            "target_idx": 1,
+            "move": "normal",
+            "dmg": 1
+        },
+        {
+            "actor_team": "enemy",
+            "actor_idx": 1,
+            "target_idx": 1,
+            "move": "normal",
+            "dmg": 1
+        },
+        {
+            "actor_team": "enemy",
+            "actor_idx": 2,
+            "target_idx": 1,
+            "move": "normal",
+            "dmg": 1
+        },
+        {
+            "actor_team": "player",
+            "actor_idx": 1,
+            "target_idx": 2,
+            "move": "normal",
+            "dmg": 1
+        },
+        {
+            "actor_team": "player",
+            "actor_idx": 2,
+            "target_idx": 1,
+            "move": "normal",
+            "dmg": 1
+        },
+        {
+            "actor_team": "enemy",
+            "actor_idx": 1,
+            "target_idx": 1,
+            "move": "normal",
+            "dmg": 1
+        },
+        {
+            "actor_team": "enemy",
+            "actor_idx": 2,
+            "target_idx": 1,
+            "move": "skill",
+            "dmg": 2
+        },
+        {
+            "actor_team": "player",
+            "actor_idx": 2,
+            "target_idx": 1,
+            "move": "skill",
+            "dmg": 2
+        },
+        {
+            "actor_team": "enemy",
+            "actor_idx": 1,
+            "target_idx": 2,
+            "move": "normal",
+            "dmg": 1
+        },
+        {
+            "actor_team": "enemy",
+            "actor_idx": 2,
+            "target_idx": 2,
+            "move": "normal",
+            "dmg": 1
+        },
+        {
+            "actor_team": "player",
+            "actor_idx": 2,
+            "target_idx": 1,
+            "move": "normal",
+            "dmg": 1
+        },
+        {
+            "actor_team": "enemy",
+            "actor_idx": 1,
+            "target_idx": 2,
+            "move": "skill",
+            "dmg": 3
+        },
+        {
+            "actor_team": "enemy",
+            "actor_idx": 2,
+            "target_idx": 2,
+            "move": "normal",
+            "dmg": 1
+        },
+        {
+            "actor_team": "player",
+            "actor_idx": 2,
+            "target_idx": 1,
+            "move": "skill",
+            "dmg": 2
+        },
+        {
+            "actor_team": "enemy",
+            "actor_idx": 2,
+            "target_idx": 2,
+            "move": "skill",
+            "dmg": 2
+        },
+        {
+            "actor_team": "player",
+            "actor_idx": 2,
+            "target_idx": 2,
+            "move": "normal",
+            "dmg": 1
+        },
+        {
+            "actor_team": "enemy",
+            "actor_idx": 2,
+            "target_idx": 2,
+            "move": "normal",
+            "dmg": 1
+        },
+        {
+            "actor_team": "player",
+            "actor_idx": 2,
+            "target_idx": 2,
+            "move": "normal",
+            "dmg": 1
+        },
+        {
+            "actor_team": "enemy",
+            "actor_idx": 2,
+            "target_idx": 2,
+            "move": "normal",
+            "dmg": 1
+        }
+    ]
+}
