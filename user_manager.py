@@ -27,10 +27,20 @@ class UserManager:
 
     def save_data(self):
         try:
-            with open(DB_FILE, "w") as f:
-                json.dump(self.users, f, indent=4)
+            # Atomic Write: Write to temp file first, then rename
+            import tempfile
+            dir_name = os.path.dirname(os.path.abspath(DB_FILE))
+            # Create temp file in same directory to ensure atomic rename
+            with tempfile.NamedTemporaryFile(mode='w', dir=dir_name, delete=False, encoding='utf-8') as tf:
+                json.dump(self.users, tf, indent=4)
+                temp_name = tf.name
+            
+            # Atomic replacement
+            os.replace(temp_name, DB_FILE)
         except Exception as e:
             print(f"Error saving database: {e}")
+            if 'temp_name' in locals() and os.path.exists(temp_name):
+                os.remove(temp_name)
 
     def user_exists(self, username):
         return username in self.users

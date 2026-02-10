@@ -3,16 +3,17 @@ import os
 
 pygame.font.init()
 
-# --- THE SOFT GIRL PALETTE ---
+# --- THE SOFT GIRL PALETTE (UPDATED) ---
 BG_FALLBACK = (45, 25, 50)
-BUTTON_BASE = (170, 100, 190)
-BUTTON_HOVER = (230, 130, 170)
-BUTTON_BORDER = (255, 200, 220)
-TEXT_COLOR = (255, 255, 255)
-INPUT_BG = (250, 240, 250)
-COLOR_ACTIVE = (255, 150, 200)
-COLOR_PASSIVE = (160, 120, 180)
-PROFILE_BG = (70, 40, 80)
+BUTTON_BASE = (255, 160, 200)   # Hot Pastel Pink
+BUTTON_HOVER = (255, 200, 230)  # Light Pink
+BUTTON_BORDER = (255, 240, 250) # Near White Pink
+TEXT_COLOR = (255, 245, 255)    # Soft White with Pink tint
+INPUT_BG = (255, 250, 255)
+COLOR_ACTIVE = (255, 105, 180)  # Hot Pink
+COLOR_PASSIVE = (200, 150, 200) # Soft Lilac
+PROFILE_BG = (70, 40, 80)       # Keep dark for contrast
+TEXT_SHADOW = (100, 40, 80)     # Deep Plum for text shadows
 
 UI_PATH = "assets/ui"
 FONT_NAME = "Cvcielo-Regular.ttf"
@@ -47,17 +48,28 @@ def init_ui():
         panel_patch = NinePatch(assets["panel"])
 
 
+FONT_CACHE = {}
+
 def get_font(size):
+    global FONT_CACHE
+    if size in FONT_CACHE:
+        return FONT_CACHE[size]
+
     font_path = os.path.join(UI_PATH, FONT_NAME)
     if os.path.exists(font_path):
         try:
-            return pygame.font.Font(font_path, size)
+            font = pygame.font.Font(font_path, size)
+            FONT_CACHE[size] = font
+            return font
         except:
             pass
+    
     font_name = pygame.font.match_font('segoeprint')
     if not font_name: font_name = pygame.font.match_font('arial')
     try:
-        return pygame.font.Font(font_name, size)
+        font = pygame.font.Font(font_name, size)
+        FONT_CACHE[size] = font
+        return font
     except:
         return pygame.font.Font(None, size)
 
@@ -87,30 +99,42 @@ class NinePatch:
 
     def draw(self, surf, rect):
         if not self.valid:
-            try:
-                scaled = pygame.transform.scale(self.source, (rect.width, rect.height))
-                surf.blit(scaled, rect)
-            except:
-                pygame.draw.rect(surf, (50, 50, 50), rect)
             return
-        target_w, target_h = rect.width, rect.height
-        surf.blit(self.tl, (rect.x, rect.y))
-        surf.blit(self.tr, (rect.right - self.c, rect.y))
-        surf.blit(self.bl, (rect.x, rect.bottom - self.c))
-        surf.blit(self.br, (rect.right - self.c, rect.bottom - self.c))
-        if target_w > 2 * self.c:
-            scaled_tm = pygame.transform.scale(self.tm, (target_w - 2 * self.c, self.c))
-            scaled_bm = pygame.transform.scale(self.bm, (target_w - 2 * self.c, self.c))
-            surf.blit(scaled_tm, (rect.x + self.c, rect.y))
-            surf.blit(scaled_bm, (rect.x + self.c, rect.bottom - self.c))
-        if target_h > 2 * self.c:
-            scaled_ml = pygame.transform.scale(self.ml, (self.c, target_h - 2 * self.c))
-            scaled_mr = pygame.transform.scale(self.mr, (self.c, target_h - 2 * self.c))
-            surf.blit(scaled_ml, (rect.x, rect.y + self.c))
-            surf.blit(scaled_mr, (rect.right - self.c, rect.y + self.c))
-        if target_w > 2 * self.c and target_h > 2 * self.c:
-            scaled_mm = pygame.transform.scale(self.mm, (target_w - 2 * self.c, target_h - 2 * self.c))
-            surf.blit(scaled_mm, (rect.x + self.c, rect.y + self.c))
+        x, y, w, h = rect
+        # Draw corners
+        surf.blit(self.tl, (x, y))
+        surf.blit(self.tr, (x + w - self.c, y))
+        surf.blit(self.bl, (x, y + h - self.c))
+        surf.blit(self.br, (x + w - self.c, y + h - self.c))
+        
+        # Draw edges
+        # Top
+        top_w = w - 2 * self.c
+        if top_w > 0:
+            surf.blit(pygame.transform.scale(self.tm, (top_w, self.c)), (x + self.c, y))
+            # Bottom
+            surf.blit(pygame.transform.scale(self.bm, (top_w, self.c)), (x + self.c, y + h - self.c))
+        
+        # Sides
+        side_h = h - 2 * self.c
+        if side_h > 0:
+            surf.blit(pygame.transform.scale(self.ml, (self.c, side_h)), (x, y + self.c))
+            surf.blit(pygame.transform.scale(self.mr, (self.c, side_h)), (x + w - self.c, y + self.c))
+        
+        # Middle
+        if top_w > 0 and side_h > 0:
+            surf.blit(pygame.transform.scale(self.mm, (top_w, side_h)), (x + self.c, y + self.c))
+
+def draw_panel(surf, x, y, w, h):
+    r = pygame.Rect(x, y, w, h)
+    if panel_patch and panel_patch.valid:
+        panel_patch.draw(surf, (x, y, w, h))
+    else:
+        # Fallback
+        pygame.draw.rect(surf, (40, 20, 60), r)
+        pygame.draw.rect(surf, (100, 50, 100), r, 3)
+
+
 
 
 class FadeLayer:
@@ -252,12 +276,7 @@ class InputBox:
         return self.text
 
 
-def draw_panel(screen, rect):
-    if panel_patch:
-        panel_patch.draw(screen, rect)
-    else:
-        pygame.draw.rect(screen, (30, 30, 45), rect, border_radius=15)
-        pygame.draw.rect(screen, BUTTON_BORDER, rect, 3, border_radius=15)
+
 
 
 def lerp_color(start, end, t):

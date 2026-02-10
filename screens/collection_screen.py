@@ -171,11 +171,11 @@ def run_inspector_modal(screen, data):
 
     # Only load videos if path exists
     if v_paths.get("normal") and os.path.exists(v_paths["normal"]):
-        videos["normal"] = VideoWrapper(v_paths["normal"], (vid_w, vid_h), muted=True)
+        videos["normal"] = VideoWrapper(v_paths["normal"], (vid_w, vid_h), muted=True, loop=True)
     if v_paths.get("skill") and os.path.exists(v_paths["skill"]):
-        videos["skill"] = VideoWrapper(v_paths["skill"], (vid_w, vid_h), muted=True)
+        videos["skill"] = VideoWrapper(v_paths["skill"], (vid_w, vid_h), muted=True, loop=True)
     if v_paths.get("ult") and os.path.exists(v_paths["ult"]):
-        videos["ult"] = VideoWrapper(v_paths["ult"], (vid_w, vid_h), muted=True)
+        videos["ult"] = VideoWrapper(v_paths["ult"], (vid_w, vid_h), muted=True, loop=True)
 
     scroll_y = 0
     right_panel_w = w - img_area_w - 60

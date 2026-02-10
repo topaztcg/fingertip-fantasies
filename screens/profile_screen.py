@@ -48,21 +48,22 @@ def show_profile_screen(screen, username):
     card_w, card_h = 800, 600
     card_rect = pygame.Rect((screen.get_width() - card_w) // 2, (screen.get_height() - card_h) // 2, card_w, card_h)
 
-    avatar_rect = pygame.Rect(card_rect.x + 50, card_rect.y + 125, 350, 350)
-
+    # Shift Avatar down to clear the name
+    avatar_rect = pygame.Rect(card_rect.x + 50, card_rect.y + 140, 350, 350)
+    
     input_name.rect.x = card_rect.x + 50
     input_name.rect.y = card_rect.y + 40
     input_name.rect.w = 350
 
     btn_back = Button("BACK", 50, 50, 150, 50, font_size=30)
-    btn_edit = Button("EDIT PROFILE", card_rect.right - 250, card_rect.y + 30, 200, 50, font_size=25)
+    btn_edit = Button("EDIT PROFILE", card_rect.right - 250, card_rect.y + 40, 200, 50, font_size=25)
 
     btn_save = Button("SAVE", card_rect.centerx - 210, card_rect.bottom - 80, 200, 50, font_size=30)
     btn_cancel = Button("CANCEL", card_rect.centerx + 10, card_rect.bottom - 80, 200, 50, font_size=30)
 
-    font_name = get_font(70)
-    font_stats = get_font(40)
-    font_small = get_font(30)
+    font_name = get_font(65) # Slightly reduced for fit
+    font_stats = get_font(32) # Reduced for fitting long ranks
+    font_small = get_font(28)
 
     status_msg = ""
 
@@ -136,9 +137,15 @@ def show_profile_screen(screen, username):
             overlay.fill((10, 5, 20))
             screen.blit(overlay, (0, 0))
 
-            # Card BG
-            pygame.draw.rect(screen, PROFILE_BG, card_rect, border_radius=20)
+            # Card BG - Use Panel Style
+            s = pygame.Surface((card_rect.width, card_rect.height))
+            s.set_alpha(230)
+            s.fill(PROFILE_BG)
+            screen.blit(s, (card_rect.x, card_rect.y))
+            
+            # --- FIXED: Use Profile BG Panel ---
             pygame.draw.rect(screen, BUTTON_BORDER, card_rect, 4, border_radius=20)
+            pygame.draw.rect(screen, (255, 255, 255), card_rect, 1, border_radius=20) # Inner white stroke for definition
 
             disp_avatar = get_display_avatar(raw_avatar, temp_avatar_surf)
             screen.blit(disp_avatar, avatar_rect)
@@ -147,7 +154,10 @@ def show_profile_screen(screen, username):
             border_col = (100, 255, 100) if editing_mode else BUTTON_BORDER
             pygame.draw.rect(screen, border_col, avatar_rect, 3)
 
+            # Username Display
+            name_y = card_rect.y + 40
             if editing_mode:
+                input_name.rect.y = name_y
                 input_name.update()
                 input_name.draw(screen)
 
@@ -161,20 +171,45 @@ def show_profile_screen(screen, username):
                 hint = font_small.render("CLICK TO UPLOAD", True, (255, 255, 255))
                 screen.blit(hint, (avatar_rect.centerx - hint.get_width() // 2, avatar_rect.bottom - 38))
             else:
+                # Render Username with Shadow/Outline for pop
                 name_surf = font_name.render(original_username, True, TEXT_COLOR)
-                screen.blit(name_surf, (card_rect.x + 50, card_rect.y + 40))
+                name_shad = font_name.render(original_username, True, (100, 40, 80))
+                
+                # Position
+                name_pos = (card_rect.x + 50, name_y)
+                screen.blit(name_shad, (name_pos[0] + 2, name_pos[1] + 2))
+                screen.blit(name_surf, name_pos)
 
-            text_x = avatar_rect.right + 40
-            start_text_y = avatar_rect.y + 20
+            # Stats Panel (Right Side)
+            stats_x = avatar_rect.right + 40
+            stats_y = avatar_rect.y
+            stats_w = card_rect.right - stats_x - 40
+            stats_h = avatar_rect.height
+            
+            # Semi-transparent stats background
+            stats_bg = pygame.Surface((stats_w, stats_h))
+            stats_bg.set_alpha(50)
+            stats_bg.fill((255, 200, 220)) # Light Pink tint
+            screen.blit(stats_bg, (stats_x, stats_y))
+            pygame.draw.rect(screen, BUTTON_BORDER, (stats_x, stats_y, stats_w, stats_h), 2, border_radius=10)
+
             stats_list = [
-                f"Rank: {stats.get('rank', 'N/A')}",
-                f"Wins: {stats.get('wins', 0)}",
-                f"Losses: {stats.get('losses', 0)}",
-                f"Games: {stats.get('games_played', 0)}"
+                ("Rank", stats.get('rank', 'N/A')),
+                ("Wins", str(stats.get('wins', 0))),
+                ("Losses", str(stats.get('losses', 0))),
+                ("Games", str(stats.get('games_played', 0)))
             ]
-            for i, line in enumerate(stats_list):
-                txt = font_stats.render(line, True, TEXT_COLOR)
-                screen.blit(txt, (text_x, start_text_y + (i * 60)))
+            
+            for i, (label, val) in enumerate(stats_list):
+                line_y = stats_y + 30 + (i * 70)
+                
+                # Label (Pink)
+                lbl_surf = font_stats.render(f"{label}:", True, (255, 180, 220))
+                screen.blit(lbl_surf, (stats_x + 20, line_y))
+                
+                # Value (White)
+                val_surf = font_stats.render(val, True, TEXT_COLOR)
+                screen.blit(val_surf, (stats_x + 20 + lbl_surf.get_width() + 15, line_y))
 
             if status_msg:
                 msg = font_small.render(status_msg, True, (255, 100, 100))
@@ -186,6 +221,8 @@ def show_profile_screen(screen, username):
                 btn_cancel.change_color(mouse_pos)
                 btn_cancel.update(screen)
             else:
+                # Update Edit Button Position dynamically to align with Username
+                # But keep it simple for now, fixed position top right is okay
                 btn_edit.change_color(mouse_pos)
                 btn_edit.update(screen)
 
