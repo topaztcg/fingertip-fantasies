@@ -1,12 +1,14 @@
 import pygame
 import sys
 
+
 from screens.main_menu import show_main_menu
 from screens.login_screen import show_login_screen
 from screens.profile_screen import show_profile_screen
 from screens.collection_screen import show_collection_screen
 from screens.deck_screen import show_deck_screen
 from screens.gameplay_screen import show_gameplay_screen
+from ui_components import update_animations
 
 # NO REPLAY IMPORTS HERE
 from user_manager import UserManager
@@ -20,7 +22,8 @@ SCREEN_WIDTH = 1920
 SCREEN_HEIGHT = 1080
 
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-pygame.display.set_caption("Project TCG")
+pygame.display.set_caption("Fingertip Fantasies")
+clock = pygame.time.Clock()
 
 
 # --- GLOBAL STATE ---
@@ -36,6 +39,9 @@ def main():
     card_mgr = CardManager()
 
     while True:
+        dt = clock.tick(60) / 1000.0  # Delta time in seconds
+        update_animations(dt)
+        
         # --- SCENE CONTROLLER ---
         if current_scene == "MAIN_MENU":
             choice = show_main_menu(screen, GAME_STATE["current_user"], GAME_STATE["avatar_surf"])
@@ -84,12 +90,15 @@ def main():
                     print("Must login to play!")
                 else:
                     decks = user_mgr.get_user_decks(GAME_STATE["current_user"])
+                    active_name = user_mgr.get_active_deck_name(GAME_STATE["current_user"])
+                    
                     if not decks:
                         print("You have no decks! Go create one.")
+                    elif not active_name or active_name not in decks:
+                        print("No active deck selected! Go to Card Decks to equip one.")
                     else:
-                        first_deck_name = list(decks.keys())[0]
-                        deck_ids = decks[first_deck_name]
-
+                        deck_ids = decks[active_name]
+                        
                         all_cards = card_mgr.get_all_cards()
                         player_deck_data = []
                         for cid in deck_ids:

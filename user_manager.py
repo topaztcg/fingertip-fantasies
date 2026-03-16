@@ -144,6 +144,31 @@ class UserManager:
             return user["decks"]
         return {}
 
+    def get_active_deck_name(self, username):
+        user = self.users.get(username)
+        if not user: return None
+        # Return saved active deck or default to first one
+        if "active_deck" in user:
+            # Verify it still exists
+            if user["active_deck"] in user.get("decks", {}):
+                return user["active_deck"]
+        
+        # Fallback: First deck
+        decks = user.get("decks", {})
+        if decks:
+            first = list(decks.keys())[0]
+            self.set_active_deck(username, first) # Save preference
+            return first
+        return None
+
+    def set_active_deck(self, username, deck_name):
+        user = self.users.get(username)
+        if user:
+            if "decks" in user and deck_name in user["decks"]:
+                user["active_deck"] = deck_name
+                self.save_data()
+                print(f"[UserManager] Active Deck set to: {deck_name}")
+
     def save_deck(self, username, deck_name, card_ids):
         if username not in self.users: return
         if "decks" not in self.users[username]:

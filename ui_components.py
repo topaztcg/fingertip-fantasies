@@ -1,5 +1,9 @@
 import pygame
 import os
+import pytweening
+import time
+import math
+import random
 
 pygame.font.init()
 
@@ -7,6 +11,240 @@ pygame.font.init()
 BG_FALLBACK = (45, 25, 50)
 BUTTON_BASE = (255, 160, 200)   # Hot Pastel Pink
 BUTTON_HOVER = (255, 200, 230)  # Light Pink
+BUTTON_BORDER = (255, 240, 250) # Near White Pink
+TEXT_COLOR = (255, 245, 255)    # Soft White with Pink tint
+INPUT_BG = (255, 250, 255)
+COLOR_ACTIVE = (255, 105, 180)  # Hot Pink
+COLOR_PASSIVE = (200, 150, 200) # Soft Lilac
+PROFILE_BG = (70, 40, 80)       # Keep dark for contrast
+TEXT_SHADOW = (100, 40, 80)     # Deep Plum for text shadows
+
+# --- ANIMATION ENGINE ---
+class Tween:
+    def __init__(self, target, attr, end_val, duration, easing=pytweening.linear, on_complete=None):
+        self.target = target
+        self.attr = attr
+        self.start_val = getattr(target, attr)
+        self.end_val = end_val
+        self.duration = duration
+        self.easing = easing
+        self.on_complete = on_complete
+        self.elapsed = 0
+        self.active = True
+        self.is_color = isinstance(self.start_val, (tuple, list)) and len(self.start_val) in (3, 4)
+
+    def update(self, dt):
+        if not self.active: return False
+        self.elapsed += dt
+        t = min(1.0, self.elapsed / self.duration)
+        eased_t = self.easing(t)
+
+        if self.is_color:
+            current = []
+            for i in range(len(self.start_val)):
+                s = self.start_val[i]
+                e = self.end_val[i]
+                current.append(s + (e - s) * eased_t)
+            setattr(self.target, self.attr, tuple(current))
+        else:
+            val = self.start_val + (self.end_val - self.start_val) * eased_t
+            setattr(self.target, self.attr, val)
+
+        if t >= 1.0:
+            self.active = False
+            if self.on_complete: self.on_complete()
+            return False
+        return True
+
+class AnimationManager:
+    _instance = None
+    def __init__(self):
+        self.tweens = []
+    
+    @classmethod
+    def get(cls):
+        if not cls._instance: cls._instance = cls()
+        return cls._instance
+
+    def start_tween(self, target, attr, end_val, duration, easing=pytweening.easeOutQuad, on_complete=None):
+        # Cancel existing tweens on same property
+        self.tweens = [t for t in self.tweens if not (t.target == target and t.attr == attr)]
+        new_tween = Tween(target, attr, end_val, duration, easing, on_complete)
+        self.tweens.append(new_tween)
+        return new_tween
+
+    def update(self, dt):
+        # dt in seconds
+        active_tweens = []
+        for t in self.tweens:
+            if t.update(dt):
+                active_tweens.append(t)
+        self.tweens = active_tweens
+
+# Global accessor
+def animate(target, attr, end_val, duration, easing=pytweening.easeOutQuad, on_complete=None):
+    return AnimationManager.get().start_tween(target, attr, end_val, duration, easing, on_complete)
+
+def update_animations(dt):
+    AnimationManager.get().update(dt)
+
+# --- JUICE & EFFECTS ---
+class ScreenShake:
+    _instance = None
+    def __init__(self):
+        self.duration = 0
+        self.intensity = 0
+        self.offset = [0, 0]
+    
+    @classmethod
+    def get(cls):
+        if not cls._instance: cls._instance = cls()
+        return cls._instance
+
+    def shake(self, intensity=5, duration=0.5):
+        self.intensity = intensity
+        self.duration = duration
+
+    def update(self, dt):
+        if self.duration > 0:
+            self.duration -= dt
+            if self.duration <= 0:
+                self.offset = [0, 0]
+            else:
+                import random
+                self.offset = [
+                    random.uniform(-self.intensity, self.intensity),
+                    random.uniform(-self.intensity, self.intensity)
+                ]
+        return self.offset
+
+class Particle:
+    def __init__(self, x, y, color, vel, life):
+        self.x = x
+        self.y = y
+        self.color = color
+        self.vel = vel
+        self.life = life
+        self.max_life = life
+        self.size = random.randint(3, 8) if 'random' in globals() else 5
+
+    def update(self, dt):
+        self.x += self.vel[0] * dt * 60
+        self.y += self.vel[1] * dt * 60
+        self.life -= dt
+        return self.life > 0
+
+    def draw(self, screen):
+        alpha = int((self.life / self.max_life) * 255)
+        scale = (self.life / self.max_life) * self.size
+        # Draw a soft circle or sparkle
+        surf = pygame.Surface((int(scale*2), int(scale*2)), pygame.SRCALPHA)
+        pygame.draw.circle(surf, (*self.color, alpha), (int(scale), int(scale)), int(scale))
+        screen.blit(surf, (int(self.x - scale), int(self.y - scale)))
+
+class ParticleSystem:
+    _instance = None
+    def __init__(self):
+        self.particles = []
+
+    @classmethod
+    def get(cls):
+        if not cls._instance: cls._instance = cls()
+        return cls._instance
+
+    def emit(self, x, y, count=10, color=(255, 105, 180)):
+        import random
+        for _ in range(count):
+            angle = random.uniform(0, 6.28)
+            speed = random.uniform(1, 4)
+            vel = [math.cos(angle) * speed, math.sin(angle) * speed]
+            self.particles.append(Particle(x, y, color, vel, random.uniform(0.5, 1.0)))
+
+    def update(self, dt):
+        self.particles = [p for p in self.particles if p.update(dt)]
+
+    def draw(self, screen):
+        for p in self.particles:
+            p.draw(screen)
+
+class FloatingText:
+    def __init__(self, x, y, text, color, size=40):
+        self.x = x
+        self.y = y
+        self.text = str(text)
+        self.color = color
+        self.size = size
+        self.life = 1.0 # Seconds
+        self.y_offset = 0
+        self.scale = 0.5
+        
+        # Pop in animation
+        AnimationManager.get().start_tween(self, "scale", 1.2, 0.3, pytweening.easeOutElastic)
+        AnimationManager.get().start_tween(self, "y_offset", -50, 1.0, pytweening.easeOutExpo)
+
+    def update(self, dt):
+        self.life -= dt
+        return self.life > 0
+
+    def draw(self, screen):
+        alpha = int(min(255, self.life * 500)) if self.life < 0.5 else 255
+        
+        font = get_font(int(self.size * self.scale))
+        surf = font.render(self.text, True, self.color)
+        surf.set_alpha(alpha)
+        
+        # Stroke/Shadow
+        shadow_surf = font.render(self.text, True, (50, 20, 50))
+        shadow_surf.set_alpha(alpha)
+        
+        draw_pos = (self.x - surf.get_width()//2, self.y + self.y_offset - surf.get_height()//2)
+        screen.blit(shadow_surf, (draw_pos[0]+2, draw_pos[1]+2))
+        screen.blit(surf, draw_pos)
+
+class FloatingTextManager:
+    _instance = None
+    def __init__(self):
+        self.texts = []
+
+    @classmethod
+    def get(cls):
+        if not cls._instance: cls._instance = cls()
+        return cls._instance
+
+    def add(self, x, y, text, color):
+        self.texts.append(FloatingText(x, y, text, color))
+
+    def update(self, dt):
+        self.texts = [t for t in self.texts if t.update(dt)]
+
+    def draw(self, screen):
+        for t in self.texts:
+            t.draw(screen)
+
+def spawn_floating_text(x, y, text, color=(255, 255, 255)):
+    FloatingTextManager.get().add(x, y, text, color)
+
+def draw_floating_text(screen):
+    FloatingTextManager.get().draw(screen)
+
+def shake_screen(intensity=5, duration=0.5):
+    ScreenShake.get().shake(intensity, duration)
+
+def spawn_particles(x, y, count=10, color=(255, 105, 180)):
+    ParticleSystem.get().emit(x, y, count, color)
+
+def update_juice(dt):
+    offset = ScreenShake.get().update(dt)
+    ParticleSystem.get().update(dt)
+    FloatingTextManager.get().update(dt)
+    return offset
+
+def draw_particles(screen):
+    ParticleSystem.get().draw(screen)
+
+def draw_juice_overlays(screen):
+    ParticleSystem.get().draw(screen)
+    FloatingTextManager.get().draw(screen)
 BUTTON_BORDER = (255, 240, 250) # Near White Pink
 TEXT_COLOR = (255, 245, 255)    # Soft White with Pink tint
 INPUT_BG = (255, 250, 255)
@@ -177,6 +415,8 @@ class Button:
         self.cur_col = BUTTON_BASE
         self.tgt_col = BUTTON_BASE
         self.hovered = False
+        self.is_hovered = False
+        self.scale = 1.0
 
         # Calculate fitting font immediately
         self.font = self.recalculate_font()
@@ -199,46 +439,93 @@ class Button:
         return self.rect.collidepoint(pos)
 
     def change_color(self, pos):
-        if self.rect.collidepoint(pos):
-            self.tgt_col = BUTTON_HOVER;
-            self.hovered = True
-        else:
-            self.tgt_col = BUTTON_BASE;
-            self.hovered = False
+        # Update hover state
+        hovering = self.rect.collidepoint(pos)
+        
+        if hovering and not self.is_hovered:
+            self.is_hovered = True
+            self.tgt_col = BUTTON_HOVER
+            AnimationManager.get().start_tween(self, "scale", 1.05, 0.15, pytweening.easeOutBack)
+        elif not hovering and self.is_hovered:
+            self.is_hovered = False
+            self.tgt_col = BUTTON_BASE
+            AnimationManager.get().start_tween(self, "scale", 1.0, 0.15, pytweening.easeOutQuad)
 
     def set_text(self, t):
         self.text = t;
         self.text_input = t
-        self.font = self.recalculate_font()  # Recalculate if text changes
+        self.font = self.recalculate_font()
 
     def update(self, screen):
-        if assets["btn"] and assets["btn_hover"]:
-            img = assets["btn_hover"] if self.hovered else assets["btn"]
-            scaled = pygame.transform.scale(img, (self.rect.width, self.rect.height))
-            screen.blit(scaled, self.rect)
-        else:
-            if self.cur_col != self.tgt_col:
-                self.cur_col = lerp_color(self.cur_col, self.tgt_col, 0.2)
-            pygame.draw.rect(screen, self.cur_col, self.rect, border_radius=15)
-            pygame.draw.rect(screen, BUTTON_BORDER, self.rect, 3, border_radius=15)
+        # Color Interpolation
+        if self.cur_col != self.tgt_col:
+            # Simple lerp for color if no tween active
+            c1 = pygame.Color(*self.cur_col)
+            c2 = pygame.Color(*self.tgt_col)
+            self.cur_col = c1.lerp(c2, 0.2)
+        
+        # Calculate Scaled Rect
+        center = self.rect.center
+        w = int(self.rect.width * self.scale)
+        h = int(self.rect.height * self.scale)
+        draw_rect = pygame.Rect(0, 0, w, h)
+        draw_rect.center = center
 
+        if assets["btn"] and assets["btn_hover"]:
+            img = assets["btn_hover"] if self.is_hovered else assets["btn"]
+            scaled = pygame.transform.scale(img, (w, h))
+            screen.blit(scaled, draw_rect)
+        else:
+            pygame.draw.rect(screen, self.cur_col, draw_rect, border_radius=15)
+            pygame.draw.rect(screen, BUTTON_BORDER, draw_rect, 3, border_radius=15)
+
+        # Draw Text (Centered)
+        # Shadow
         shadow = self.font.render(self.text, True, (80, 40, 80))
-        txt = self.font.render(self.text, True, TEXT_COLOR)
-        shadow_rect = shadow.get_rect(center=(self.rect.centerx + 2, self.rect.centery + 2))
-        txt_rect = txt.get_rect(center=self.rect.center)
+        shadow_rect = shadow.get_rect(center=(center[0] + 2, center[1] + 2))
         screen.blit(shadow, shadow_rect)
+        
+        # Main Text
+        txt = self.font.render(self.text, True, TEXT_COLOR)
+        txt_rect = txt.get_rect(center=center)
         screen.blit(txt, txt_rect)
+
+    def handle_event(self, event):
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if event.button == 1:
+                if self.rect.collidepoint(event.pos):
+                    if hasattr(self, 'on_click') and self.on_click:
+                        self.on_click()
+                    return True
+        return False
 
 
 class InputBox:
-    def __init__(self, x, y, w, h, text='', is_password=False):
+    def __init__(self, x, y, w, h, text='', placeholder='', is_password=False):
         self.rect = pygame.Rect(x, y, w, h)
         self.color = COLOR_PASSIVE
         self.text = text
-        self.font = get_font(32)
-        self.txt_surface = self.font.render(text, True, self.color)
-        self.active = False
+        self.placeholder = placeholder
         self.is_password = is_password
+        self.active = False
+        
+        self.font = get_font(28)
+        self.txt_surface = None
+        self.re_render()
+
+        # Animation state
+        self.glow_alpha = 0
+        self.target_glow = 0
+
+    def re_render(self):
+        # Decide what to show
+        if not self.text and not self.active and self.placeholder:
+            # Show Placeholder
+            self.txt_surface = self.font.render(self.placeholder, True, (150, 130, 160))
+        else:
+            # Show Actual Text (or stars)
+            to_show = "*" * len(self.text) if self.is_password else self.text
+            self.txt_surface = self.font.render(to_show, True, (50, 20, 50)) # Dark Purple text for contrast on light BG
 
     def handle_event(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN:
@@ -247,6 +534,7 @@ class InputBox:
             else:
                 self.active = False
             self.color = COLOR_ACTIVE if self.active else COLOR_PASSIVE
+            self.re_render()
 
         if event.type == pygame.KEYDOWN:
             if self.active:
@@ -255,22 +543,38 @@ class InputBox:
                 elif event.key == pygame.K_BACKSPACE:
                     self.text = self.text[:-1]
                 else:
-                    if len(self.text) < 15: self.text += event.unicode
-                display_text = "*" * len(self.text) if self.is_password else self.text
-                self.txt_surface = self.font.render(display_text, True, COLOR_PASSIVE)
+                    # Limit length
+                    if len(self.text) < 20: self.text += event.unicode
+                self.re_render()
         return None
 
     def update(self):
-        width = max(200, self.txt_surface.get_width() + 10)
-        self.rect.w = width
+        # We KEEP fixed width now for better layout control
+        # width = max(200, self.txt_surface.get_width() + 10)
+        # self.rect.w = width
+        
+        # Glow Animation
+        self.target_glow = 150 if self.active else 0
+        self.glow_alpha += (self.target_glow - self.glow_alpha) * 0.2
 
     def draw(self, screen):
-        if panel_patch:
-            panel_patch.draw(screen, self.rect)
-        else:
-            pygame.draw.rect(screen, INPUT_BG, self.rect, border_radius=10)
-        pygame.draw.rect(screen, self.color, self.rect, 2, border_radius=10)
-        screen.blit(self.txt_surface, (self.rect.x + 10, self.rect.y + 5))
+        # 1. Glow (if active)
+        if self.glow_alpha > 1:
+            glow_surf = pygame.Surface((self.rect.width + 10, self.rect.height + 10), pygame.SRCALPHA)
+            pygame.draw.rect(glow_surf, (*COLOR_ACTIVE, int(self.glow_alpha)), glow_surf.get_rect(), border_radius=12)
+            screen.blit(glow_surf, (self.rect.x - 5, self.rect.y - 5))
+
+        # 2. Background
+        pygame.draw.rect(screen, INPUT_BG, self.rect, border_radius=10)
+        
+        # 3. Border
+        border_c = COLOR_ACTIVE if self.active else COLOR_PASSIVE
+        pygame.draw.rect(screen, border_c, self.rect, 2, border_radius=10)
+        
+        # 4. Text
+        # Center vertically
+        text_y = self.rect.y + (self.rect.height - self.txt_surface.get_height()) // 2
+        screen.blit(self.txt_surface, (self.rect.x + 15, text_y))
 
     def get_text(self):
         return self.text

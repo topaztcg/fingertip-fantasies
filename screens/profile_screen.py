@@ -1,7 +1,10 @@
 import pygame
 import tkinter as tk
+import sys
+import os
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from tkinter import filedialog
-from ui_components import Button, InputBox, TEXT_COLOR, BG_FALLBACK, PROFILE_BG, BUTTON_BORDER, get_font
+from ui_components import Button, InputBox, TEXT_COLOR, BG_FALLBACK, PROFILE_BG, BUTTON_BORDER, get_font, update_animations, spawn_particles, update_juice, draw_juice_overlays
 from user_manager import UserManager
 
 
@@ -68,6 +71,7 @@ def show_profile_screen(screen, username):
     status_msg = ""
 
     while True:
+        dt = clock.tick(60) / 1000.0
         events = pygame.event.get()
         mouse_pos = pygame.mouse.get_pos()
 
@@ -79,6 +83,9 @@ def show_profile_screen(screen, username):
                 input_name.handle_event(event)
 
             if event.type == pygame.MOUSEBUTTONDOWN:
+                if event.button == 1:
+                    spawn_particles(event.pos[0], event.pos[1], count=5, color=(200, 100, 200))
+
                 if viewing_fullscreen:
                     viewing_fullscreen = False
                 else:
@@ -229,5 +236,7 @@ def show_profile_screen(screen, username):
             btn_back.change_color(mouse_pos)
             btn_back.update(screen)
 
+        update_animations(dt)
+        update_juice(dt)
+        draw_juice_overlays(screen)
         pygame.display.update()
-        clock.tick(60)

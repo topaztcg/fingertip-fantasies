@@ -1,7 +1,8 @@
 import pygame
 import sys
 import os
-from ui_components import Button, BG_FALLBACK, BUTTON_BASE, BUTTON_BORDER, TEXT_COLOR, get_font, FadeLayer, TEXT_SHADOW, PROFILE_BG, COLOR_ACTIVE, COLOR_PASSIVE
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from ui_components import Button, BG_FALLBACK, BUTTON_BASE, BUTTON_BORDER, TEXT_COLOR, get_font, FadeLayer, TEXT_SHADOW, PROFILE_BG, COLOR_ACTIVE, COLOR_PASSIVE, update_animations, spawn_particles, update_juice, draw_juice_overlays
 
 # Keep your absolute path if that's where your assets are
 ASSET_PATH = r"assets\main_menu\menu_background_image.png"
@@ -92,6 +93,8 @@ def show_main_menu(screen, current_user, avatar_surf=None):
             if event.type == pygame.MOUSEBUTTONDOWN and next_action is None:
                 # FIXED: STRICT CLICK CHECK (Only Left Click)
                 if event.button == 1:
+                    spawn_particles(event.pos[0], event.pos[1], count=5, color=(200, 100, 200))
+
                     # Check main menu buttons
                     for btn in menu_buttons:
                         if btn.check_input(mouse_pos):
@@ -138,16 +141,18 @@ def show_main_menu(screen, current_user, avatar_surf=None):
         if current_user != "Guest":
             draw_profile_tag(screen, current_user, avatar_surf, profile_rect, p_text, p_font)
 
-        # --- UPDATE & DRAW TRANSITION ---
+        # --- UPDATE & DRAW TRANSITION & JUICE ---
         fade_layer.update()
         fade_layer.draw(screen)
 
-        # IF FADE OUT IS DONE, RETURN THE ACTION
-        if next_action is not None and fade_layer.finished:
+        if next_action and fade_layer.finished:
             return next_action
 
+        dt = clock.tick(60) / 1000.0
+        update_animations(dt)
+        update_juice(dt)
+        draw_juice_overlays(screen)
         pygame.display.update()
-        clock.tick(60)
 
 
 def draw_profile_tag(screen, username, avatar, bg_rect, text_str, font_obj):

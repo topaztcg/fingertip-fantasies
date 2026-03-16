@@ -31,6 +31,22 @@
                 "cost": "5",
                 "desc": "Raiden Shogun's stress release in form of a squirt"
             }
+        },
+        "dialogue": {
+            "on_match_start": "My Divine Pussy Throbs",
+            "on_skill_use": "I can't contain it anymore ahhhhh",
+            "on_ult_use": "Hnghhh take this fool"
+        },
+        "dialogues": {
+            "match_start": "",
+            "skill_used": "",
+            "death": "",
+            "ult_used": "",
+            "buff_used": "",
+            "damage_dealt": "",
+            "damage_taken": "",
+            "low_hp": "",
+            "energy_full": ""
         }
     },
     {
@@ -107,7 +123,7 @@
         "description": "Dominant and stressed out matriarch of the Fisali family, just like her poisons her stress and horniness are bottled up behind the dominant and rich persona until she breaks and it all comes out violently",
         "hp": 10,
         "max_hp": 10,
-        "energy_max": 4,
+        "energy_max": 6,
         "unlocked": true,
         "image_path": "assets/cards\\cantarella\\image.png",
         "videos": {

@@ -1,10 +1,14 @@
 import pygame
 import sys
+import os
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import tkinter as tk
 from tkinter import filedialog
-from ui_components import Button, InputBox, BG_FALLBACK, TEXT_COLOR, get_font
+from ui_components import (
+    Button, InputBox, BG_FALLBACK, TEXT_COLOR, get_font, 
+    update_animations, draw_panel, spawn_particles, update_juice, draw_juice_overlays
+)
 from user_manager import UserManager
-
 
 def get_image_from_pc():
     root = tk.Tk()
@@ -16,159 +20,216 @@ def get_image_from_pc():
     root.destroy()
     return file_path
 
-
 def show_login_screen(screen):
     clock = pygame.time.Clock()
     user_mgr = UserManager()
 
     mode = "LOGIN"
     status_msg = ""
+    status_timer = 0
 
-    # --- LAYOUT CONFIG ---
-    center_x = screen.get_width() // 2
+    # Layout Config
+    W, H = screen.get_width(), screen.get_height()
+    PANEL_W, PANEL_H = 500, 600
+    panel_x = (W - PANEL_W) // 2
+    panel_y = (H - PANEL_H) // 2
 
-    # MOVED UP: Give some more space for the form
-    start_y = 180
-    row_gap = 100
+    # Inputs (Centered in Panel)
+    # Start inputs roughly 1/3 down the panel
+    start_y_rel = 180
+    input_w = 340
+    input_h = 55
+    input_x = panel_x + (PANEL_W - input_w) // 2
+    
+    user_box = InputBox(input_x, panel_y + start_y_rel, input_w, input_h, placeholder="Username")
+    pass_box = InputBox(input_x, panel_y + start_y_rel + 80, input_w, input_h, placeholder="Password", is_password=True)
 
-    label_x = center_x - 400  # Labels further left
-    input_x = center_x - 50  # Inputs near center
+    # Buttons
+    btn_w = 220
+    btn_h = 55
+    btn_submit = Button("LOGIN", panel_x + (PANEL_W - btn_w)//2, panel_y + 400, btn_w, btn_h, font_size=28)
+    
+    # Switch Mode Button (Link style at bottom)
+    btn_switch = Button("Create Account", panel_x + (PANEL_W - 300)//2, panel_y + 500, 300, 40, font_size=22)
+    # Style tweak for "link" look? For now standard button but smaller
 
-    user_box = InputBox(input_x, start_y, 300, 50)
-    pass_box = InputBox(input_x, start_y + row_gap, 300, 50, is_password=True)
+    btn_back = Button("BACK", 30, 30, 120, 50, font_size=24)
 
-    # --- BUTTONS ---
-    # These Y positions are now much lower to avoid overlap
-    btn_submit = Button("LOGIN", center_x - 150, 680, 300, 60, font_size=30)
-    btn_switch = Button("CREATE NEW USER", center_x - 200, 760, 400, 60, font_size=28)
+    # Avatar (Register Mode)
+    btn_avatar = Button("Upload Avatar", panel_x + (PANEL_W - 250)//2, panel_y + 300, 250, 45, font_size=24)
 
-    btn_back = Button("BACK", 50, 50, 150, 50, font_size=30)
-
-    # Avatar Upload (Register Mode) - Placed below Password
-    # Y approx 380 + 90 = 470
-    btn_avatar = Button("UPLOAD AVATAR", center_x - 150, start_y + (row_gap * 2), 300, 50, font_size=30)
-
-    font_title = get_font(80)
-    font_label = get_font(40)
-    font_msg = get_font(30)
+    font_title = get_font(60)
+    font_msg = get_font(24)
 
     uploaded_avatar_surf = None
 
+    # Spawn some initial particles
+    spawn_particles(W//2, H//2, count=30, color=(100, 50, 150))
+
     while True:
+        dt = clock.tick(60) / 1000.0
         events = pygame.event.get()
+        
+        mouse_pos = pygame.mouse.get_pos()
+
         for event in events:
             if event.type == pygame.QUIT:
-                pygame.quit()
                 sys.exit()
 
             user_box.handle_event(event)
             pass_box.handle_event(event)
+            
+            # Interactive Particles on click
+            if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                spawn_particles(event.pos[0], event.pos[1], count=5, color=(200, 100, 200))
 
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                mouse_pos = pygame.mouse.get_pos()
+            if btn_back.handle_event(event):
+                return ("BACK", None)
 
-                if btn_back.check_input(mouse_pos):
-                    return ("BACK", None)
+            if btn_switch.handle_event(event):
+                status_msg = ""
+                uploaded_avatar_surf = None
+                if mode == "LOGIN":
+                    mode = "REGISTER"
+                    btn_submit.set_text("REGISTER")
+                    btn_switch.set_text("Back to Login")
+                    PANEL_H = 700 # Expand for avatar
+                    pass_box.rect.y = panel_y + start_y_rel + 80 # Reset pos
+                else:
+                    mode = "LOGIN"
+                    btn_submit.set_text("LOGIN")
+                    btn_switch.set_text("Create Account")
+                    PANEL_H = 600
+                
+                # Re-center panel Y
+                panel_y = (H - PANEL_H) // 2
+                # Re-calc relative positions
+                user_box.rect.y = panel_y + start_y_rel
+                pass_box.rect.y = panel_y + start_y_rel + 80
+                btn_avatar.rect.y = panel_y + 330
+                btn_submit.rect.y = panel_y + PANEL_H - 180
+                btn_switch.rect.y = panel_y + PANEL_H - 80
+                # Re-center X
+                user_box.rect.x = panel_x + (PANEL_W - input_w) // 2
+                pass_box.rect.x = panel_x + (PANEL_W - input_w) // 2
+                btn_submit.rect.x = panel_x + (PANEL_W - btn_w) // 2
+                btn_switch.rect.x = panel_x + (PANEL_W - 300) // 2
+                btn_avatar.rect.x = panel_x + (PANEL_W - 250) // 2
 
-                if btn_switch.check_input(mouse_pos):
-                    status_msg = ""
-                    uploaded_avatar_surf = None
+
+            if mode == "REGISTER" and btn_avatar.handle_event(event):
+                path = get_image_from_pc()
+                if path:
+                    try:
+                        raw = pygame.image.load(path).convert_alpha()
+                        uploaded_avatar_surf = pygame.transform.scale(raw, (800, 800)) # Store hi-res
+                        status_msg = "Avatar Selected"
+                        status_timer = 3.0
+                    except:
+                        status_msg = "Error loading image"
+                        status_timer = 3.0
+
+            if btn_submit.handle_event(event):
+                u_val = user_box.get_text().strip()
+                p_val = pass_box.get_text().strip()
+                
+                # Check empty
+                if not u_val or not p_val:
+                    status_msg = "Missing fields!"
+                    status_timer = 2.0
+                else:
+                    # Logic
                     if mode == "LOGIN":
-                        mode = "REGISTER"
-                        btn_submit.set_text("CREATE ACCOUNT")
-                        btn_switch.set_text("BACK TO LOGIN")
-                    else:
-                        mode = "LOGIN"
-                        btn_submit.set_text("LOGIN")
-                        btn_switch.set_text("CREATE NEW USER")
-
-                if mode == "REGISTER" and btn_avatar.check_input(mouse_pos):
-                    path = get_image_from_pc()
-                    if path:
-                        try:
-                            raw_img = pygame.image.load(path).convert_alpha()
-                            uploaded_avatar_surf = pygame.transform.scale(raw_img, (800, 800))
-                            status_msg = "Avatar Loaded!"
-                        except Exception as e:
-                            status_msg = "Error loading image"
-                            print(e)
-
-                if btn_submit.check_input(mouse_pos):
-                    u_val = user_box.get_text().strip()
-                    p_val = pass_box.get_text().strip()
-
-                    if not u_val or not p_val:
-                        status_msg = "Fields cannot be empty!"
-                    else:
-                        if mode == "LOGIN":
-                            if user_mgr.validate_login(u_val, p_val):
-                                return ("LOGIN_SUCCESS", u_val)
-                            else:
-                                status_msg = "Invalid Credentials"
+                        if user_mgr.validate_login(u_val, p_val):
+                            return ("LOGIN_SUCCESS", u_val)
                         else:
-                            final_avatar = uploaded_avatar_surf
-                            if final_avatar is None:
-                                final_avatar = pygame.Surface((800, 800))
-                                final_avatar.fill((180, 150, 180))  # Soft purple placeholder
+                            status_msg = "Invalid Credentials"
+                            status_timer = 2.0
+                    else:
+                        # Register
+                        final_av = uploaded_avatar_surf
+                        if not final_av:
+                            final_av = pygame.Surface((800, 800))
+                            final_av.fill((100, 80, 120))
+                        
+                        success, msg = user_mgr.create_user(u_val, p_val, final_av)
+                        status_msg = msg
+                        status_timer = 3.0
+                        if success:
+                            # Switch back to login
+                            mode = "LOGIN"
+                            btn_submit.set_text("LOGIN")
+                            btn_switch.set_text("Create Account")
+                            PANEL_H = 600
+                            panel_y = (H - PANEL_H) // 2
+                            # Reset pos... (Simpler to just copy paste re-calc or make function, but this works)
+                            user_box.rect.y = panel_y + start_y_rel
+                            pass_box.rect.y = panel_y + start_y_rel + 80
+                            btn_submit.rect.y = panel_y + PANEL_H - 180
+                            btn_switch.rect.y = panel_y + PANEL_H - 80
 
-                            success, msg = user_mgr.create_user(u_val, p_val, final_avatar)
-                            status_msg = msg
-                            if success:
-                                mode = "LOGIN"
-                                btn_submit.set_text("LOGIN")
-                                btn_switch.set_text("CREATE NEW USER")
-
+        # --- DRAWING ---
         screen.fill(BG_FALLBACK)
+        
+        # 1. Background Juice
+        update_juice(dt)
+        draw_juice_overlays(screen)
 
-        # Title
-        title_text = "LOGIN" if mode == "LOGIN" else "REGISTER"
-        title_surf = font_title.render(title_text, True, TEXT_COLOR)
-        screen.blit(title_surf, (center_x - title_surf.get_width() // 2, 80))
+        # 2. Main Glass Panel
+        draw_panel(screen, panel_x, panel_y, PANEL_W, PANEL_H)
+        
+        # 3. Title
+        title_txt = "WELCOME" if mode == "LOGIN" else "JOIN US"
+        t_surf = font_title.render(title_txt, True, (255, 255, 255))
+        # Shadow
+        t_shad = font_title.render(title_txt, True, (255, 105, 180))
+        t_x = panel_x + (PANEL_W - t_surf.get_width())//2
+        t_y = panel_y + 40
+        screen.blit(t_shad, (t_x+2, t_y+2))
+        screen.blit(t_surf, (t_x, t_y))
+        
+        # Subtitle
+        sub_txt = "Login to continue" if mode == "LOGIN" else "Create your profile"
+        s_surf = get_font(24).render(sub_txt, True, (200, 180, 220))
+        screen.blit(s_surf, (panel_x + (PANEL_W - s_surf.get_width())//2, t_y + 70))
 
-        # Labels
-        u_y_center = start_y + 25 - (font_label.get_height() // 2)
-        screen.blit(font_label.render("Username:", True, TEXT_COLOR), (label_x, u_y_center))
-
-        p_y_center = (start_y + row_gap) + 25 - (font_label.get_height() // 2)
-        screen.blit(font_label.render("Password:", True, TEXT_COLOR), (label_x, p_y_center))
-
+        # 4. Components
         user_box.update()
         pass_box.update()
         user_box.draw(screen)
         pass_box.draw(screen)
 
-        if mode == "REGISTER":
-            # Draw Upload Button
-            btn_avatar.change_color(pygame.mouse.get_pos())
-            btn_avatar.update(screen)
-
-            # Preview Box (Centered below upload button)
-            # Button is at start_y + 200 (approx 380)
-            # Box starts at 450
-            preview_box = pygame.Rect(center_x - 75, start_y + (row_gap * 2) + 70, 150, 150)
-            pygame.draw.rect(screen, (60, 40, 70), preview_box)  # Darker soft purple
-
-            if uploaded_avatar_surf:
-                preview_img = pygame.transform.scale(uploaded_avatar_surf, (150, 150))
-                screen.blit(preview_img, preview_box)
-            else:
-                no_img = font_msg.render("No Img", True, (200, 180, 210))
-                screen.blit(no_img, (preview_box.x + 35, preview_box.y + 65))
-
-            pygame.draw.rect(screen, (255, 200, 220), preview_box, 3)
-
-        if status_msg:
-            # Shift error msg down to bottom
-            col = (255, 100, 100) if "Error" in status_msg or "Invalid" in status_msg else (150, 255, 150)
-            msg_surf = font_msg.render(status_msg, True, col)
-            screen.blit(msg_surf, (center_x - msg_surf.get_width() // 2, 850))
-
-        btn_submit.change_color(pygame.mouse.get_pos())
+        btn_submit.change_color(mouse_pos)
         btn_submit.update(screen)
-        btn_switch.change_color(pygame.mouse.get_pos())
+        
+        btn_switch.change_color(mouse_pos)
         btn_switch.update(screen)
-        btn_back.change_color(pygame.mouse.get_pos())
+        
+        btn_back.change_color(mouse_pos)
         btn_back.update(screen)
+        
+        if mode == "REGISTER":
+            btn_avatar.change_color(mouse_pos)
+            btn_avatar.update(screen)
+            # Preview Avatar
+            prev_x = btn_avatar.rect.right + 20
+            prev_y = btn_avatar.rect.y
+            prev_rect = pygame.Rect(panel_x + 40, btn_avatar.rect.y - 10, 60, 60) # Left side?
+            # Actually let's put it next to the button or small icon
+            
+            if uploaded_avatar_surf:
+                sc = pygame.transform.smoothscale(uploaded_avatar_surf, (50, 50))
+                screen.blit(sc, (btn_avatar.rect.right + 10, btn_avatar.rect.y))
+                pygame.draw.rect(screen, (100, 255, 100), (btn_avatar.rect.right + 10, btn_avatar.rect.y, 50, 50), 2)
 
+        # 5. Status Message
+        if status_msg:
+            status_timer -= dt
+            if status_timer <= 0: status_msg = ""
+            
+            col = (255, 100, 100) if "Error" in status_msg or "Invalid" in status_msg or "Missing" in status_msg else (100, 255, 100)
+            m_surf = font_msg.render(status_msg, True, col)
+            screen.blit(m_surf, (panel_x + (PANEL_W - m_surf.get_width())//2, panel_y + PANEL_H - 40))
+
+        update_animations(dt)
         pygame.display.update()
-        clock.tick(60)

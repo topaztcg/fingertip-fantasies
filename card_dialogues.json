@@ -1,0 +1,69 @@
+{
+    "raiden_ei": {
+        "MATCH_START": [
+            {
+                "text": "Worship my pussy"
+            }
+        ],
+        "ATK_USED": [
+            {
+                "text": "Hyahhh hnghhh",
+                "timing": "PRE"
+            }
+        ],
+        "DAMAGE_TAKEN": [
+            {
+                "text": "Hmph.",
+                "threshold": 0
+            }
+        ],
+        "HEAVY_HIT_TAKEN": [
+            {
+                "text": "Insolent!",
+                "threshold": 5
+            }
+        ],
+        "ROUND_START": [
+            {
+                "text": "Hnghhh, the lightning ahhhh"
+            }
+        ],
+        "SKILL_USED": [
+            {
+                "text": "T-this feels too good, ahhh I can't stop",
+                "timing": "PRE"
+            }
+        ],
+        "ULT_USED": [
+            {
+                "text": "",
+                "timing": "PRE"
+            }
+        ],
+        "ATK_BUFFED": [
+            {
+                "text": "My pussy grows ever stronger",
+                "threshold": 4
+            }
+        ],
+        "HEAVY_HIT_DEALT": [
+            {
+                "text": "Ahhhhh my pussy ahhh the lightning ahhhh nghhhh",
+                "threshold": 5
+            }
+        ]
+    },
+    "lara_croft": {
+        "MATCH_START": [
+            {
+                "text": "Let's find some treasure."
+            }
+        ],
+        "SKILL_USED": [
+            {
+                "text": "Watch this.",
+                "timing": "POST"
+            }
+        ]
+    }
+}

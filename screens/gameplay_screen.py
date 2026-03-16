@@ -1,15 +1,19 @@
 import pygame
 import sys
 import os
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import random
 import time
-from ui_components import Button, BG_FALLBACK, get_font, FadeLayer, draw_panel
+import pytweening
+from ui_components import Button, BG_FALLBACK, BUTTON_BORDER, TEXT_COLOR, get_font, update_animations, draw_panel, spawn_particles, update_juice, draw_juice_overlays, spawn_floating_text, shake_screen, AnimationManager, FadeLayer
 from game_ai import SmartAI
-from video_player import run_fullscreen_video
-from buff_manager import BuffManager
+from video_player import VideoWrapper, run_fullscreen_video
+from buff_manager import BuffManager, BuffCardUI
+from dialogue_manager import DialogueManager
 
 # --- CONSTANTS ---
 CARD_W, CARD_H = 180, 270
+SCREEN_WIDTH, SCREEN_HEIGHT = 1200, 800
 GAP_X = 80
 
 
@@ -39,11 +43,8 @@ class BattleCard:
         self.max_hp = int(card_data.get("hp", 10))
         self.current_hp = self.max_hp
         self.energy = 0
-        # DYNAMIC MAX ENERGY: Based on Ultimate Cost
-        ult_data = card_data.get("moves", {}).get("ult", {})
-        self.max_energy = int(ult_data.get("cost", 5))
+        self.max_energy = int(card_data.get("energy_max", 3))
         self.is_player = is_player
-        self.selected = False
         self.is_dead = False
 
         self.total_damage_dealt = 0
@@ -60,15 +61,31 @@ class BattleCard:
         self.dot_val = 0
 
         self.rect = pygame.Rect(x, y, CARD_W, CARD_H)
-        self.hover_scale = 1.0
+        self.trigger_cb = None # Callback for dialogue system
 
+        # UI State
+        self.selected = False
+        self.target_y = y
+        self.base_y = y
+        self.shake_offset = [0, 0]
+        self.hover_scale = 1.0
+        
+        # Load Image
+        img_path = card_data.get("image_path")
         self.image_surf = None
-        if os.path.exists(card_data["image_path"]):
+        if img_path and os.path.exists(img_path):
             try:
-                raw = pygame.image.load(card_data["image_path"]).convert_alpha()
+                raw = pygame.image.load(img_path).convert_alpha()
                 self.image_surf = pygame.transform.scale(raw, (CARD_W, CARD_H))
-            except:
-                pass
+            except: pass
+        
+        # ENTRY ANIMATION
+        target_y = y
+        self.rect.y = 1200 # Off-screen bottom
+        if not is_player: self.rect.y = -400 # Off-screen top for enemy
+        
+        AnimationManager.get().start_tween(self.rect, "y", target_y, 0.8, pytweening.easeOutBack)
+        self.shield = 0 
 
     def reset_round_stats(self):
         self.temp_atk_boost = 0
@@ -80,32 +97,69 @@ class BattleCard:
 
     def apply_buff(self, buff_type, val):
         if buff_type == "HEAL":
-            actual_heal = min(val, self.max_hp - self.current_hp)
-            self.current_hp += actual_heal
-            self.healing_done += actual_heal # Interpreted as Healing Received
+            old_hp = self.current_hp
+            self.current_hp = min(self.max_hp, self.current_hp + val)
+            healed = self.current_hp - old_hp
+            spawn_floating_text(self.rect.centerx, self.rect.centery, f"+{healed}", (50, 255, 50))
+            spawn_particles(self.rect.centerx, self.rect.centery, 10, (50, 255, 50))
+            if self.trigger_cb: self.trigger_cb(self, "HEALED", healed)
+        
         elif buff_type == "BUFF_ATK":
             self.temp_atk_boost += val
-            self.buffs_received += 1
+            spawn_floating_text(self.rect.centerx, self.rect.centery, f"+{val} ATK", (255, 100, 50))
+            if self.trigger_cb: self.trigger_cb(self, "ATK_BUFFED", self.temp_atk_boost)
+
         elif buff_type == "BUFF_DEF":
-            self.temp_def_boost += val
-            self.buffs_received += 1
+            # Assuming Shield logic
+            self.shield += val
+            spawn_floating_text(self.rect.centerx, self.rect.centery, f"+{val} SHIELD", (100, 100, 255))
+            if self.trigger_cb: self.trigger_cb(self, "SHIELD_GAINED", self.shield)
         elif buff_type == "DEBUFF_FREEZE":
             self.frozen_turns += val
         elif buff_type == "DEBUFF_DOT":
             self.dot_turns = 2;
             self.dot_val = val
+        
+        # VISUAL FEEDBACK
+        cx, cy = self.rect.centerx, self.rect.centery
+        if buff_type == "HEAL":
+            spawn_floating_text(cx, cy, f"+{val}", (50, 255, 50))
+            spawn_particles(cx, cy, 5, (50, 255, 50))
+        elif buff_type == "BUFF_ATK":
+            spawn_floating_text(cx, cy, "ATK UP", (100, 100, 255))
+        elif buff_type == "BUFF_DEF":
+            spawn_floating_text(cx, cy, "DEF UP", (100, 100, 255))
 
     def take_damage(self, amount):
         if self.is_dead: return
         actual_dmg = max(0, amount - self.temp_def_boost)
         self.current_hp -= actual_dmg
         self.total_damage_taken += actual_dmg
+        
+        # VISUAL FEEDBACK (JUICE)
+        cx, cy = self.rect.centerx, self.rect.centery
+        col = (255, 50, 50) if self.is_player else (255, 100, 100)
+        spawn_floating_text(cx, cy, str(actual_dmg), col)
+        spawn_particles(cx, cy, 10, col)
+        
+        if actual_dmg > 15:
+            shake_screen(5, 0.4)
+        elif actual_dmg > 5:
+            shake_screen(2, 0.2)
+        
         if self.current_hp <= 0:
             self.current_hp = 0;
             self.is_dead = True;
             self.selected = False;
             self.frozen_turns = 0;
             self.dot_turns = 0
+            spawn_floating_text(cx, cy, "DEAD", (50, 50, 50))
+            if self.trigger_cb: self.trigger_cb(self, "DEATH")
+        else:
+            if self.trigger_cb:
+                self.trigger_cb(self, "DAMAGE_TAKEN", actual_dmg)
+                if actual_dmg >= 5:
+                    self.trigger_cb(self, "HEAVY_HIT_TAKEN", actual_dmg)
 
     def consume_energy(self, cost):
         if self.energy >= cost:
@@ -114,8 +168,11 @@ class BattleCard:
         return False
 
     def gain_energy(self, amount=1):
-        self.energy += amount
-        if self.energy > self.max_energy: self.energy = self.max_energy
+        old_e = self.energy
+        self.energy = min(self.max_energy, self.energy + amount)
+        if self.energy > old_e:
+            # Visual Feedback
+            spawn_floating_text(self.rect.centerx + 20, self.rect.centery - 20, "+1 EN", (50, 200, 255))
 
     def update(self, mouse_pos, click_event=False):
         if self.is_dead: return False
@@ -202,6 +259,33 @@ def show_gameplay_screen(screen, player_deck_data, current_user):
     clock = pygame.time.Clock()
     buff_mgr = BuffManager()
     ai = SmartAI()
+    
+    # -- DIALOGUE SYSTEM INIT --
+    dialogue_mgr = DialogueManager.get()
+    active_dialogues = []
+    
+    def trigger_dialogue(card_obj, trigger, value=None):
+        nonlocal active_dialogues
+        
+        # Dead check (allow DEATH/MATCH_LOST triggers)
+        if card_obj.is_dead and trigger not in ["DEATH", "MATCH_LOST", "MATCH_WON"]:
+            return
+
+        # Mapping trigger name if needed
+        data = dialogue_mgr.trigger_event(card_obj, trigger, value)
+        if data:
+            # Check if this card already has an active dialogue, if so, replace it
+            # Otherwise add new
+            existing = next((d for d in active_dialogues if d["card"] == card_obj), None)
+            
+            new_entry = data.copy()
+            new_entry["timer"] = 180 # 3 seconds
+            
+            if existing:
+                existing["text"] = new_entry["text"]
+                existing["timer"] = 180
+            else:
+                active_dialogues.append(new_entry)
 
     fade = FadeLayer(screen.get_width(), screen.get_height(), speed=8)
     screen_w, screen_h = screen.get_width(), screen.get_height()
@@ -223,6 +307,10 @@ def show_gameplay_screen(screen, player_deck_data, current_user):
     for i, data in enumerate(ai_deck):
         c = BattleCard(data, start_x + (i * (CARD_W + GAP_X)), ENEMY_CARD_Y, is_player=False)
         enemy_cards.append(c)
+        
+    # -- ASSIGN CALLBACKS --
+    for c in player_cards + enemy_cards:
+        c.trigger_cb = trigger_dialogue
 
     btn_w, btn_h = 240, 60;
     ui_x = screen_w - btn_w - 40;
@@ -250,6 +338,10 @@ def show_gameplay_screen(screen, player_deck_data, current_user):
     next_turn_target = ""
     buffs_played_this_turn = {}
 
+    # Trigger MATCH_START for all cards
+    for c in player_cards + enemy_cards:
+        trigger_dialogue(c, "MATCH_START")
+
     inspected_entity = None
     inspector_scroll_y = 0
     max_scroll_height = 0
@@ -262,6 +354,10 @@ def show_gameplay_screen(screen, player_deck_data, current_user):
         info_msg = "Drawing Buffs...";
         state = "DRAW_BUFFS";
         state_timer = 60
+        # Trigger ROUND_START for all cards (Only Round 2+)
+        if round_num > 1:
+            for c in player_cards + enemy_cards:
+                trigger_dialogue(c, "ROUND_START")
 
     def switch_turn_logic():
         nonlocal state, next_turn_target, state_timer, buffs_played_this_turn, selected_buff, inspected_entity
@@ -280,7 +376,13 @@ def show_gameplay_screen(screen, player_deck_data, current_user):
 
     def end_round():
         nonlocal round_num;
+        # Check Low HP at end of round
+        for c in player_cards:
+            if c.current_hp < 5 and not c.is_dead:
+                trigger_dialogue(c, "LOW_HP_ROUND_END")
+                
         round_num += 1;
+        # trigger_dialogue(player_cards[0], "ROUND_START") # Removed redundant call
         reset_round_logic()
 
     def execute_attack(attacker, target, move_type):
@@ -301,15 +403,36 @@ def show_gameplay_screen(screen, player_deck_data, current_user):
                 return False
             attacker.energy_spent += cost
         
+        # Trigger Action Dialogue
+        trigger_type = "ATK_USED"
+        if move_type == "skill": trigger_type = "SKILL_USED"
+        elif move_type == "ult": trigger_type = "ULT_USED"
+        
+        trigger_dialogue(attacker, trigger_type)
+        
         vid = attacker.data["videos"].get(move_type)
         if vid: run_fullscreen_video(screen, vid, show_hint=False)
+        
+        # Trigger Post-Video (if configured in JSON via timing='POST' it would be queued)
+        # But we already triggered above. The Manager handles the timing check?
+        # Actually my Manager Implementation returns data with 'timing' field.
+        # So I should handle it here properly.
+        # But for now, let's keep it simple: The dialogue shows up, then video plays. 
+        # The user asked for "before or after".
+        # Since run_fullscreen_video blocks, 'PRE' alerts are seen before. 'POST' alerts are seen after.
+        # The trigger_dialogue puts it in queue/active.
         
         tot_dmg = base_dmg + attacker.temp_atk_boost
         target.take_damage(tot_dmg)
         
+        trigger_dialogue(attacker, "DAMAGE_DEALT", tot_dmg)
+        if tot_dmg >= 5: trigger_dialogue(attacker, "HEAVY_HIT_DEALT", tot_dmg)
+        
         attacker.temp_atk_boost = 0
         attacker.total_damage_dealt += tot_dmg
-        if target.is_dead: attacker.kills += 1
+        if target.is_dead: 
+            attacker.kills += 1
+            trigger_dialogue(attacker, "KILL")
         
         if attacker.is_player:
             player_moves -= 1;
@@ -322,20 +445,31 @@ def show_gameplay_screen(screen, player_deck_data, current_user):
 
     def check_death():
         nonlocal state, winner_team
-        if all(c.is_dead for c in enemy_cards): state = "GAME_OVER"; winner_team = "PLAYER"; return
-        if all(c.is_dead for c in player_cards): state = "GAME_OVER"; winner_team = "ENEMY"; return
+        if all(c.is_dead for c in enemy_cards): 
+            state = "GAME_OVER"; winner_team = "PLAYER"; 
+            # Dialogue for Victory
+            alive_count = sum(1 for c in player_cards if not c.is_dead)
+            t_name = f"MATCH_WON_{alive_count}"
+            for c in player_cards:
+                if not c.is_dead: trigger_dialogue(c, t_name)
+            return
+            
+        if all(c.is_dead for c in player_cards): 
+            state = "GAME_OVER"; winner_team = "ENEMY"; 
+            for c in player_cards: # Dead cards could speak? Maybe defeat lines?
+                trigger_dialogue(c, "MATCH_LOST")
+            return
 
     def use_buff_card(card_ui, target, is_player_using):
         nonlocal info_msg
         b_type = card_ui.data["type"]
         current_count = buffs_played_this_turn.get(b_type, 0)
-        if current_count >= 2:
-            if is_player_using: info_msg = f"Limit: 2 {b_type} cards per turn!"
-            return False
+        # --- REMOVED LIMIT CHECK ---
         is_buff = b_type in ["HEAL", "BUFF_ATK", "BUFF_DEF"]
         targets_friend = (target.is_player == is_player_using)
         if (is_buff and targets_friend) or (not is_buff and not targets_friend):
             target.apply_buff(b_type, card_ui.data["val"])
+            trigger_dialogue(target, f"BUFF_USED_{b_type}")
             buffs_played_this_turn[b_type] = current_count + 1;
             return True
         if is_player_using: info_msg = "Invalid Target!"; return False
@@ -367,145 +501,238 @@ def show_gameplay_screen(screen, player_deck_data, current_user):
     def draw_inspect_overlay():
         nonlocal max_scroll_height
         if not inspected_entity: return
-        s = pygame.Surface((screen_w, screen_h));
-        s.set_alpha(200);
-        s.fill((0, 0, 0));
+        
+        # --- 1. DARK BACKDROP ---
+        s = pygame.Surface((screen_w, screen_h))
+        s.set_alpha(230)
+        s.fill((10, 5, 10))
         screen.blit(s, (0, 0))
-        BIG_W, BIG_H = 400, 650
-        box_x = (screen_w - BIG_W) // 2;
+
+        # --- 2. MAIN PANEL ---
+        BIG_W, BIG_H = 500, 750
+        box_x = (screen_w - BIG_W) // 2
         box_y = (screen_h - BIG_H) // 2
         big_rect = pygame.Rect(box_x, box_y, BIG_W, BIG_H)
+        
         draw_panel(screen, box_x, box_y, BIG_W, BIG_H)
+        
         data = inspected_entity.data
         border_col = data.get("color", (100, 100, 255))
-        header_height = 60
-        header_surf = pygame.Surface((BIG_W - 10, header_height), pygame.SRCALPHA)
-        header_surf.fill((*border_col, 100))
-        screen.blit(header_surf, (box_x + 5, box_y + 5))
 
-        # FIXED: White Text for Header
-        nm_surf = get_font(30).render(data["name"], True, (255, 255, 255))
-        nm_shad = get_font(30).render(data["name"], True, (0, 0, 0))
-        screen.blit(nm_shad, (big_rect.centerx - nm_surf.get_width() // 2 + 2, box_y + 17))
-        screen.blit(nm_surf, (big_rect.centerx - nm_surf.get_width() // 2, box_y + 15))
+        # --- 3. HEADER (Fixed) ---
+        header_h = 100 # Increased to prevent overlap
+        # Header Background Gradient (simulated with alpha rect)
+        head_bg = pygame.Surface((BIG_W - 8, header_h - 4), pygame.SRCALPHA)
+        pygame.draw.rect(head_bg, (*border_col, 40), head_bg.get_rect(), border_top_left_radius=15, border_top_right_radius=15)
+        screen.blit(head_bg, (box_x + 4, box_y + 4))
+        
+        # Title (Name)
+        nm_font = get_font(38)
+        nm_surf = nm_font.render(data["name"], True, (255, 255, 255))
+        nm_shad = nm_font.render(data["name"], True, (0, 0, 0))
+        # Center horizontally, padded from top
+        title_x = box_x + (BIG_W - nm_surf.get_width()) // 2
+        title_y = box_y + 15
+        screen.blit(nm_shad, (title_x + 2, title_y + 2))
+        screen.blit(nm_surf, (title_x, title_y))
+        
+        # Subtitle (Type)
+        type_txt = data.get("type", "Unknown Unit").upper().replace("_", " ")
+        sub_font = get_font(20)
+        sub_surf = sub_font.render(type_txt, True, (200, 200, 220))
+        screen.blit(sub_surf, (box_x + (BIG_W - sub_surf.get_width()) // 2, title_y + 50))
+        
+        # Separator Line
+        pygame.draw.line(screen, (100, 100, 120), (box_x + 20, box_y + header_h), (box_x + BIG_W - 20, box_y + header_h), 2)
 
-        view_rect = pygame.Rect(box_x + 10, box_y + header_height + 10, BIG_W - 20, BIG_H - header_height - 20)
+        # --- 4. SCROLLABLE CONTENT ---
+        view_rect = pygame.Rect(box_x + 10, box_y + header_h + 10, BIG_W - 20, BIG_H - header_h - 40)
         screen.set_clip(view_rect)
-        start_y_pos = view_rect.y;
+        
+        start_y = view_rect.y - inspector_scroll_y
         virtual_y = 0
-
+        
+        # A. CARD IMAGE
+        img_h = 300
         img_path = data.get("image_path", "")
         if img_path and os.path.exists(img_path):
             try:
                 raw = pygame.image.load(img_path).convert_alpha()
-                img_h = 240
-                big_img = pygame.transform.scale(raw, (BIG_W - 60, img_h))
-                draw_y = start_y_pos + virtual_y - inspector_scroll_y
-                pygame.draw.rect(screen, (20, 20, 30),
-                                 (big_rect.centerx - (BIG_W - 56) // 2, draw_y - 2, BIG_W - 56, img_h + 4))
-                img_rect = big_img.get_rect(center=(big_rect.centerx, draw_y + img_h // 2))
-                screen.blit(big_img, img_rect)
+                # Maintain aspect ratio to fit width
+                aspect = raw.get_width() / raw.get_height()
+                target_w = int(img_h * aspect)
+                if target_w > BIG_W - 60:
+                    target_w = BIG_W - 60
+                    img_h = int(target_w / aspect)
+                
+                scaled_img = pygame.transform.smoothscale(raw, (target_w, img_h))
+                
+                draw_y = start_y + virtual_y
+                img_x = box_x + (BIG_W - target_w) // 2
+                
+                # Image Border/Glow
+                glow_rect = pygame.Rect(img_x - 2, draw_y - 2, target_w + 4, img_h + 4)
+                pygame.draw.rect(screen, border_col, glow_rect, border_radius=8)
+                screen.blit(scaled_img, (img_x, draw_y))
+                
                 virtual_y += img_h + 20
             except:
-                virtual_y += 200
-
+                pass
+        
+        # B. VITAL STATS ROW (HP / Energy)
         if hasattr(inspected_entity, "max_hp"):
-            draw_y = start_y_pos + virtual_y - inspector_scroll_y
-            stats_y = draw_y;
-            icon_radius = 22
-            hp_center = (big_rect.left + 80, stats_y + 20)
-            pygame.draw.circle(screen, (180, 0, 0), hp_center, icon_radius);
-            pygame.draw.circle(screen, (255, 255, 255), hp_center, icon_radius, 2)
-            # FIXED: White Text for Stats
-            hp_str = f"{inspected_entity.current_hp}/{inspected_entity.max_hp}"
-            hp_surf = get_font(26).render(hp_str, True, (255, 255, 255))
-            screen.blit(hp_surf, (hp_center[0] + 35, hp_center[1] - 15))
-
-            en_center = (big_rect.right - 100, stats_y + 20)
-            pygame.draw.circle(screen, (0, 100, 200), en_center, icon_radius);
-            pygame.draw.circle(screen, (255, 255, 255), en_center, icon_radius, 2)
-            en_str = f"{inspected_entity.energy}/{inspected_entity.max_energy}"
-            en_surf = get_font(26).render(en_str, True, (255, 255, 255))
-            screen.blit(en_surf, (en_center[0] + 35, en_center[1] - 15))
+            draw_y = start_y + virtual_y
+            
+            # HP Pill
+            hp_w, hp_h = 160, 40
+            hp_x = box_x + BIG_W // 2 - hp_w - 10
+            hp_rect = pygame.Rect(hp_x, draw_y, hp_w, hp_h)
+            pygame.draw.rect(screen, (60, 20, 20), hp_rect, border_radius=20)
+            pygame.draw.rect(screen, (200, 50, 50), hp_rect, 2, border_radius=20)
+            
+            hp_txt = f"HP {inspected_entity.current_hp}/{inspected_entity.max_hp}"
+            hp_surf = get_font(24).render(hp_txt, True, (255, 200, 200))
+            screen.blit(hp_surf, (hp_rect.centerx - hp_surf.get_width()//2, hp_rect.centery - hp_surf.get_height()//2))
+            
+            # Energy Pill
+            en_x = box_x + BIG_W // 2 + 10
+            en_rect = pygame.Rect(en_x, draw_y, hp_w, hp_h)
+            pygame.draw.rect(screen, (20, 40, 60), en_rect, border_radius=20)
+            pygame.draw.rect(screen, (50, 150, 255), en_rect, 2, border_radius=20)
+            
+            en_txt = f"EN {inspected_entity.energy}/{inspected_entity.max_energy}"
+            en_surf = get_font(24).render(en_txt, True, (200, 240, 255))
+            screen.blit(en_surf, (en_rect.centerx - en_surf.get_width()//2, en_rect.centery - en_surf.get_height()//2))
+            
             virtual_y += 60
-        elif "type" in data:
-            draw_y = start_y_pos + virtual_y - inspector_scroll_y
-            type_str = f"TYPE: {data['type']} | VAL: {data['val']}"
-            # FIXED: White Text
-            t_surf = get_font(22).render(type_str, True, (220, 220, 220))
-            screen.blit(t_surf, (big_rect.centerx - t_surf.get_width() // 2, draw_y + 10))
+        elif "val" in data:
+            # Just Value for Buff Cards
+            draw_y = start_y + virtual_y
+            val_txt = f"VALUE: {data['val']}"
+            v_surf = get_font(28).render(val_txt, True, (255, 255, 200))
+            screen.blit(v_surf, (box_x + (BIG_W - v_surf.get_width()) // 2, draw_y))
             virtual_y += 50
 
-        virtual_y += 10
-        desc_txt = data.get("description", data.get("desc", "No description"))
-        font_desc = get_font(20)
-        wrapped_lines = wrap_text(desc_txt, font_desc, BIG_W - 60)
-        for line in wrapped_lines:
-            draw_y = start_y_pos + virtual_y - inspector_scroll_y
-            # FIXED: White Text for Description
-            line_surf = font_desc.render(line, True, (255, 255, 255))
-            screen.blit(line_surf, (big_rect.centerx - line_surf.get_width() // 2, draw_y))
-            virtual_y += 25
-
+        # C. DESCRIPTION
+        desc_txt = data.get("description", data.get("desc", "No description available."))
+        desc_font = get_font(22)
+        wrapped_desc = wrap_text(desc_txt, desc_font, BIG_W - 60)
+        
+        for line in wrapped_desc:
+            draw_y = start_y + virtual_y
+            l_surf = desc_font.render(line, True, (220, 220, 220)) # Light Grey
+            screen.blit(l_surf, (box_x + (BIG_W - l_surf.get_width()) // 2, draw_y))
+            virtual_y += 28
+            
+        virtual_y += 20
+        
+        # D. ABILITIES LIST
         if "moves" in data:
-            virtual_y += 25
-            draw_y = start_y_pos + virtual_y - inspector_scroll_y
-            pygame.draw.line(screen, (180, 180, 200), (big_rect.left + 30, draw_y), (big_rect.right - 30, draw_y), 2)
+            # Section Header
+            draw_y = start_y + virtual_y
+            pygame.draw.line(screen, (100, 100, 120), (box_x + 40, draw_y), (box_x + BIG_W - 40, draw_y), 1)
             virtual_y += 15
-            draw_y = start_y_pos + virtual_y - inspector_scroll_y
-            moves = data["moves"]
-            font_skill = get_font(18);
-            font_header = get_font(22)
-            h_surf = font_header.render("ABILITIES", True, (255, 255, 100))
-            screen.blit(h_surf, (big_rect.centerx - h_surf.get_width() // 2, draw_y))
+            
+            h_surf = get_font(24).render("ABILITIES", True, (255, 215, 0)) # Gold
+            draw_y = start_y + virtual_y
+            screen.blit(h_surf, (box_x + (BIG_W - h_surf.get_width()) // 2, draw_y))
             virtual_y += 35
+            
+            moves = data["moves"]
+            font_title = get_font(22)
+            font_detail = get_font(18)
+            
             for m_key, m_label in [("normal", "NORMAL"), ("skill", "SKILL"), ("ult", "ULTIMATE")]:
                 if m_key in moves:
-                    draw_y = start_y_pos + virtual_y - inspector_scroll_y
                     m_data = moves[m_key]
-                    name = m_data.get("name", "Unknown");
-                    dmg = m_data.get("dmg", "0");
-                    cost = m_data.get("cost", "0") if m_key != "normal" else "+1"
-
-                    # FIXED: White Text for Ability Names
-                    n_surf = font_skill.render(f"{m_label}: {name}", True, (240, 240, 240));
-                    screen.blit(n_surf, (big_rect.left + 30, draw_y))
-                    virtual_y += 22;
-                    draw_y = start_y_pos + virtual_y - inspector_scroll_y
-                    stats_x = big_rect.left + 30
-                    d_surf = font_skill.render(f"DMG: {dmg}", True, (255, 100, 100));
-                    screen.blit(d_surf, (stats_x, draw_y))
-                    if m_key == "normal":
-                        c_surf = font_skill.render(f" (Generates {cost} Energy)", True, (100, 255, 100))
-                    else:
-                        c_surf = font_skill.render(f" | COST: {cost}", True, (100, 200, 255))
-                    screen.blit(c_surf, (stats_x + d_surf.get_width() + 5, draw_y))
-                    virtual_y += 22;
-                    s_desc = m_data.get("desc", "");
-                    s_lines = wrap_text(s_desc, font_skill, BIG_W - 60)
-                    for sl in s_lines:
-                        draw_y = start_y_pos + virtual_y - inspector_scroll_y
-                        # FIXED: Light Grey for Skill Desc
-                        sl_surf = font_skill.render(sl, True, (200, 200, 200))
-                        screen.blit(sl_surf, (stats_x, draw_y));
-                        virtual_y += 20
-                    virtual_y += 25
+                    name = m_data.get("name", "Unknown")
+                    dmg = m_data.get("dmg", "0")
+                    cost = m_data.get("cost", "0")
+                    desc = m_data.get("desc", "")
+                    
+                    # --- DYNAMIC HEIGHT CALCULATION ---
+                    # 1. Title/Header Height (Fixed)
+                    header_h = 35 
+                    
+                    # 2. Damage Line (Optional)
+                    has_dmg = (str(dmg) != "0")
+                    dmg_h = 25 if has_dmg else 0
+                    
+                    # 3. Description Block (Variable)
+                    d_lines = wrap_text(desc, font_detail, BIG_W - 90)
+                    line_spacing = 20
+                    desc_h = len(d_lines) * line_spacing
+                    
+                    # Total Card Height + Padding
+                    total_h = header_h + dmg_h + desc_h + 15
+                    
+                    draw_y = start_y + virtual_y
+                    card_rect = pygame.Rect(box_x + 20, draw_y, BIG_W - 40, total_h)
+                    
+                    # Card BG
+                    bg_col = (40, 30, 50)
+                    border_c = (100, 80, 120)
+                    if m_key == "ult": 
+                        bg_col = (50, 20, 20)
+                        border_c = (200, 50, 50)
+                    
+                    pygame.draw.rect(screen, bg_col, card_rect, border_radius=10)
+                    pygame.draw.rect(screen, border_c, card_rect, 2, border_radius=10)
+                    
+                    # Cost/Energy Pill (Right Aligned) — draw first to know width
+                    cost_txt = f"{cost} Energy" if m_key != "normal" else "+1 Energy"
+                    cost_col = (100, 200, 255) if m_key != "normal" else (100, 255, 100)
+                    c_surf = font_detail.render(cost_txt, True, cost_col)
+                    cost_w = c_surf.get_width()
+                    screen.blit(c_surf, (card_rect.right - 15 - cost_w, card_rect.y + 12))
+                    
+                    # Ability Name — truncate if it would overlap the cost pill
+                    full_name = f"{m_label}: {name}"
+                    max_name_w = card_rect.width - 30 - cost_w - 15  # padding + gap + cost
+                    n_surf = font_title.render(full_name, True, (255, 255, 255))
+                    if n_surf.get_width() > max_name_w:
+                        # Truncate with ellipsis
+                        while len(full_name) > 3 and font_title.size(full_name + "...")[0] > max_name_w:
+                            full_name = full_name[:-1]
+                        n_surf = font_title.render(full_name + "...", True, (255, 255, 255))
+                    screen.blit(n_surf, (card_rect.x + 15, card_rect.y + 8))
+                    
+                    current_y_offset = header_h
+                    
+                    # Damage (Under name)
+                    if has_dmg:
+                       dmg_surf = font_detail.render(f"DMG: {dmg}", True, (255, 100, 100))
+                       screen.blit(dmg_surf, (card_rect.x + 15, card_rect.y + current_y_offset)) 
+                       current_y_offset += dmg_h
+                    
+                    # Description Lines
+                    for i, line in enumerate(d_lines):
+                        l_s = font_detail.render(line, True, (240, 230, 210))
+                        screen.blit(l_s, (card_rect.x + 15, card_rect.y + current_y_offset + (i * line_spacing)))
+                    
+                    virtual_y += total_h + 15
+        
         virtual_y += 20
-        total_content_height = virtual_y;
-        viewport_h = view_rect.height;
-        max_scroll_height = max(0, total_content_height - viewport_h)
+        total_content_height = virtual_y
+        
+        # --- 5. SCROLL BAR & HINT ---
         screen.set_clip(None)
+        viewport_h = view_rect.height
+        max_scroll_height = max(0, total_content_height - viewport_h)
+        
         if max_scroll_height > 0:
             scroll_pct = inspector_scroll_y / max_scroll_height
-            bar_h = max(30, (viewport_h / total_content_height) * viewport_h)
+            bar_h = max(40, (viewport_h / total_content_height) * viewport_h)
             avail_h = viewport_h - bar_h
             bar_y = view_rect.y + (scroll_pct * avail_h)
-            bar_rect = pygame.Rect(big_rect.right - 15, bar_y, 8, bar_h)
-            pygame.draw.rect(screen, (150, 100, 150), bar_rect, border_radius=4)
-        hint = get_font(18).render("Scroll for more | Click to Close", True, (255, 255, 255))
-        hint_s = get_font(18).render("Scroll for more | Click to Close", True, (0, 0, 0))
-        screen.blit(hint_s, (big_rect.centerx - hint.get_width() // 2 + 1, big_rect.bottom + 11))
-        screen.blit(hint, (big_rect.centerx - hint.get_width() // 2, big_rect.bottom + 10))
+            bar_rect = pygame.Rect(box_x + BIG_W - 12, bar_y, 6, bar_h)
+            pygame.draw.rect(screen, (80, 60, 90), bar_rect, border_radius=3)
+            pygame.draw.rect(screen, (150, 100, 150), bar_rect, 1, border_radius=3)
+
+        # Close Hint
+        hint_font = get_font(20)
+        hint = hint_font.render("Click outside or Right-Click to Close", True, (200, 200, 200))
+        screen.blit(hint, (box_x + (BIG_W - hint.get_width()) // 2, box_y + BIG_H + 10))
 
     def draw_results_ui():
         # Dark Overlay
@@ -640,13 +867,125 @@ def show_gameplay_screen(screen, player_deck_data, current_user):
         btn_continue.rect.y = panel_y + panel_h - 70
         btn_continue.update(screen)
 
-    while True:
-        # ... (Event Handling) ...
-        mouse_pos = pygame.mouse.get_pos();
-        events = pygame.event.get()
-        for event in events:
-            if event.type == pygame.QUIT: sys.exit()
+    def draw_dialogue_overlay():
+        nonlocal active_dialogues
+        
+        font = get_font(16)
+        padding = 10
+        max_bw = 250
+        tail_h = 12
+        
+        # --- PASS 1: Calculate all bubble rects ---
+        bubble_data = []
+        to_remove = []
+        
+        for d in active_dialogues:
+            card_ui = d["card"]
+            speaker_name = card_ui.data.get("name", "???")
+            text = d["text"]
+            display_text = f"{speaker_name}: {text}"
+            
+            # Measure text
+            txt_surf = font.render(display_text, True, (0, 0, 0))
+            bw = txt_surf.get_width() + (padding * 2)
+            bh = txt_surf.get_height() + (padding * 2)
+            
+            lines = None
+            if bw > max_bw:
+                bw = max_bw
+                words = display_text.split(' ')
+                lines = []
+                current_line = ""
+                for word in words:
+                    test = current_line + (" " if current_line else "") + word
+                    if font.size(test)[0] <= bw - padding * 2:
+                        current_line = test
+                    else:
+                        if current_line: lines.append(current_line)
+                        current_line = word
+                if current_line: lines.append(current_line)
+                bh = len(lines) * (font.get_height() + 2) + padding * 2
+                txt_surf = None
+            
+            # Anchor to card center, above card
+            anchor_x = card_ui.rect.centerx
+            by = card_ui.rect.top - bh - tail_h - 5
+            bx = anchor_x - bw // 2
+            
+            # Clamp to screen
+            if bx < 10: bx = 10
+            if bx + bw > SCREEN_WIDTH - 10: bx = SCREEN_WIDTH - 10 - bw
+            if by < 5: by = 5
+            
+            rect = pygame.Rect(bx, by, bw, bh)
+            bubble_data.append({
+                "d": d, "rect": rect, "anchor_x": anchor_x,
+                "txt_surf": txt_surf, "lines": lines, "card_ui": card_ui
+            })
+        
+        # --- PASS 2: Resolve overlaps ---
+        bubble_data.sort(key=lambda b: b["rect"].x)
+        
+        for i in range(len(bubble_data)):
+            for j in range(i + 1, len(bubble_data)):
+                ri = bubble_data[i]["rect"]
+                rj = bubble_data[j]["rect"]
+                if ri.colliderect(rj):
+                    rj.y = ri.y - rj.height - 5
+                    if rj.y < 5: rj.y = 5
+        
+        # --- PASS 3: Draw ---
+        for bd in bubble_data:
+            rect = bd["rect"]
+            anchor_x = bd["anchor_x"]
+            d = bd["d"]
+            
+            # Shadow
+            shadow_rect = rect.copy()
+            shadow_rect.x += 3
+            shadow_rect.y += 3
+            pygame.draw.rect(screen, (0, 0, 0, 80), shadow_rect, border_radius=8)
+            
+            # Body
+            pygame.draw.rect(screen, (255, 255, 255), rect, border_radius=8)
+            pygame.draw.rect(screen, (60, 60, 60), rect, 2, border_radius=8)
+            
+            # Tail pointing down to card
+            tail_x = max(rect.x + 15, min(anchor_x, rect.right - 15))
+            tail_pts = [
+                (tail_x - 6, rect.bottom),
+                (tail_x + 6, rect.bottom),
+                (tail_x, rect.bottom + tail_h)
+            ]
+            pygame.draw.polygon(screen, (255, 255, 255), tail_pts)
+            pygame.draw.lines(screen, (60, 60, 60), False, tail_pts, 2)
+            
+            # Text
+            if bd["lines"]:
+                ly = rect.y + padding
+                for line in bd["lines"]:
+                    ls = font.render(line, True, (0, 0, 0))
+                    screen.blit(ls, (rect.x + padding, ly))
+                    ly += font.get_height() + 2
+            elif bd["txt_surf"]:
+                screen.blit(bd["txt_surf"], (rect.x + padding, rect.y + padding))
+            
+            # Timer
+            d["timer"] -= 1
+            if d["timer"] <= 0:
+                to_remove.append(d)
+        
+        for r in to_remove:
+            active_dialogues.remove(r)
 
+    # --- MAIN LOOP ---
+    while True:
+        mouse_pos = pygame.mouse.get_pos();
+        # Event Handling
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit(); sys.exit()
+            
             if event.type == pygame.MOUSEWHEEL:
                 if inspected_entity:
                     scroll_speed = 30
@@ -674,6 +1013,7 @@ def show_gameplay_screen(screen, player_deck_data, current_user):
 
                 # STRICT CLICK CHECK: Only Left Click
                 if event.button == 1:
+                    spawn_particles(event.pos[0], event.pos[1], count=5, color=(200, 100, 200))
 
                     if state == "GAME_OVER":
                         if btn_continue.check_input(mouse_pos):
@@ -698,10 +1038,15 @@ def show_gameplay_screen(screen, player_deck_data, current_user):
                             if b_c.check_click(mouse_pos): clicked_buff_ui = b_c; break
 
                         if clicked_buff_ui:
+                            was_selected = clicked_buff_ui.selected
                             for b in player_hand: b.selected = False
-                            clicked_buff_ui.selected = True;
-                            selected_buff = clicked_buff_ui;
-                            selected_player = None
+                            
+                            if not was_selected:
+                                clicked_buff_ui.selected = True;
+                                selected_buff = clicked_buff_ui;
+                                selected_player = None
+                            else:
+                                selected_buff = None
 
                         # Attack Logic
                         elif selected_player and selected_enemy:
@@ -795,7 +1140,7 @@ def show_gameplay_screen(screen, player_deck_data, current_user):
         elif state == "DRAW_BUFFS":
             state_timer -= 1
             if state_timer <= 0:
-                hand_x = (screen_w - (5 * 130)) // 2
+                hand_x = (screen_w - (4 * 130)) // 2
                 player_hand = buff_mgr.fill_hand(player_hand, hand_x, PLAYER_HAND_Y)
                 enemy_hand = buff_mgr.fill_hand(enemy_hand, hand_x, ENEMY_HAND_Y)
                 state = "TURN_SWITCH_ANIM";
@@ -897,8 +1242,24 @@ def show_gameplay_screen(screen, player_deck_data, current_user):
              screen.blit(inf_surf, (screen_w // 2 - inf_surf.get_width() // 2, center_y - inf_surf.get_height() // 2))
 
         for c in enemy_cards + player_cards: c.draw(screen, mouse_pos)
-        for b in player_hand: b.draw(screen, mouse_pos)
+
+        # Draw Player Hand (Hovered card LAST)
+        hovered_buff = None
+        for b in player_hand:
+            if b.rect.collidepoint(mouse_pos):
+                hovered_buff = b
+            else:
+                b.draw(screen, mouse_pos)
+        
+        if hovered_buff:
+            hovered_buff.draw(screen, mouse_pos)
+
+        # Draw Enemy Hand (Hovered card LAST - even if disabled interaction, good for consistency)
+        # Actually, enemy hand currently gets (-1, -1), so no hover. 
+        # But if we want inspection, let's keep it consistent.
+        # For now, just standard draw is fine as per original code, unless requested.
         for b in enemy_hand: b.draw(screen, (-1, -1))
+        
         btn_surrender.update(screen)
         
         # --- UPDATE BUTTON LABELS DYNAMICALLY ---
@@ -936,5 +1297,13 @@ def show_gameplay_screen(screen, player_deck_data, current_user):
         if not fade.finished:
             fade.draw(screen)
 
+        # Draw Juice Overlays (Particles, Floating Text)
+        draw_juice_overlays(screen)
+        
+        # Draw Dialogue Overlay (Speech Bubbles)
+        draw_dialogue_overlay()
+
         pygame.display.update()
-        clock.tick(60)
+        dt = clock.tick(60) / 1000.0
+        update_juice(dt)
+        update_animations(dt)
