@@ -5,7 +5,8 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from ui_components import Button, BG_FALLBACK, BUTTON_BASE, BUTTON_BORDER, TEXT_COLOR, get_font, FadeLayer, TEXT_SHADOW, PROFILE_BG, COLOR_ACTIVE, COLOR_PASSIVE, update_animations, spawn_particles, update_juice, draw_juice_overlays
 
 # Keep your absolute path if that's where your assets are
-ASSET_PATH = r"assets\main_menu\menu_background_image.png"
+# --- ASSETS ---
+ASSET_PATH = "assets/main_menu/menu_background_image.png"
 
 
 def show_main_menu(screen, current_user, avatar_surf=None):

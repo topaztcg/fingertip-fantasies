@@ -7,11 +7,11 @@
         "max_hp": 10,
         "energy_max": 5,
         "unlocked": true,
-        "image_path": "assets/cards\\raiden_ei\\image.png",
+        "image_path": "assets/cards/raiden_ei/image.png",
         "videos": {
-            "normal": "assets/cards\\raiden_ei\\video_normal.mp4",
-            "skill": "assets/cards\\raiden_ei\\video_skill.mp4",
-            "ult": "assets/cards\\raiden_ei\\video_ult.mp4"
+            "normal": "assets/cards/raiden_ei/video_normal.mp4",
+            "skill": "assets/cards/raiden_ei/video_skill.mp4",
+            "ult": "assets/cards/raiden_ei/video_ult.mp4"
         },
         "moves": {
             "normal": {
@@ -57,11 +57,11 @@
         "max_hp": 10,
         "energy_max": 6,
         "unlocked": true,
-        "image_path": "assets/cards\\lara_croft\\image.png",
+        "image_path": "assets/cards/lara_croft/image.png",
         "videos": {
-            "normal": "assets/cards\\lara_croft\\video_normal.mp4",
-            "skill": "assets/cards\\lara_croft\\video_skill.mp4",
-            "ult": "assets/cards\\lara_croft\\video_ult.mp4"
+            "normal": "assets/cards/lara_croft/video_normal.mp4",
+            "skill": "assets/cards/lara_croft/video_skill.mp4",
+            "ult": "assets/cards/lara_croft/video_ult.mp4"
         },
         "moves": {
             "normal": {
@@ -91,11 +91,11 @@
         "max_hp": 10,
         "energy_max": 7,
         "unlocked": true,
-        "image_path": "assets/cards\\topaz\\image.png",
+        "image_path": "assets/cards/topaz/image.png",
         "videos": {
-            "normal": "assets/cards\\topaz\\video_normal.mp4",
-            "skill": "assets/cards\\topaz\\video_skill.mp4",
-            "ult": "assets/cards\\topaz\\video_ult.mp4"
+            "normal": "assets/cards/topaz/video_normal.mp4",
+            "skill": "assets/cards/topaz/video_skill.mp4",
+            "ult": "assets/cards/topaz/video_ult.mp4"
         },
         "moves": {
             "normal": {
@@ -125,11 +125,11 @@
         "max_hp": 10,
         "energy_max": 6,
         "unlocked": true,
-        "image_path": "assets/cards\\cantarella\\image.png",
+        "image_path": "assets/cards/cantarella/image.png",
         "videos": {
-            "normal": "assets/cards\\cantarella\\video_normal.mp4",
-            "skill": "assets/cards\\cantarella\\video_skill.mp4",
-            "ult": "assets/cards\\cantarella\\video_ult.mp4"
+            "normal": "assets/cards/cantarella/video_normal.mp4",
+            "skill": "assets/cards/cantarella/video_skill.mp4",
+            "ult": "assets/cards/cantarella/video_ult.mp4"
         },
         "moves": {
             "normal": {

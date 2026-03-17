@@ -12,7 +12,7 @@
             100,
             100
         ],
-        "image_path": "assets/buff_images\\black_dildo.png"
+        "image_path": "assets/buff_images/black_dildo.png"
     },
     {
         "id": "vibrator",
@@ -27,6 +27,6 @@
             255,
             100
         ],
-        "image_path": "assets/buff_images\\pink_vibrator.png"
+        "image_path": "assets/buff_images/pink_vibrator.png"
     }
 ]
