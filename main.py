@@ -18,10 +18,9 @@ from card_manager import CardManager
 # --- INITIAL SETUP ---
 pygame.init()
 
-SCREEN_WIDTH = 1920
-SCREEN_HEIGHT = 1080
 
-screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+
+screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
 pygame.display.set_caption("Fingertip Fantasies")
 clock = pygame.time.Clock()
 
