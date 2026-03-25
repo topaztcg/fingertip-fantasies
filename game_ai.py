@@ -1,3 +1,4 @@
+import copy
 import random
 from card_manager import CardManager
 
@@ -5,193 +6,197 @@ class SmartAI:
     def __init__(self):
         self.card_mgr = CardManager()
         self.all_cards = self.card_mgr.get_all_cards()
-        self.persona = random.choice(["AGGRESSIVE", "DEFENSIVE", "BALANCED", "CHAOTIC"])
-        print(f"[AI] Initialized with Persona: {self.persona}")
 
     def generate_deck(self):
-        valid_pool = [c for c in self.all_cards]
-        if len(valid_pool) < 3: return valid_pool
-        return random.sample(valid_pool, 3)
+        valid = [c for c in self.all_cards]
+        if len(valid) < 3: return valid
+        return random.sample(valid, 3)
 
-    def get_best_move(self, ai_hand, ai_board, player_board, current_energy_pool=99):
+    def get_turn_actions(self, enemy_hand, enemy_cards, player_cards):
         """
-        Analyzes the board and returns the best possible action.
-        Returns: DICT with keys: type, card, target, score, desc
+        Calculates the best sequence of buffs ending with an attack (or no attack).
+        Simulates all possible outcomes for the current turn.
         """
-        possible_moves = []
+        def clone_state(state):
+            return {
+                "ai": [copy.copy(c) for c in state["ai"]],
+                "player": [copy.copy(c) for c in state["player"]],
+                "hand": list(state["hand"])
+            }
 
-        # --- 1. IDENTIFY ALL POSSIBLE BUFF MOVES ---
-        # AI Logic: We can play up to 2 buffs per turn usually, but let's just score them all
-        # We need to pass 'buffs_played_this_turn' context if we want to enforce limits strictly here,
-        # but for now let's assume the GameScreen handles the "2 per turn" validation or we return, fail, and retry.
-        
-        living_ai = [c for c in ai_board if not c.is_dead]
-        living_player = [c for c in player_board if not c.is_dead]
-        
-        if not living_ai or not living_player: return None
+        def eval_state(state):
+            score = 0
+            for c in state["ai"]:
+                if c["is_dead"]: score -= 2000
+                else:
+                    score += c["hp"] * 20
+                    score += c["energy"] * 15
+                    score += c["temp_atk"] * 10
+                    score += c["temp_def"] * 10
+            for c in state["player"]:
+                if c["is_dead"]: score += 2000
+                else:
+                    # Enemy alive penalty. 
+                    # Multiply HP penalty by their threat level so AI naturally 
+                    # prioritizes chunking high-threat targets.
+                    threat_multiplier = 1.0 + (c["energy"] * 0.3) + (c["temp_atk"] * 0.2)
+                    
+                    score -= c["hp"] * 20 * threat_multiplier
+                    score -= c["energy"] * 15
+                    score -= c["temp_atk"] * 10
+                    score -= c["temp_def"] * 10
+                    if c["frozen"] > 0: score += 50
+                    if c["dot_turns"] > 0: score += c["dot_val"] * 10
+            return score
 
-        for buff_card in ai_hand:
-            # Try applying to all valid targets
-            b_type = buff_card.data["type"]
-            val = buff_card.data["val"]
+        def sim_buff(state, buff_idx, is_ally_target, target_idx):
+            ns = clone_state(state)
+            buff = ns["hand"].pop(buff_idx)
+            b_type = buff.data["type"]
+            val = buff.data["val"]
+            target_list = ns["ai"] if is_ally_target else ns["player"]
+            target = target_list[target_idx]
             
-            # Buffs go on allies
-            if b_type in ["HEAL", "BUFF_ATK", "BUFF_DEF"]:
-                for target in living_ai:
-                    score = self._score_buff(b_type, val, target, is_ally=True)
-                    possible_moves.append({
-                        "type": "PLAY_BUFF",
-                        "card": buff_card,
-                        "target": target,
-                        "score": score,
-                        "desc": f"Buff {target.data['name']} with {b_type}"
-                    })
-            
-            # Debuffs go on enemies
-            elif b_type in ["DEBUFF_FREEZE", "DEBUFF_DOT"]:
-                for target in living_player:
-                    score = self._score_buff(b_type, val, target, is_ally=False)
-                    possible_moves.append({
-                        "type": "PLAY_BUFF",
-                        "card": buff_card,
-                        "target": target,
-                        "score": score,
-                        "desc": f"Debuff {target.data['name']} with {b_type}"
-                    })
-
-        # --- 2. IDENTIFY ALL POSSIBLE ATTACK MOVES ---
-        for attacker in living_ai:
-            if attacker.frozen_turns > 0: continue # Can't move
-
-            moves_data = attacker.data.get("moves", {})
-            
-            # Helper to get move cost safely
-            def get_cost(m_key): 
-                if m_key == "normal": return 0
-                return int(moves_data.get(m_key, {}).get("cost", 0))
-
-            # Helper to get move dmg safely
-            def get_dmg(m_key):
-                return int(moves_data.get(m_key, {}).get("dmg", 0))
-
-            available_attacks = []
-            # Check Energy for Skill/Ult
-            if "ult" in moves_data and attacker.energy >= get_cost("ult"):
-                available_attacks.append("ult")
-            if "skill" in moves_data and attacker.energy >= get_cost("skill"):
-                available_attacks.append("skill")
-            if "normal" in moves_data:
-                available_attacks.append("normal")
-
-            for m_key in available_attacks:
-                cost = get_cost(m_key)
-                base_dmg = get_dmg(m_key)
-                total_dmg = base_dmg + attacker.temp_atk_boost
+            if b_type == "HEAL":
+                target["hp"] = min(target["max_hp"], target["hp"] + val)
+            elif b_type == "BUFF_ATK":
+                target["temp_atk"] += val
+            elif b_type == "BUFF_DEF":
+                target["temp_def"] += val
+            elif b_type == "DEBUFF_FREEZE":
+                target["frozen"] += val
+            elif b_type == "DEBUFF_DOT":
+                target["dot_turns"] += val
+                target["dot_val"] = val  # Simplified assuming val is dot damage
                 
-                for target in living_player:
-                    score = self._score_attack(attacker, target, m_key, total_dmg, cost)
-                    possible_moves.append({
-                        "type": "ATTACK",
-                        "card": attacker,
-                        "target": target,
-                        "move": m_key, # Key change: use 'move' instead of m_key directly
-                        "score": score,
-                        "desc": f"{m_key.upper()} on {target.data['name']} ({total_dmg} dmg)"
-                    })
+            return ns
 
-        # --- 3. SELECT BEST MOVE ---
-        if not possible_moves: return None
+        def get_legal_buffs(state):
+            moves = []
+            for i, buff in enumerate(state["hand"]):
+                b_type = buff.data["type"]
+                is_buff = b_type in ["HEAL", "BUFF_ATK", "BUFF_DEF"]
+                if is_buff:
+                    for j, c in enumerate(state["ai"]):
+                        if not c["is_dead"]:
+                            # Optimization: Don't heal if full HP
+                            if b_type == "HEAL" and c["hp"] >= c["max_hp"]: continue
+                            moves.append(("BUFF", i, True, j))
+                else:
+                    for j, c in enumerate(state["player"]):
+                        if not c["is_dead"]: moves.append(("BUFF", i, False, j))
+            return moves
 
-        # Sort by score descending
-        possible_moves.sort(key=lambda x: x["score"], reverse=True)
-
-        # Weighted Randomness for "Alice" feeling
-        # Take top 3 moves and pick one based on weights, or strict top if huge gap
-        top_moves = possible_moves[:3]
-        best_move = top_moves[0]
-        
-        # If the best move is vastly superior (e.g. lethal), always take it
-        if best_move["score"] > 500:
-            return best_move
-
-        # Otherwise, add a little randomness based on persona
-        if self.persona == "CHAOTIC" and len(top_moves) > 1:
-            return random.choice(top_moves)
-        
-        return best_move
-
-    def _score_buff(self, b_type, val, target, is_ally):
-        score = 0
-        
-        if b_type == "HEAL":
-            missing_hp = target.max_hp - target.current_hp
-            if missing_hp > 0:
-                # Base score for healing per point
-                score += val * 10
-                # Critical HP Bonus (Unit below 30%)
-                if target.current_hp < (target.max_hp * 0.3):
-                    score += 100
-            else:
-                score -= 50 # Waste of heal
-
-            if self.persona == "DEFENSIVE": score *= 1.5
-
-        elif b_type == "BUFF_ATK":
-            score += val * 15
-            # Bonus if target has high energy (ready to Ult)
-            if target.energy >= (target.max_energy - 1):
-                score += 50
-            if self.persona == "AGGRESSIVE": score *= 1.5
-
-        elif b_type == "BUFF_DEF":
-            score += val * 10
-            if target.current_hp < (target.max_hp * 0.5):
-                score += 30
-            if self.persona == "DEFENSIVE": score *= 1.5
+        def sim_attack(state, attacker_idx, target_idx, m_key):
+            ns = clone_state(state)
+            attacker = ns["ai"][attacker_idx]
+            target = ns["player"][target_idx]
             
-        elif b_type == "DEBUFF_FREEZE":
-            score += val * 40
-            # Great to freeze units with high energy
-            if target.energy >= 3:
-                score += 50
-            if self.persona == "DEFENSIVE": score *= 1.2
+            m_data = attacker["moves"].get(m_key, {})
+            base_dmg = int(m_data.get("dmg", 0))
+            if m_key == "normal":
+                attacker["energy"] = min(attacker["max_energy"], attacker["energy"] + 1)
+            else:
+                cost = int(m_data.get("cost", 0))
+                attacker["energy"] -= cost
+                
+            tot_dmg = base_dmg + attacker["temp_atk"]
+            actual_dmg = max(0, tot_dmg - target["temp_def"])
+            target["hp"] -= actual_dmg
+            
+            if target["hp"] <= 0:
+                target["hp"] = 0
+                target["is_dead"] = True
+                
+            attacker["temp_atk"] = 0
+            return ns
 
-        elif b_type == "DEBUFF_DOT":
-            score += val * 2 * 10 # Total damage prediction
-            if self.persona == "AGGRESSIVE": score *= 1.2
+        def get_legal_attacks(state):
+            moves = []
+            for i, c in enumerate(state["ai"]):
+                if c["is_dead"] or c["frozen"] > 0: continue
+                # Gather available moves
+                avail = []
+                if "normal" in c["moves"]: avail.append("normal")
+                if "skill" in c["moves"] and c["energy"] >= int(c["moves"]["skill"].get("cost", 0)): avail.append("skill")
+                if "ult" in c["moves"] and c["energy"] >= int(c["moves"]["ult"].get("cost", 0)): avail.append("ult")
+                
+                for m_key in avail:
+                    for j, trg in enumerate(state["player"]):
+                        if not trg["is_dead"]:
+                            moves.append(("ATTACK", i, j, m_key))
+            return moves
 
-        return score
+        best_score = float('-inf')
+        best_sequence = []
 
-    def _score_attack(self, attacker, target, move_key, damage, cost):
-        score = 0
+        def dfs(state, current_seq, can_attack):
+            nonlocal best_score, best_sequence
+            
+            score = eval_state(state)
+            # If this path is strictly better, record it
+            if score > best_score:
+                best_score = score
+                best_sequence = list(current_seq)
+            # If we don't have to attack, we might just be ending our turn early, which is fine, 
+            # but usually more moves = better score unless it's a bad move.
+
+            # Try Buffs
+            for b_move in get_legal_buffs(state):
+                b_idx, is_ally, t_idx = b_move[1], b_move[2], b_move[3]
+                ns = sim_buff(state, b_idx, is_ally, t_idx)
+                current_seq.append(b_move)
+                dfs(ns, current_seq, can_attack)
+                current_seq.pop()
+                
+            # Try Attacks (ends the sequence)
+            if can_attack:
+                for a_move in get_legal_attacks(state):
+                    a_idx, t_idx, m_key = a_move[1], a_move[2], a_move[3]
+                    ns = sim_attack(state, a_idx, t_idx, m_key)
+                    
+                    # Score after attack
+                    final_score = eval_state(ns)
+                    if final_score > best_score:
+                        best_score = final_score
+                        best_sequence = current_seq + [a_move]
+
+        # Init state
+        def to_sim_card(bc):
+            return {
+                "obj": bc, "hp": bc.current_hp, "max_hp": bc.max_hp,
+                "energy": bc.energy, "max_energy": bc.max_energy,
+                "temp_atk": bc.temp_atk_boost, "temp_def": bc.temp_def_boost,
+                "frozen": bc.frozen_turns, "is_dead": bc.is_dead,
+                "dot_turns": bc.dot_turns, "dot_val": bc.dot_val,
+                "moves": bc.data.get("moves", {})
+            }
+
+        initial_state = {
+            "ai": [to_sim_card(c) for c in enemy_cards],
+            "player": [to_sim_card(c) for c in player_cards],
+            "hand": list(enemy_hand)
+        }
+
+        dfs(initial_state, [], True)
+
+        # Map sequence back to real objects
+        resolved_actions = []
+        # Because buffs modify indices (popping), we must track the hand as it shrinks 
+        # to map indices back.
+        sim_hand_list = list(enemy_hand)
         
-        # 1. Damage Efficiency
-        score += damage * 10
-        
-        # 2. Kill Potential (Huge Priority)
-        if target.current_hp <= max(0, damage - target.temp_def_boost):
-            score += 1000
-        
-        # 3. Energy Cost Penalty (Efficiency)
-        # We generally want to save energy for big hits, unless we are killing
-        if move_key != "normal":
-             # If it's not a kill, using energy is a 'cost'
-             if score < 1000: 
-                 score -= (cost * 5)
-        else:
-            # Normal attacks generate energy, that's a plus
-            score += 15 
-
-        # 4. Overkill Penalty
-        # If target has 1 HP and we use a 10 dmg Ult, that's wasteful
-        if target.current_hp < damage and move_key == "ult":
-            score -= 200 
-
-        # 5. Persona Modifiers
-        if self.persona == "AGGRESSIVE":
-            score *= 1.2
-        elif self.persona == "DEFENSIVE" and move_key == "normal":
-            # Defensive AI prefers building energy for safe big hits later?
-            score *= 1.1
-
-        return score
+        for move in best_sequence:
+            if move[0] == "BUFF":
+                _, b_idx, is_ally, t_idx = move
+                real_buff = sim_hand_list.pop(b_idx)
+                target_list = enemy_cards if is_ally else player_cards
+                real_target = target_list[t_idx]
+                resolved_actions.append(("BUFF", real_buff, real_target))
+            elif move[0] == "ATTACK":
+                _, a_idx, t_idx, m_key = move
+                real_attacker = enemy_cards[a_idx]
+                real_target = player_cards[t_idx]
+                resolved_actions.append(("ATTACK", real_attacker, real_target, m_key))
+                
+        return resolved_actions

@@ -337,6 +337,7 @@ def show_gameplay_screen(screen, player_deck_data, current_user):
     state_timer = 0;
     next_turn_target = ""
     buffs_played_this_turn = {}
+    ai_action_queue = None
 
     # Trigger MATCH_START for all cards
     for c in player_cards + enemy_cards:
@@ -1160,46 +1161,49 @@ def show_gameplay_screen(screen, player_deck_data, current_user):
             if state_timer > think_delay:
                 state_timer = 0
                 if enemy_moves > 0:
-                    # GET MOVE FROM SMART AI
-                    ai_move = ai.get_best_move(enemy_hand, enemy_cards, player_cards)
+                    # CALCULATE FULL SEQUENCE IF NEEDED
+                    if ai_action_queue is None:
+                        ai_action_queue = ai.get_turn_actions(enemy_hand, enemy_cards, player_cards)
                     
-                    if ai_move:
-                        # EXECUTE MOVE
+                    if ai_action_queue:
+                        # POP AND EXECUTE NEXT ACTION
+                        action = ai_action_queue.pop(0)
                         action_success = False
-                        if ai_move["type"] == "PLAY_BUFF":
-                            card = ai_move["card"]
-                            target = ai_move["target"]
+                        
+                        if action[0] == "BUFF":
+                            _, card, target = action
                             if use_buff_card(card, target, False):
                                 enemy_hand.remove(card)
-                                info_msg = ai_move["desc"]
+                                info_msg = f"Enemy used {card.data.get('name', 'Buff')}!"
                                 action_success = True
                         
-                        elif ai_move["type"] == "ATTACK":
-                            attacker = ai_move["card"]
-                            target = ai_move["target"]
-                            move_key = ai_move["move"]
+                        elif action[0] == "ATTACK":
+                            _, attacker, target, move_key = action
                             if execute_attack(attacker, target, move_key):
-                                info_msg = ai_move["desc"]
+                                info_msg = f"Enemy used {move_key.upper()}!"
                                 action_success = True
                         
                         if action_success:
                              if state != "GAME_OVER":
                                  # If action was a BUFF, allow another move (don't end turn)
                                  # If action was an ATTACK, end turn.
-                                 if ai_move["type"] == "ATTACK":
+                                 if action[0] == "ATTACK":
+                                     ai_action_queue = None
                                      switch_turn_logic()
                                  else:
                                      # It was a BUFF, so just pause briefly before next move
                                      state_timer = -30
                         else:
-                             # Move failed? Retry or Pass?
-                             # For now, pass to avoid stuck loop
+                             # Move failed? Clear queue to avoid stuck loop
+                             ai_action_queue = None
                              switch_turn_logic()
 
                     else:
                         # No moves left or AI chooses to pass
+                        ai_action_queue = None
                         switch_turn_logic()
                 else:
+                    ai_action_queue = None
                     if state != "GAME_OVER": switch_turn_logic()
 
         screen.fill(BG_FALLBACK)
