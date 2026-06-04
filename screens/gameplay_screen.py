@@ -5,13 +5,12 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import random
 import time
 import pytweening
-from ui_components import Button, BG_FALLBACK, BUTTON_BORDER, TEXT_COLOR, get_font, update_animations, draw_panel, spawn_particles, update_juice, draw_juice_overlays, spawn_floating_text, shake_screen, AnimationManager, FadeLayer
+from ui_components import Button, BG_FALLBACK, BUTTON_BORDER, TEXT_COLOR, get_font, update_animations, draw_panel, spawn_particles, update_juice, draw_juice_overlays, spawn_floating_text, shake_screen, AnimationManager, FadeLayer, TEXT_SHADOW, PROFILE_BG
 from game_ai import SmartAI
 from video_player import VideoWrapper, run_fullscreen_video
 from buff_manager import BuffManager, BuffCardUI
 from dialogue_manager import DialogueManager
-
-# --- CONSTANTS ---
+from leaderboard_manager import LeaderboardManager
 CARD_W, CARD_H = 180, 270
 SCREEN_WIDTH, SCREEN_HEIGHT = 1200, 800
 GAP_X = 80
@@ -255,10 +254,26 @@ class BattleCard:
             screen.blit(temp_surf, temp_surf.get_rect(center=self.rect.center))
 
 
-def show_gameplay_screen(screen, player_deck_data, current_user):
+def show_gameplay_screen(screen, player_deck_data, current_user, opp=None):
     clock = pygame.time.Clock()
     buff_mgr = BuffManager()
     ai = SmartAI()
+    lb_mgr = LeaderboardManager()
+    
+    # --- LOAD HUD AVATARS ---
+    from user_manager import UserManager
+    from screens.profile_screen import show_profile_screen
+    u_mgr = UserManager()
+    player_pfp = u_mgr.get_avatar_image(current_user)
+    if player_pfp: player_pfp = pygame.transform.scale(player_pfp, (100, 100))
+    
+    enemy_id = opp["id"] if opp else "bot_ai"
+    enemy_name = opp["name"] if opp else "ENEMY"
+    enemy_league = opp["league"] if opp else "unranked"
+    enemy_pfp = None
+    if opp and opp.get("pfp_path") and os.path.exists(opp["pfp_path"]):
+        try: enemy_pfp = pygame.transform.scale(pygame.image.load(opp["pfp_path"]).convert_alpha(), (100, 100))
+        except: pass
     
     # -- DIALOGUE SYSTEM INIT --
     dialogue_mgr = DialogueManager.get()
@@ -312,15 +327,15 @@ def show_gameplay_screen(screen, player_deck_data, current_user):
     for c in player_cards + enemy_cards:
         c.trigger_cb = trigger_dialogue
 
-    btn_w, btn_h = 240, 60;
-    ui_x = screen_w - btn_w - 40;
+    btn_w, btn_h = 280, 65;
+    ui_x = screen_w - btn_w - 30;
     ui_y_start = screen_h - 450
-    btn_normal = Button("NORMAL (+1 E)", ui_x, ui_y_start, btn_w, btn_h, font_size=20)
-    btn_skill = Button("SKILL (2 E)", ui_x, ui_y_start + 70, btn_w, btn_h, font_size=20)
-    btn_ult = Button("ULTIMATE (4 E)", ui_x, ui_y_start + 140, btn_w, btn_h, font_size=20)
-    btn_end_turn = Button("END ROUND", ui_x, ui_y_start + 230, btn_w, btn_h, font_size=24)
-    btn_surrender = Button("SURRENDER", screen_w - 200, 30, 180, 50, font_size=20)
-    btn_continue = Button("RETURN TO MENU", screen_w - 350, screen_h - 100, 300, 60, font_size=30)
+    btn_normal = Button("NORMAL (+1 E)", ui_x, ui_y_start, btn_w, btn_h, font_size=22)
+    btn_skill = Button("SKILL (2 E)", ui_x, ui_y_start + 80, btn_w, btn_h, font_size=22)
+    btn_ult = Button("ULTIMATE (4 E)", ui_x, ui_y_start + 160, btn_w, btn_h, font_size=22)
+    btn_end_turn = Button("END ROUND", ui_x, ui_y_start + 250, btn_w, btn_h, font_size=26)
+    btn_surrender = Button("SURRENDER", screen_w - 220, 30, 200, 50, font_size=22)
+    btn_continue = Button("RETURN TO MENU", screen_w - 350, screen_h - 100, 320, 70, font_size=32)
 
     state = "COIN_TOSS";
     winner_team = None;
@@ -338,6 +353,9 @@ def show_gameplay_screen(screen, player_deck_data, current_user):
     next_turn_target = ""
     buffs_played_this_turn = {}
     ai_action_queue = None
+    results_view_mode = "SUMMARY" # or "STATS"
+    btn_toggle_results = Button("VIEW COMBAT STATS", screen_w // 2 - 150, 100, 300, 50, font_size=20)
+    match_recorded = False
 
     # Trigger MATCH_START for all cards
     for c in player_cards + enemy_cards:
@@ -425,6 +443,7 @@ def show_gameplay_screen(screen, player_deck_data, current_user):
         
         tot_dmg = base_dmg + attacker.temp_atk_boost
         target.take_damage(tot_dmg)
+        attacker.total_damage_dealt += tot_dmg
         
         trigger_dialogue(attacker, "DAMAGE_DEALT", tot_dmg)
         if tot_dmg >= 5: trigger_dialogue(attacker, "HEAVY_HIT_DEALT", tot_dmg)
@@ -506,7 +525,7 @@ def show_gameplay_screen(screen, player_deck_data, current_user):
         # --- 1. DARK BACKDROP ---
         s = pygame.Surface((screen_w, screen_h))
         s.set_alpha(230)
-        s.fill((10, 5, 10))
+        s.fill(BG_FALLBACK)
         screen.blit(s, (0, 0))
 
         # --- 2. MAIN PANEL ---
@@ -530,7 +549,7 @@ def show_gameplay_screen(screen, player_deck_data, current_user):
         # Title (Name)
         nm_font = get_font(38)
         nm_surf = nm_font.render(data["name"], True, (255, 255, 255))
-        nm_shad = nm_font.render(data["name"], True, (0, 0, 0))
+        nm_shad = nm_font.render(data["name"], True, TEXT_SHADOW)
         # Center horizontally, padded from top
         title_x = box_x + (BIG_W - nm_surf.get_width()) // 2
         title_y = box_y + 15
@@ -544,7 +563,7 @@ def show_gameplay_screen(screen, player_deck_data, current_user):
         screen.blit(sub_surf, (box_x + (BIG_W - sub_surf.get_width()) // 2, title_y + 50))
         
         # Separator Line
-        pygame.draw.line(screen, (100, 100, 120), (box_x + 20, box_y + header_h), (box_x + BIG_W - 20, box_y + header_h), 2)
+        pygame.draw.line(screen, BUTTON_BORDER, (box_x + 20, box_y + header_h), (box_x + BIG_W - 20, box_y + header_h), 2)
 
         # --- 4. SCROLLABLE CONTENT ---
         view_rect = pygame.Rect(box_x + 10, box_y + header_h + 10, BIG_W - 20, BIG_H - header_h - 40)
@@ -588,8 +607,8 @@ def show_gameplay_screen(screen, player_deck_data, current_user):
             hp_w, hp_h = 160, 40
             hp_x = box_x + BIG_W // 2 - hp_w - 10
             hp_rect = pygame.Rect(hp_x, draw_y, hp_w, hp_h)
-            pygame.draw.rect(screen, (60, 20, 20), hp_rect, border_radius=20)
-            pygame.draw.rect(screen, (200, 50, 50), hp_rect, 2, border_radius=20)
+            pygame.draw.rect(screen, PROFILE_BG, hp_rect, border_radius=20)
+            pygame.draw.rect(screen, (255, 100, 150), hp_rect, 2, border_radius=20)
             
             hp_txt = f"HP {inspected_entity.current_hp}/{inspected_entity.max_hp}"
             hp_surf = get_font(24).render(hp_txt, True, (255, 200, 200))
@@ -598,7 +617,7 @@ def show_gameplay_screen(screen, player_deck_data, current_user):
             # Energy Pill
             en_x = box_x + BIG_W // 2 + 10
             en_rect = pygame.Rect(en_x, draw_y, hp_w, hp_h)
-            pygame.draw.rect(screen, (20, 40, 60), en_rect, border_radius=20)
+            pygame.draw.rect(screen, PROFILE_BG, en_rect, border_radius=20)
             pygame.draw.rect(screen, (50, 150, 255), en_rect, 2, border_radius=20)
             
             en_txt = f"EN {inspected_entity.energy}/{inspected_entity.max_energy}"
@@ -631,7 +650,7 @@ def show_gameplay_screen(screen, player_deck_data, current_user):
         if "moves" in data:
             # Section Header
             draw_y = start_y + virtual_y
-            pygame.draw.line(screen, (100, 100, 120), (box_x + 40, draw_y), (box_x + BIG_W - 40, draw_y), 1)
+            pygame.draw.line(screen, BUTTON_BORDER, (box_x + 40, draw_y), (box_x + BIG_W - 40, draw_y), 1)
             virtual_y += 15
             
             h_surf = get_font(24).render("ABILITIES", True, (255, 215, 0)) # Gold
@@ -671,8 +690,8 @@ def show_gameplay_screen(screen, player_deck_data, current_user):
                     card_rect = pygame.Rect(box_x + 20, draw_y, BIG_W - 40, total_h)
                     
                     # Card BG
-                    bg_col = (40, 30, 50)
-                    border_c = (100, 80, 120)
+                    bg_col = PROFILE_BG
+                    border_c = BUTTON_BORDER
                     if m_key == "ult": 
                         bg_col = (50, 20, 20)
                         border_c = (200, 50, 50)
@@ -727,7 +746,7 @@ def show_gameplay_screen(screen, player_deck_data, current_user):
             avail_h = viewport_h - bar_h
             bar_y = view_rect.y + (scroll_pct * avail_h)
             bar_rect = pygame.Rect(box_x + BIG_W - 12, bar_y, 6, bar_h)
-            pygame.draw.rect(screen, (80, 60, 90), bar_rect, border_radius=3)
+            pygame.draw.rect(screen, BUTTON_BORDER, bar_rect, border_radius=3)
             pygame.draw.rect(screen, (150, 100, 150), bar_rect, 1, border_radius=3)
 
         # Close Hint
@@ -736,15 +755,16 @@ def show_gameplay_screen(screen, player_deck_data, current_user):
         screen.blit(hint, (box_x + (BIG_W - hint.get_width()) // 2, box_y + BIG_H + 10))
 
     def draw_results_ui():
+        nonlocal results_view_mode
         # Dark Overlay
         s = pygame.Surface((screen_w, screen_h));
-        s.set_alpha(220);
+        s.set_alpha(240);
         s.fill((5, 5, 10));
         screen.blit(s, (0, 0))
 
-        # Main Report Card Panel (90% width, 85% height)
-        panel_w = int(screen_w * 0.9)
-        panel_h = int(screen_h * 0.85)
+        # Main Report Card Panel (92% width, 92% height)
+        panel_w = int(screen_w * 0.92)
+        panel_h = int(screen_h * 0.92)
         panel_x = (screen_w - panel_w) // 2
         panel_y = (screen_h - panel_h) // 2
         draw_panel(screen, panel_x, panel_y, panel_w, panel_h)
@@ -754,12 +774,29 @@ def show_gameplay_screen(screen, player_deck_data, current_user):
         title_txt = "VICTORY!" if is_win else "DEFEAT..."
         title_col = (255, 215, 0) if is_win else (220, 50, 50)
         
-        t_surf = get_font(int(panel_h * 0.12)).render(title_txt, True, title_col)
-        screen.blit(t_surf, (screen_w // 2 - t_surf.get_width() // 2, panel_y + 20))
+        # Reduce font size to prevent overlapping
+        t_surf = get_font(60).render(title_txt, True, title_col)
+        # Add a subtle shadow to title
+        t_shad = get_font(60).render(title_txt, True, TEXT_SHADOW)
+        
+        tx = screen_w // 2 - t_surf.get_width() // 2
+        ty = panel_y + 25
+        screen.blit(t_shad, (tx + 3, ty + 3))
+        screen.blit(t_surf, (tx, ty))
+
+        # Toggle Button
+        btn_toggle_results.rect.centerx = screen_w // 2
+        btn_toggle_results.rect.y = panel_y + 115
+        btn_toggle_results.update(screen)
+        
+        if btn_toggle_results.check_input(mouse_pos):
+            if pygame.mouse.get_pressed()[0]:
+                results_view_mode = "STATS" if results_view_mode == "SUMMARY" else "SUMMARY"
+                btn_toggle_results.set_text(f"VIEW {'SUMMARY' if results_view_mode == 'STATS' else 'COMBAT STATS'}")
+                pygame.time.delay(200) # Simple debounce
 
         # --- HELPERS ---
         def fit_text(txt, size, max_w):
-            """Dynamically scale text to fit width."""
             f = get_font(size)
             w, h = f.size(txt)
             while w > max_w and size > 10:
@@ -768,104 +805,177 @@ def show_gameplay_screen(screen, player_deck_data, current_user):
                 w, h = f.size(txt)
             return f.render(txt, True, (255, 255, 255))
 
-        # --- MVP SECTION (Left Side ~30%) ---
-        all_p = player_cards + enemy_cards
-        # MVP Score: Dmg + Heals + (Kills * 20) + (Buffs * 10)
-        def get_score(c): return c.total_damage_dealt + c.healing_done + (c.kills * 20) + (c.buffs_received * 10)
-        mvp_card = max(all_p, key=get_score) if all_p else player_cards[0]
-
-        mvp_w = int(panel_w * 0.3)
-        mvp_h = int(panel_h * 0.6)
-        mvp_x = panel_x + int(panel_w * 0.05)
-        mvp_y = panel_y + int(panel_h * 0.2)
-
-        # Draw MVP Frame
-        pygame.draw.rect(screen, (30, 20, 40), (mvp_x, mvp_y, mvp_w, mvp_h), border_radius=15)
-        pygame.draw.rect(screen, (255, 215, 0), (mvp_x, mvp_y, mvp_w, mvp_h), 3, border_radius=15)
-
-        lbl_mvp = get_font(int(mvp_h * 0.1)).render("- MVP -", True, (255, 215, 0))
-        screen.blit(lbl_mvp, (mvp_x + mvp_w // 2 - lbl_mvp.get_width() // 2, mvp_y + 10))
-
-        if mvp_card.image_surf:
-            # Dynamic Image Scaling
-            img_w = int(mvp_w * 0.7)
-            img_h = int(mvp_h * 0.6)
-            img = pygame.transform.scale(mvp_card.image_surf, (img_w, img_h))
-            i_rect = img.get_rect(center=(mvp_x + mvp_w // 2, mvp_y + mvp_h // 2))
-            screen.blit(img, i_rect)
-            pygame.draw.rect(screen, (255, 215, 0), i_rect, 2)
+        if results_view_mode == "SUMMARY":
+            # --- SUMMARY VIEW (BIG PFPS & POINTS) ---
+            cy = panel_y + 370
+            p1_x = panel_x + panel_w // 4
+            p2_x = panel_x + (panel_w // 4) * 3
             
-            # MVP Name
-            # Move up significantly to avoid border overlap
-            name_y = mvp_y + mvp_h - int(panel_h * 0.15)
-            name_surf = fit_text(mvp_card.data['name'], int(mvp_h * 0.08), mvp_w - 20)
-            screen.blit(name_surf, (mvp_x + mvp_w // 2 - name_surf.get_width() // 2, name_y))
-
-        # --- STATS TABLE (Right Side ~60%) ---
-        table_x = mvp_x + mvp_w + int(panel_w * 0.05)
-        table_y = mvp_y
-        table_w = int(panel_w * 0.55)
-        
-        headers = ["Unit", "Dmg", "Taken", "Heal", "Energy", "Buffs", "Kill"]
-        # Dynamic Column Widths (relative weights)
-        col_weights = [0.25, 0.12, 0.12, 0.12, 0.13, 0.13, 0.13]
-        col_widths = [int(table_w * w) for w in col_weights]
-        
-        curr_x = table_x
-
-        # Draw Headers
-        header_y_offset = int(panel_h * 0.02)
-        for i, h in enumerate(headers):
-            h_surf = fit_text(h, int(panel_h * 0.04), col_widths[i] - 5)
-            # Center header in its column
-            screen.blit(h_surf, (curr_x + (col_widths[i] - h_surf.get_width()) // 2, table_y + header_y_offset))
-            curr_x += col_widths[i]
-        
-        line_y = table_y + int(panel_h * 0.08)
-        pygame.draw.line(screen, (100, 100, 120), (table_x, line_y), (table_x + table_w, line_y), 2)
-
-        # Draw Rows
-        curr_row_y = table_y + int(panel_h * 0.12)
-        row_height = int(panel_h * 0.06)
-        
-        def draw_team_rows(cards, team_name, col):
-            nonlocal curr_row_y
-            ts = get_font(int(panel_h * 0.035)).render(team_name, True, col)
-            screen.blit(ts, (table_x, curr_row_y))
-            curr_row_y += row_height
+            p_pts = "+25 PTS" if is_win else "-15 PTS"
+            e_pts = "-15 PTS" if is_win else "+25 PTS"
+            p_col = (100, 255, 100) if is_win else (255, 100, 100)
+            e_col = (255, 100, 100) if is_win else (100, 255, 100)
             
-            for c in cards:
-                cx = table_x
-                # Unit Name
-                c_col = (255, 255, 255) if not c.is_dead else (100, 100, 100)
-                n_surf = fit_text(c.data['name'], int(panel_h * 0.035), col_widths[0] - 10)
-                screen.blit(n_surf, (cx, curr_row_y))
-                cx += col_widths[0]
+            # Draw Player Summary
+            if player_pfp:
+                big_p = pygame.transform.scale(player_pfp, (200, 200))
+                pr = big_p.get_rect(center=(p1_x, cy - 80))
+                pygame.draw.rect(screen, BUTTON_BORDER, pr.inflate(6, 6), border_radius=10)
+                screen.blit(big_p, pr)
+            
+            p_n = get_font(30).render(current_user, True, (255, 255, 255))
+            p_data = lb_mgr.get_player_data(current_user)
+            p_l = get_font(20).render(f"LEAGUE: {p_data['league'].upper()}", True, (200, 200, 255))
+            p_r = get_font(20).render(f"RANK: #{lb_mgr.get_player_rank(current_user)}", True, (255, 200, 100))
+            p_pt = get_font(40).render(p_pts, True, p_col)
+            
+            screen.blit(p_n, p_n.get_rect(center=(p1_x, cy + 50)))
+            screen.blit(p_l, p_l.get_rect(center=(p1_x, cy + 90)))
+            screen.blit(p_r, p_r.get_rect(center=(p1_x, cy + 115)))
+            screen.blit(p_pt, p_pt.get_rect(center=(p1_x, cy + 160)))
+            
+            # Draw Enemy Summary
+            if enemy_pfp:
+                big_e = pygame.transform.scale(enemy_pfp, (200, 200))
+                er = big_e.get_rect(center=(p2_x, cy - 80))
+                pygame.draw.rect(screen, BUTTON_BORDER, er.inflate(6, 6), border_radius=10)
+                screen.blit(big_e, er)
                 
-                # Stats
-                stats = [
-                    (c.total_damage_dealt, (255, 100, 100)),
-                    (c.total_damage_taken, (100, 100, 255)),
-                    (c.healing_done, (100, 255, 100)),
-                    (c.energy_spent, (255, 255, 0)),
-                    (c.buffs_received, (200, 100, 200)),
-                    (c.kills, (255, 50, 50))
-                ]
-                
-                for i, (val, color) in enumerate(stats):
-                    v_surf = get_font(int(panel_h * 0.035)).render(str(val), True, color)
-                    # Center align in column
-                    screen.blit(v_surf, (cx + (col_widths[i+1] - v_surf.get_width()) // 2, curr_row_y))
-                    cx += col_widths[i+1]
-                
-                curr_row_y += row_height
+            e_n = get_font(30).render(enemy_name, True, (255, 255, 255))
+            e_l = get_font(20).render(f"LEAGUE: {enemy_league.upper()}", True, (200, 200, 255))
+            e_r = get_font(20).render(f"RANK: #{lb_mgr.get_player_rank(enemy_name)}", True, (255, 200, 100))
+            e_pt = get_font(40).render(e_pts, True, e_col)
+            
+            screen.blit(e_n, e_n.get_rect(center=(p2_x, cy + 50)))
+            screen.blit(e_l, e_l.get_rect(center=(p2_x, cy + 90)))
+            screen.blit(e_r, e_r.get_rect(center=(p2_x, cy + 115)))
+            screen.blit(e_pt, e_pt.get_rect(center=(p2_x, cy + 160)))
+            
+            # VS Text
+            vs = get_font(60).render("VS", True, (150, 150, 150))
+            screen.blit(vs, vs.get_rect(center=(panel_x + panel_w // 2, cy - 50)))
 
-        draw_team_rows(player_cards, "PLAYER TEAM", (100, 255, 100))
-        curr_row_y += 10
-        draw_team_rows(enemy_cards, "ENEMY TEAM", (255, 100, 100))
+        else:
+            # --- COMBAT STATS VIEW (MVP box + Table) ---
+            # MVP Left Box (approx 350px width)
+            mvp_w = 350
+            mvp_rect = pygame.Rect(panel_x + 30, panel_y + 180, mvp_w, panel_h - 260)
+            pygame.draw.rect(screen, (30, 30, 40), mvp_rect, border_radius=10)
+            pygame.draw.rect(screen, BUTTON_BORDER, mvp_rect, 2, border_radius=10)
+            
+            mvp_title = get_font(30).render("MATCH MVP", True, (255, 215, 0))
+            screen.blit(mvp_title, (mvp_rect.centerx - mvp_title.get_width()//2, mvp_rect.top + 10))
+            
+            # Find MVP (highest dmg)
+            all_c = player_cards + enemy_cards
+            mvp = max(all_c, key=lambda c: c.total_damage_dealt)
+            
+            mvp_img_path = mvp.data.get("image_path")
+            
+            mvp_owner = current_user if mvp in player_cards else enemy_name
+            mvp_owner_col = (100, 255, 100) if mvp in player_cards else (255, 100, 100)
+            
+            if mvp_img_path and os.path.exists(mvp_img_path):
+                try:
+                    m_img = pygame.transform.scale(pygame.image.load(mvp_img_path).convert_alpha(), (150, 225))
+                    img_rect = m_img.get_rect(center=(mvp_rect.centerx, mvp_rect.top + 175))
+                    
+                    pygame.draw.rect(screen, BUTTON_BORDER, img_rect.inflate(6, 6), border_radius=8)
+                    screen.blit(m_img, img_rect)
+                    
+                    m_name = get_font(28).render(mvp.data["name"], True, (255, 255, 255))
+                    screen.blit(m_name, (mvp_rect.centerx - m_name.get_width()//2, img_rect.bottom + 10))
+                    
+                    m_owner = get_font(20).render(f"Team: {mvp_owner}", True, mvp_owner_col)
+                    screen.blit(m_owner, (mvp_rect.centerx - m_owner.get_width()//2, img_rect.bottom + 40))
+                    
+                    m_dmg = get_font(24).render(f"Damage: {mvp.total_damage_dealt}", True, (255, 100, 100))
+                    screen.blit(m_dmg, (mvp_rect.centerx - m_dmg.get_width()//2, img_rect.bottom + 65))
+                except:
+                    pass
+            
+            # STATS TABLE (Takes rest of the space)
+            table_x = panel_x + 30 + mvp_w + 30
+            table_y = panel_y + 180
+            table_w = panel_w - (30 + mvp_w + 30) - 30
+            
+            headers = ["Unit", "Dmg", "Taken", "Heal", "Energy", "Buffs", "Kill"]
+            col_weights = [0.25, 0.12, 0.12, 0.12, 0.13, 0.13, 0.13]
+            col_widths = [int(table_w * w) for w in col_weights]
+            
+            curr_x = table_x
+            
+            # Header Background Bar
+            hdr_bg = pygame.Surface((table_w, 40), pygame.SRCALPHA)
+            pygame.draw.rect(hdr_bg, (40, 40, 60, 200), hdr_bg.get_rect(), border_radius=5)
+            screen.blit(hdr_bg, (table_x, table_y))
+
+            # Draw Headers
+            header_y_offset = 8
+            for i, h in enumerate(headers):
+                h_surf = fit_text(h, 22, col_widths[i] - 5)
+                # Render in gold for a premium feel
+                h_surf = get_font(22).render(h, True, (255, 215, 0))
+                screen.blit(h_surf, (curr_x + (col_widths[i] - h_surf.get_width()) // 2, table_y + header_y_offset))
+                curr_x += col_widths[i]
+            
+            line_y = table_y + 45
+            pygame.draw.line(screen, BUTTON_BORDER, (table_x, line_y), (table_x + table_w, line_y), 2)
+
+            # Draw Rows
+            curr_row_y = line_y + 10
+            row_height = 40
+            
+            row_idx = 0
+            def draw_team_rows(cards, team_name, col):
+                nonlocal curr_row_y, row_idx
+                
+                # Team Header Pill
+                t_surf = pygame.Surface((table_w, row_height), pygame.SRCALPHA)
+                pygame.draw.rect(t_surf, (*col, 40), t_surf.get_rect(), border_radius=8)
+                pygame.draw.rect(t_surf, (*col, 150), t_surf.get_rect(), 1, border_radius=8)
+                screen.blit(t_surf, (table_x, curr_row_y))
+                
+                ts = get_font(25).render(team_name, True, col)
+                screen.blit(ts, (table_x + 10, curr_row_y + (row_height - ts.get_height()) // 2))
+                curr_row_y += row_height + 8
+                
+                for c in cards:
+                    if row_idx % 2 == 0:
+                        z_surf = pygame.Surface((table_w, row_height), pygame.SRCALPHA)
+                        pygame.draw.rect(z_surf, (0, 0, 0, 60), z_surf.get_rect(), border_radius=4)
+                        screen.blit(z_surf, (table_x, curr_row_y))
+                    
+                    cx = table_x
+                    c_col = TEXT_COLOR if not c.is_dead else (150, 120, 150)
+                    n_surf = get_font(22).render(c.data['name'][:10], True, c_col)
+                    screen.blit(n_surf, (cx + 5, curr_row_y + (row_height - n_surf.get_height()) // 2))
+                    cx += col_widths[0]
+                    
+                    stats = [
+                        (c.total_damage_dealt, (255, 180, 180)),
+                        (c.total_damage_taken, (180, 180, 255)),
+                        (c.healing_done, (180, 255, 180)),
+                        (c.energy_spent, (255, 255, 180)),
+                        (c.buffs_received, (220, 180, 220)),
+                        (c.kills, (255, 100, 100))
+                    ]
+                    
+                    for i, (val, color) in enumerate(stats):
+                        if c.is_dead: color = (120, 100, 120)
+                        v_surf = get_font(22).render(str(val), True, color)
+                        screen.blit(v_surf, (cx + (col_widths[i+1] - v_surf.get_width()) // 2, curr_row_y + (row_height - v_surf.get_height()) // 2))
+                        cx += col_widths[i+1]
+                    
+                    curr_row_y += row_height + 4
+                    row_idx += 1
+
+            draw_team_rows(player_cards, "PLAYER TEAM", (100, 255, 100))
+            curr_row_y += 15
+            draw_team_rows(enemy_cards, "ENEMY TEAM", (255, 100, 100))
 
         btn_continue.rect.centerx = screen_w // 2
-        btn_continue.rect.y = panel_y + panel_h - 70
+        btn_continue.rect.y = panel_y + panel_h - 60
         btn_continue.update(screen)
 
     def draw_dialogue_overlay():
@@ -981,6 +1091,18 @@ def show_gameplay_screen(screen, player_deck_data, current_user):
 
     # --- MAIN LOOP ---
     while True:
+        if state == "GAME_OVER" and not match_recorded:
+            total_dmg = sum(c.total_damage_dealt for c in player_cards)
+            is_win = (winner_team == "PLAYER")
+            lb_mgr.record_match(current_user, is_win, total_dmg)
+            
+            # Record Enemy Match
+            if opp and opp.get("is_bot"):
+                enemy_dmg = sum(c.total_damage_dealt for c in enemy_cards)
+                lb_mgr.record_match(opp["name"], not is_win, enemy_dmg)
+                
+            match_recorded = True
+            
         mouse_pos = pygame.mouse.get_pos();
         # Event Handling
         for event in pygame.event.get():
@@ -1021,9 +1143,42 @@ def show_gameplay_screen(screen, player_deck_data, current_user):
                             fade.fade_out()
                             while not fade.finished: fade.update(); fade.draw(screen); pygame.display.update()
                             return
+                            
+                        # Handle PFP Clicks in Results Screen (Summary Mode)
+                        if results_view_mode == "SUMMARY":
+                            panel_w = int(screen_w * 0.9)
+                            panel_h = int(screen_h * 0.85)
+                            panel_x = (screen_w - panel_w) // 2
+                            panel_y = (screen_h - panel_h) // 2
+                            cy = panel_y + 350
+                            
+                            p1_x = panel_x + panel_w // 4
+                            p1_rect = pygame.Rect(0, 0, 200, 200)
+                            p1_rect.center = (p1_x, cy - 80)
+                            
+                            p2_x = panel_x + (panel_w // 4) * 3
+                            p2_rect = pygame.Rect(0, 0, 200, 200)
+                            p2_rect.center = (p2_x, cy - 80)
+                            
+                            if p1_rect.collidepoint(mouse_pos):
+                                show_profile_screen(screen, current_user)
+                                continue
+                            if p2_rect.collidepoint(mouse_pos):
+                                show_profile_screen(screen, enemy_id)
+                                continue
 
                     if inspected_entity: inspected_entity = None; continue
                     if btn_surrender.check_input(mouse_pos): return
+                    
+                    # Handle PFP Clicks in HUD (During Match)
+                    p_hud_rect = pygame.Rect(18, PLAYER_CARD_Y - 2, 104, 104)
+                    e_hud_rect = pygame.Rect(screen_w - 132, ENEMY_CARD_Y - 2, 104, 104)
+                    if p_hud_rect.collidepoint(mouse_pos):
+                        show_profile_screen(screen, current_user)
+                        continue
+                    if e_hud_rect.collidepoint(mouse_pos):
+                        show_profile_screen(screen, enemy_id)
+                        continue
 
                     # 1. BUTTONS FIRST (Prevents click-through)
                     if state == "TURN_PLAYER" and btn_end_turn.check_input(mouse_pos):
@@ -1210,10 +1365,30 @@ def show_gameplay_screen(screen, player_deck_data, current_user):
         
         # --- UPDATE TRANSITION (Draw Last) ---
         fade.update()
+        
+        # --- DRAW HUD PFPS & NAMES ---
+        hud_font = get_font(28)
+        
+        # Player (Left Side, near player cards)
+        p_hud_y = PLAYER_CARD_Y
+        if player_pfp:
+            pygame.draw.rect(screen, BUTTON_BORDER, (18, p_hud_y - 2, 104, 104), border_radius=8)
+            screen.blit(player_pfp, (20, p_hud_y))
+        ps = hud_font.render(current_user, True, (100, 255, 100))
+        screen.blit(ps, (20, p_hud_y + 110))
+        
+        # Enemy (Right Side, near enemy cards)
+        e_hud_y = ENEMY_CARD_Y
+        e_hud_x = screen_w - 130
+        if enemy_pfp:
+            pygame.draw.rect(screen, BUTTON_BORDER, (e_hud_x - 2, e_hud_y - 2, 104, 104), border_radius=8)
+            screen.blit(enemy_pfp, (e_hud_x, e_hud_y))
+        es = hud_font.render(enemy_name, True, (255, 100, 100))
+        screen.blit(es, (e_hud_x, e_hud_y + 110))
 
         info_rect = pygame.Rect(20, 40, 250, 180)
-        pygame.draw.rect(screen, (0, 0, 0), info_rect, border_radius=10);
-        pygame.draw.rect(screen, (100, 100, 100), info_rect, 2, border_radius=10)
+        pygame.draw.rect(screen, PROFILE_BG, info_rect, border_radius=10);
+        pygame.draw.rect(screen, BUTTON_BORDER, info_rect, 2, border_radius=10)
         screen.blit(get_font(25).render(f"ROUND {round_num}", True, (255, 255, 0)), (40, 60))
         screen.blit(get_font(25).render(f"Moves Left: {player_moves}", True, (0, 255, 0)), (40, 110))
         screen.blit(get_font(25).render(f"Enemy Moves: {enemy_moves}", True, (255, 50, 50)), (40, 160))
@@ -1226,7 +1401,7 @@ def show_gameplay_screen(screen, player_deck_data, current_user):
              # Create text surfaces
              inf_font = get_font(48)
              inf_surf = inf_font.render(info_msg, True, (255, 255, 255))
-             inf_shad = inf_font.render(info_msg, True, (0, 0, 0))
+             inf_shad = inf_font.render(info_msg, True, TEXT_SHADOW)
              
              # Draw Background Banner
              banner_h = 80
@@ -1234,7 +1409,7 @@ def show_gameplay_screen(screen, player_deck_data, current_user):
              banner_rect = pygame.Rect(0, center_y - banner_h // 2, banner_w, banner_h)
              
              s = pygame.Surface((banner_w, banner_h), pygame.SRCALPHA)
-             s.fill((0, 0, 0, 180)) # Semi-transparent black
+             s.fill((PROFILE_BG[0], PROFILE_BG[1], PROFILE_BG[2], 180)) # Semi-transparent theme bg
              screen.blit(s, (0, center_y - banner_h // 2))
              
              # Draw Border Lines

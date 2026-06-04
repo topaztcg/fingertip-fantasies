@@ -2,8 +2,9 @@ import pygame
 import sys
 import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from ui_components import Button, BG_FALLBACK, BUTTON_BORDER, TEXT_COLOR, get_font, update_animations, draw_panel, spawn_particles, update_juice, draw_juice_overlays
+from ui_components import Button, BG_FALLBACK, BUTTON_BORDER, TEXT_COLOR, get_font, update_animations, draw_panel, spawn_particles, update_juice, draw_juice_overlays, TEXT_SHADOW, PROFILE_BG, AnimationManager
 from card_manager import CardManager
+import pytweening
 from video_player import VideoWrapper, run_fullscreen_video
 
 
@@ -32,6 +33,8 @@ class CardPreview:
         self.rect = pygame.Rect(x, y, w, h)
         self.base_rect = pygame.Rect(x, y, w, h)
         self.hovered = False
+        self.is_hovered = False
+        self.scale = 1.0
 
         self.final_surf = None
         if os.path.exists(card_data["image_path"]):
@@ -73,18 +76,21 @@ class CardPreview:
 
     def update(self, mouse_pos):
         self.hovered = self.rect.collidepoint(mouse_pos)
+        
+        if self.hovered and not self.is_hovered:
+            self.is_hovered = True
+            AnimationManager.get().start_tween(self, "scale", 1.08, 0.2, pytweening.easeOutBack)
+        elif not self.hovered and self.is_hovered:
+            self.is_hovered = False
+            AnimationManager.get().start_tween(self, "scale", 1.0, 0.2, pytweening.easeOutQuad)
 
     def draw(self, screen):
         # Hover Scale Effect
-        if self.hovered:
-            scale_factor = 1.05
-            current_w = int(self.base_rect.width * scale_factor)
-            current_h = int(self.base_rect.height * scale_factor)
-            current_x = self.base_rect.centerx - (current_w // 2)
-            current_y = self.base_rect.centery - (current_h // 2)
-        else:
-            current_w, current_h = self.base_rect.width, self.base_rect.height
-            current_x, current_y = self.base_rect.x, self.base_rect.y
+        scale_factor = self.scale
+        current_w = int(self.base_rect.width * scale_factor)
+        current_h = int(self.base_rect.height * scale_factor)
+        current_x = self.base_rect.centerx - (current_w // 2)
+        current_y = self.base_rect.centery - (current_h // 2)
 
         draw_rect = pygame.Rect(current_x, current_y, current_w, current_h)
         
@@ -92,7 +98,9 @@ class CardPreview:
         shadow_rect = draw_rect.copy()
         shadow_rect.y += 6
         shadow_rect.x += 4
-        pygame.draw.rect(screen, (0, 0, 0, 100), shadow_rect, border_radius=12)
+        shadow_surf = pygame.Surface((current_w, current_h), pygame.SRCALPHA)
+        pygame.draw.rect(shadow_surf, (50, 20, 50, 100), shadow_surf.get_rect(), border_radius=12)
+        screen.blit(shadow_surf, (shadow_rect.x, shadow_rect.y))
 
         # Draw Base/Image
         if self.final_surf:
@@ -102,7 +110,7 @@ class CardPreview:
             else:
                 screen.blit(self.final_surf, (current_x, current_y))
         else:
-            pygame.draw.rect(screen, (50, 40, 60), draw_rect, border_radius=12)
+            pygame.draw.rect(screen, PROFILE_BG, draw_rect, border_radius=12)
 
         # Gradient Overlay at bottom for text readability
         grad_h = 80
@@ -134,7 +142,7 @@ class CardPreview:
         # Consistent text positioning (centered horizontally, padded from bottom)
         # Move up slightly to account for descenders (p, g, y)
         txt_center_x = current_x + current_w // 2
-        txt_y = current_y + current_h - 40 
+        txt_y = current_y + current_h - 45 
         
         # Subtler shadow offset
         screen.blit(name_shad, (txt_center_x - name_surf.get_width() // 2 + 1, txt_y + 1))
@@ -149,7 +157,7 @@ def show_collection_screen(screen):
     # Dynamic Grid Layout Logic
     max_cols = 5
     card_w, card_h = 180, 250
-    gap_x, gap_y = 40, 40
+    gap_x, gap_y = 60, 60
     
     # Calculate effective columns to center properly if few cards exist
     num_cards = len(all_cards)
@@ -158,7 +166,7 @@ def show_collection_screen(screen):
     # Total Grid Width based on effective columns
     total_grid_w = (effective_cols * card_w) + ((effective_cols - 1) * gap_x)
     start_x = (screen.get_width() - total_grid_w) // 2
-    start_y = 180 # Push down to make room for header
+    start_y = 220 # Push down to make room for header
 
     preview_objs = []
 
@@ -174,7 +182,7 @@ def show_collection_screen(screen):
         y = start_y + (row * (card_h + gap_y))
         preview_objs.append(CardPreview(data, x, y, card_w, card_h))
 
-    btn_back = Button("BACK", 50, 50, 150, 50, font_size=30)
+    btn_back = Button("BACK", 50, 40, 150, 60, font_size=28)
 
     while True:
         dt = clock.tick(60) / 1000.0
@@ -198,13 +206,13 @@ def show_collection_screen(screen):
                             run_inspector_modal(screen, card.data)
 
         # Draw Background (Dark Gradients)
-        screen.fill((20, 10, 30))
+        screen.fill(BG_FALLBACK)
         
         # Header (Centered)
         t_font = get_font(60)
         title_txt = "CARD COLLECTION"
         title = t_font.render(title_txt, True, (255, 255, 255))
-        t_shad = t_font.render(title_txt, True, (255, 100, 150, 50))
+        t_shad = t_font.render(title_txt, True, TEXT_SHADOW)
         
         title_x = (screen.get_width() - title.get_width()) // 2
         # Tighter shadow
@@ -212,10 +220,10 @@ def show_collection_screen(screen):
         screen.blit(title, (title_x, 50))
         
         # Divider Line - MOVED DOWN to avoid overlap
-        line_y = 140
+        line_y = 170
         line_w = screen.get_width() * 0.8
         line_start_x = (screen.get_width() - line_w) // 2
-        pygame.draw.line(screen, (100, 50, 100), (line_start_x, line_y), (line_start_x + line_w, line_y), 2)
+        pygame.draw.line(screen, BUTTON_BORDER, (line_start_x, line_y), (line_start_x + line_w, line_y), 2)
 
         for card in preview_objs:
             card.update(mouse_pos)
@@ -410,7 +418,7 @@ def run_inspector_modal(screen, data):
                                     run_fullscreen_video(screen, v_paths[content])
 
         # --- DRAWING ---
-        screen.fill((10, 5, 10)) # Background behind modal (if transparent)
+        screen.fill(BG_FALLBACK) # Background behind modal
         
         # Draw Main Panel (Glass Style)
         draw_panel(screen, x, y, w, h)
@@ -425,7 +433,7 @@ def run_inspector_modal(screen, data):
                 pygame.draw.line(fade, (0, 0, 0, alpha), (i, 0), (i, h))
             # Actually we are using a panel over it? No, art is on top. 
             # Let's draw a border line between art and content
-            pygame.draw.line(screen, (100, 80, 120), (x + img_area_w, y), (x + img_area_w, y + h), 2)
+            pygame.draw.line(screen, BUTTON_BORDER, (x + img_area_w, y), (x + img_area_w, y + h), 2)
 
         # SCROLL AREA
         base_x = x + img_area_w + 40
@@ -452,7 +460,7 @@ def run_inspector_modal(screen, data):
             if item_type == "header":
                 # Name with shadow
                 t_surf = font_h.render(content, True, (255, 255, 255))
-                t_shad = font_h.render(content, True, (0, 0, 0))
+                t_shad = font_h.render(content, True, TEXT_SHADOW)
                 screen.blit(t_shad, (base_x + 2, draw_y + 2))
                 screen.blit(t_surf, (base_x, draw_y))
             
@@ -467,20 +475,20 @@ def run_inspector_modal(screen, data):
                 
                 # HP Pill
                 hp_rect = pygame.Rect(base_x, draw_y, 140, 40)
-                pygame.draw.rect(screen, (60, 20, 20), hp_rect, border_radius=20)
-                pygame.draw.rect(screen, (200, 50, 50), hp_rect, 2, border_radius=20)
+                pygame.draw.rect(screen, PROFILE_BG, hp_rect, border_radius=20)
+                pygame.draw.rect(screen, (255, 100, 150), hp_rect, 2, border_radius=20)
                 hp_s = font_s.render(f"HP: {hp}", True, (255, 200, 200))
                 screen.blit(hp_s, (hp_rect.centerx - hp_s.get_width()//2, hp_rect.centery - hp_s.get_height()//2))
 
                 # Energy Pill
                 en_rect = pygame.Rect(base_x + 160, draw_y, 140, 40)
-                pygame.draw.rect(screen, (20, 40, 60), en_rect, border_radius=20)
+                pygame.draw.rect(screen, PROFILE_BG, en_rect, border_radius=20)
                 pygame.draw.rect(screen, (50, 150, 255), en_rect, 2, border_radius=20)
                 en_s = font_s.render(f"EN: {en}", True, (200, 240, 255))
                 screen.blit(en_s, (en_rect.centerx - en_s.get_width()//2, en_rect.centery - en_s.get_height()//2))
 
             elif item_type == "line":
-                pygame.draw.line(screen, (100, 100, 120), (base_x, draw_y), (base_x + right_panel_w - 60, draw_y), 2)
+                pygame.draw.line(screen, BUTTON_BORDER, (base_x, draw_y), (base_x + right_panel_w - 60, draw_y), 2)
             
             elif item_type == "move_title":
                 title, col = content
@@ -529,7 +537,7 @@ def run_inspector_modal(screen, data):
             avail_h = viewport_h - bar_h
             bar_y = view_rect.y + (scroll_pct * avail_h)
             bar_rect = pygame.Rect(base_x + right_panel_w - 15, bar_y, 6, bar_h)
-            pygame.draw.rect(screen, (100, 80, 120), bar_rect, border_radius=3)
+            pygame.draw.rect(screen, BUTTON_BORDER, bar_rect, border_radius=3)
 
         btn_close.change_color(mouse_pos)
         btn_close.update(screen)

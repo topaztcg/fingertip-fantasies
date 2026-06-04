@@ -6,7 +6,8 @@ import tkinter as tk
 from tkinter import filedialog
 from ui_components import (
     Button, InputBox, BG_FALLBACK, TEXT_COLOR, get_font, 
-    update_animations, draw_panel, spawn_particles, update_juice, draw_juice_overlays
+    update_animations, draw_panel, spawn_particles, update_juice, draw_juice_overlays,
+    TEXT_SHADOW, COLOR_PASSIVE, COLOR_ACTIVE
 )
 from user_manager import UserManager
 
@@ -30,27 +31,27 @@ def show_login_screen(screen):
 
     # Layout Config
     W, H = screen.get_width(), screen.get_height()
-    PANEL_W, PANEL_H = 500, 600
+    PANEL_W, PANEL_H = 550, 700
     panel_x = (W - PANEL_W) // 2
     panel_y = (H - PANEL_H) // 2
 
     # Inputs (Centered in Panel)
     # Start inputs roughly 1/3 down the panel
-    start_y_rel = 180
-    input_w = 340
-    input_h = 55
+    start_y_rel = 200
+    input_w = 360
+    input_h = 60
     input_x = panel_x + (PANEL_W - input_w) // 2
     
     user_box = InputBox(input_x, panel_y + start_y_rel, input_w, input_h, placeholder="Username")
-    pass_box = InputBox(input_x, panel_y + start_y_rel + 80, input_w, input_h, placeholder="Password", is_password=True)
+    pass_box = InputBox(input_x, panel_y + start_y_rel + 120, input_w, input_h, placeholder="Password", is_password=True)
 
     # Buttons
-    btn_w = 220
-    btn_h = 55
-    btn_submit = Button("LOGIN", panel_x + (PANEL_W - btn_w)//2, panel_y + 400, btn_w, btn_h, font_size=28)
+    btn_w = 260
+    btn_h = 60
+    btn_submit = Button("LOGIN", panel_x + (PANEL_W - btn_w)//2, panel_y + 460, btn_w, btn_h, font_size=28)
     
     # Switch Mode Button (Link style at bottom)
-    btn_switch = Button("Create Account", panel_x + (PANEL_W - 300)//2, panel_y + 500, 300, 40, font_size=22)
+    btn_switch = Button("Create Account", panel_x + (PANEL_W - 300)//2, panel_y + 560, 300, 45, font_size=22)
     # Style tweak for "link" look? For now standard button but smaller
 
     btn_back = Button("BACK", 30, 30, 120, 50, font_size=24)
@@ -64,7 +65,7 @@ def show_login_screen(screen):
     uploaded_avatar_surf = None
 
     # Spawn some initial particles
-    spawn_particles(W//2, H//2, count=30, color=(100, 50, 150))
+    spawn_particles(W//2, H//2, count=30, color=COLOR_ACTIVE)
 
     while True:
         dt = clock.tick(60) / 1000.0
@@ -93,20 +94,20 @@ def show_login_screen(screen):
                     mode = "REGISTER"
                     btn_submit.set_text("REGISTER")
                     btn_switch.set_text("Back to Login")
-                    PANEL_H = 700 # Expand for avatar
-                    pass_box.rect.y = panel_y + start_y_rel + 80 # Reset pos
+                    PANEL_H = 800 # Expand for avatar
+                    pass_box.rect.y = panel_y + start_y_rel + 120 # Reset pos
                 else:
                     mode = "LOGIN"
                     btn_submit.set_text("LOGIN")
                     btn_switch.set_text("Create Account")
-                    PANEL_H = 600
+                    PANEL_H = 700
                 
                 # Re-center panel Y
                 panel_y = (H - PANEL_H) // 2
                 # Re-calc relative positions
                 user_box.rect.y = panel_y + start_y_rel
-                pass_box.rect.y = panel_y + start_y_rel + 80
-                btn_avatar.rect.y = panel_y + 330
+                pass_box.rect.y = panel_y + start_y_rel + 120
+                btn_avatar.rect.y = panel_y + 380
                 btn_submit.rect.y = panel_y + PANEL_H - 180
                 btn_switch.rect.y = panel_y + PANEL_H - 80
                 # Re-center X
@@ -150,7 +151,7 @@ def show_login_screen(screen):
                         final_av = uploaded_avatar_surf
                         if not final_av:
                             final_av = pygame.Surface((800, 800))
-                            final_av.fill((100, 80, 120))
+                            final_av.fill(COLOR_PASSIVE)
                         
                         success, msg = user_mgr.create_user(u_val, p_val, final_av)
                         status_msg = msg
@@ -160,11 +161,11 @@ def show_login_screen(screen):
                             mode = "LOGIN"
                             btn_submit.set_text("LOGIN")
                             btn_switch.set_text("Create Account")
-                            PANEL_H = 600
+                            PANEL_H = 700
                             panel_y = (H - PANEL_H) // 2
                             # Reset pos... (Simpler to just copy paste re-calc or make function, but this works)
                             user_box.rect.y = panel_y + start_y_rel
-                            pass_box.rect.y = panel_y + start_y_rel + 80
+                            pass_box.rect.y = panel_y + start_y_rel + 120
                             btn_submit.rect.y = panel_y + PANEL_H - 180
                             btn_switch.rect.y = panel_y + PANEL_H - 80
 
@@ -182,7 +183,7 @@ def show_login_screen(screen):
         title_txt = "WELCOME" if mode == "LOGIN" else "JOIN US"
         t_surf = font_title.render(title_txt, True, (255, 255, 255))
         # Shadow
-        t_shad = font_title.render(title_txt, True, (255, 105, 180))
+        t_shad = font_title.render(title_txt, True, TEXT_SHADOW)
         t_x = panel_x + (PANEL_W - t_surf.get_width())//2
         t_y = panel_y + 40
         screen.blit(t_shad, (t_x+2, t_y+2))

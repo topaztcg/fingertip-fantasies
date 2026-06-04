@@ -1,0 +1,1109 @@
+{
+    "current_season": "2026-05",
+    "seasons": {
+        "2026-05": {
+            "players": {
+                "bot_scarlett": {
+                    "name": "Scarlett",
+                    "is_bot": true,
+                    "league": "05",
+                    "points": 810,
+                    "total_damage": 2970,
+                    "wins": 45,
+                    "losses": 23,
+                    "games_played": 68
+                },
+                "bot_lexi": {
+                    "name": "Lexi",
+                    "is_bot": true,
+                    "league": "04",
+                    "points": 630,
+                    "total_damage": 1817,
+                    "wins": 30,
+                    "losses": 11,
+                    "games_played": 41
+                },
+                "bot_roxanne": {
+                    "name": "Roxanne",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 50,
+                    "total_damage": 0,
+                    "wins": 0,
+                    "losses": 0,
+                    "games_played": 0
+                },
+                "bot_adriana": {
+                    "name": "Adriana",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 50,
+                    "total_damage": 0,
+                    "wins": 0,
+                    "losses": 0,
+                    "games_played": 0
+                },
+                "bot_jade": {
+                    "name": "Jade",
+                    "is_bot": true,
+                    "league": "04",
+                    "points": 705,
+                    "total_damage": 2736,
+                    "wins": 39,
+                    "losses": 23,
+                    "games_played": 62
+                },
+                "bot_raven": {
+                    "name": "Raven",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 50,
+                    "total_damage": 0,
+                    "wins": 0,
+                    "losses": 0,
+                    "games_played": 0
+                },
+                "bot_bianca": {
+                    "name": "Bianca",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 45,
+                    "total_damage": 462,
+                    "wins": 4,
+                    "losses": 7,
+                    "games_played": 11
+                },
+                "bot_sienna": {
+                    "name": "Sienna",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 170,
+                    "total_damage": 1757,
+                    "wins": 17,
+                    "losses": 24,
+                    "games_played": 41
+                },
+                "bot_stella": {
+                    "name": "Stella",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 50,
+                    "total_damage": 0,
+                    "wins": 0,
+                    "losses": 0,
+                    "games_played": 0
+                },
+                "bot_maya": {
+                    "name": "Maya",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 50,
+                    "total_damage": 0,
+                    "wins": 0,
+                    "losses": 0,
+                    "games_played": 0
+                },
+                "bot_selene": {
+                    "name": "Selene",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 50,
+                    "total_damage": 0,
+                    "wins": 0,
+                    "losses": 0,
+                    "games_played": 0
+                },
+                "bot_lola": {
+                    "name": "Lola",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 50,
+                    "total_damage": 0,
+                    "wins": 0,
+                    "losses": 0,
+                    "games_played": 0
+                },
+                "bot_giselle": {
+                    "name": "Giselle",
+                    "is_bot": true,
+                    "league": "03",
+                    "points": 500,
+                    "total_damage": 1701,
+                    "wins": 26,
+                    "losses": 13,
+                    "games_played": 39
+                },
+                "bot_talia": {
+                    "name": "Talia",
+                    "is_bot": true,
+                    "league": "03",
+                    "points": 480,
+                    "total_damage": 2343,
+                    "wins": 31,
+                    "losses": 23,
+                    "games_played": 54
+                },
+                "bot_ivy": {
+                    "name": "Ivy",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 50,
+                    "total_damage": 0,
+                    "wins": 0,
+                    "losses": 0,
+                    "games_played": 0
+                },
+                "bot_fiona": {
+                    "name": "Fiona",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 165,
+                    "total_damage": 474,
+                    "wins": 7,
+                    "losses": 4,
+                    "games_played": 11
+                },
+                "bot_vixen": {
+                    "name": "Vixen",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 50,
+                    "total_damage": 0,
+                    "wins": 0,
+                    "losses": 0,
+                    "games_played": 0
+                },
+                "bot_margo": {
+                    "name": "Margo",
+                    "is_bot": true,
+                    "league": "02",
+                    "points": 399,
+                    "total_damage": 2161,
+                    "wins": 29,
+                    "losses": 21,
+                    "games_played": 50
+                },
+                "bot_layla": {
+                    "name": "Layla",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 50,
+                    "total_damage": 0,
+                    "wins": 0,
+                    "losses": 0,
+                    "games_played": 0
+                },
+                "bot_cleo": {
+                    "name": "Cleo",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 169,
+                    "total_damage": 1484,
+                    "wins": 16,
+                    "losses": 19,
+                    "games_played": 35
+                },
+                "bot_zara": {
+                    "name": "Zara",
+                    "is_bot": true,
+                    "league": "03",
+                    "points": 505,
+                    "total_damage": 2124,
+                    "wins": 30,
+                    "losses": 19,
+                    "games_played": 49
+                },
+                "bot_sasha": {
+                    "name": "Sasha",
+                    "is_bot": true,
+                    "league": "02",
+                    "points": 285,
+                    "total_damage": 1041,
+                    "wins": 15,
+                    "losses": 9,
+                    "games_played": 24
+                },
+                "bot_amber": {
+                    "name": "Amber",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 50,
+                    "total_damage": 0,
+                    "wins": 0,
+                    "losses": 0,
+                    "games_played": 0
+                },
+                "bot_melody": {
+                    "name": "Melody",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 50,
+                    "total_damage": 0,
+                    "wins": 0,
+                    "losses": 0,
+                    "games_played": 0
+                },
+                "bot_nikita": {
+                    "name": "Nikita",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 110,
+                    "total_damage": 1531,
+                    "wins": 14,
+                    "losses": 22,
+                    "games_played": 36
+                },
+                "bot_lexa": {
+                    "name": "Lexa",
+                    "is_bot": true,
+                    "league": "03",
+                    "points": 435,
+                    "total_damage": 2156,
+                    "wins": 29,
+                    "losses": 21,
+                    "games_played": 50
+                },
+                "bot_jasmine": {
+                    "name": "Jasmine",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 50,
+                    "total_damage": 0,
+                    "wins": 0,
+                    "losses": 0,
+                    "games_played": 0
+                },
+                "bot_claudia": {
+                    "name": "Claudia",
+                    "is_bot": true,
+                    "league": "02",
+                    "points": 270,
+                    "total_damage": 1756,
+                    "wins": 21,
+                    "losses": 19,
+                    "games_played": 40
+                },
+                "bot_sabrina": {
+                    "name": "Sabrina",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 144,
+                    "total_damage": 2117,
+                    "wins": 21,
+                    "losses": 29,
+                    "games_played": 50
+                },
+                "bot_valerie": {
+                    "name": "Valerie",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 50,
+                    "total_damage": 0,
+                    "wins": 0,
+                    "losses": 0,
+                    "games_played": 0
+                },
+                "bot_monica": {
+                    "name": "Monica",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 50,
+                    "total_damage": 0,
+                    "wins": 0,
+                    "losses": 0,
+                    "games_played": 0
+                },
+                "bot_serena": {
+                    "name": "Serena",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 50,
+                    "total_damage": 1009,
+                    "wins": 9,
+                    "losses": 15,
+                    "games_played": 24
+                },
+                "bot_nadia": {
+                    "name": "Nadia",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 50,
+                    "total_damage": 0,
+                    "wins": 0,
+                    "losses": 0,
+                    "games_played": 0
+                },
+                "bot_tara": {
+                    "name": "Tara",
+                    "is_bot": true,
+                    "league": "02",
+                    "points": 235,
+                    "total_damage": 483,
+                    "wins": 9,
+                    "losses": 2,
+                    "games_played": 11
+                },
+                "bot_macy": {
+                    "name": "Macy",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 85,
+                    "total_damage": 1649,
+                    "wins": 13,
+                    "losses": 26,
+                    "games_played": 39
+                },
+                "bot_estelle": {
+                    "name": "Estelle",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 50,
+                    "total_damage": 0,
+                    "wins": 0,
+                    "losses": 0,
+                    "games_played": 0
+                },
+                "bot_elektra": {
+                    "name": "Elektra",
+                    "is_bot": true,
+                    "league": "02",
+                    "points": 314,
+                    "total_damage": 1639,
+                    "wins": 21,
+                    "losses": 17,
+                    "games_played": 38
+                },
+                "bot_delilah": {
+                    "name": "Delilah",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 125,
+                    "total_damage": 479,
+                    "wins": 6,
+                    "losses": 5,
+                    "games_played": 11
+                },
+                "bot_brielle": {
+                    "name": "Brielle",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 90,
+                    "total_damage": 1025,
+                    "wins": 10,
+                    "losses": 14,
+                    "games_played": 24
+                },
+                "bot_callie": {
+                    "name": "Callie",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 35,
+                    "total_damage": 1626,
+                    "wins": 13,
+                    "losses": 25,
+                    "games_played": 38
+                },
+                "bot_freya": {
+                    "name": "Freya",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 70,
+                    "total_damage": 1731,
+                    "wins": 14,
+                    "losses": 27,
+                    "games_played": 41
+                },
+                "bot_kali": {
+                    "name": "Kali",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 50,
+                    "total_damage": 0,
+                    "wins": 0,
+                    "losses": 0,
+                    "games_played": 0
+                },
+                "bot_paris": {
+                    "name": "Paris",
+                    "is_bot": true,
+                    "league": "03",
+                    "points": 570,
+                    "total_damage": 2218,
+                    "wins": 34,
+                    "losses": 17,
+                    "games_played": 51
+                },
+                "bot_simone": {
+                    "name": "Simone",
+                    "is_bot": true,
+                    "league": "02",
+                    "points": 235,
+                    "total_damage": 489,
+                    "wins": 9,
+                    "losses": 2,
+                    "games_played": 11
+                },
+                "bot_vanessa": {
+                    "name": "Vanessa",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 50,
+                    "total_damage": 0,
+                    "wins": 0,
+                    "losses": 0,
+                    "games_played": 0
+                },
+                "bot_ruby": {
+                    "name": "Ruby",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 50,
+                    "total_damage": 0,
+                    "wins": 0,
+                    "losses": 0,
+                    "games_played": 0
+                },
+                "bot_eliza": {
+                    "name": "Eliza",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 50,
+                    "total_damage": 0,
+                    "wins": 0,
+                    "losses": 0,
+                    "games_played": 0
+                },
+                "bot_blair": {
+                    "name": "Blair",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 50,
+                    "total_damage": 0,
+                    "wins": 0,
+                    "losses": 0,
+                    "games_played": 0
+                },
+                "bot_harlow": {
+                    "name": "Harlow",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 35,
+                    "total_damage": 1744,
+                    "wins": 11,
+                    "losses": 30,
+                    "games_played": 41
+                },
+                "bot_gia": {
+                    "name": "Gia",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 50,
+                    "total_damage": 0,
+                    "wins": 0,
+                    "losses": 0,
+                    "games_played": 0
+                },
+                "bot_saffron": {
+                    "name": "Saffron",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 50,
+                    "total_damage": 0,
+                    "wins": 0,
+                    "losses": 0,
+                    "games_played": 0
+                },
+                "bot_lilah": {
+                    "name": "Lilah",
+                    "is_bot": true,
+                    "league": "02",
+                    "points": 330,
+                    "total_damage": 2854,
+                    "wins": 32,
+                    "losses": 35,
+                    "games_played": 67
+                },
+                "bot_misty": {
+                    "name": "Misty",
+                    "is_bot": true,
+                    "league": "02",
+                    "points": 315,
+                    "total_damage": 1550,
+                    "wins": 20,
+                    "losses": 16,
+                    "games_played": 36
+                },
+                "bot_kendall": {
+                    "name": "Kendall",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 50,
+                    "total_damage": 0,
+                    "wins": 0,
+                    "losses": 0,
+                    "games_played": 0
+                },
+                "bot_reina": {
+                    "name": "Reina",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 70,
+                    "total_damage": 1488,
+                    "wins": 13,
+                    "losses": 22,
+                    "games_played": 35
+                },
+                "bot_diamond": {
+                    "name": "Diamond",
+                    "is_bot": true,
+                    "league": "02",
+                    "points": 345,
+                    "total_damage": 1773,
+                    "wins": 23,
+                    "losses": 18,
+                    "games_played": 41
+                },
+                "bot_mira": {
+                    "name": "Mira",
+                    "is_bot": true,
+                    "league": "03",
+                    "points": 589,
+                    "total_damage": 2741,
+                    "wins": 38,
+                    "losses": 25,
+                    "games_played": 63
+                },
+                "bot_indigo": {
+                    "name": "Indigo",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 50,
+                    "total_damage": 0,
+                    "wins": 0,
+                    "losses": 0,
+                    "games_played": 0
+                },
+                "bot_angelina": {
+                    "name": "Angelina",
+                    "is_bot": true,
+                    "league": "03",
+                    "points": 520,
+                    "total_damage": 2275,
+                    "wins": 30,
+                    "losses": 23,
+                    "games_played": 53
+                },
+                "bot_belle": {
+                    "name": "Belle",
+                    "is_bot": true,
+                    "league": "02",
+                    "points": 285,
+                    "total_damage": 2870,
+                    "wins": 30,
+                    "losses": 37,
+                    "games_played": 67
+                },
+                "bot_candice": {
+                    "name": "Candice",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 50,
+                    "total_damage": 0,
+                    "wins": 0,
+                    "losses": 0,
+                    "games_played": 0
+                },
+                "bot_kiana": {
+                    "name": "Kiana",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 50,
+                    "total_damage": 0,
+                    "wins": 0,
+                    "losses": 0,
+                    "games_played": 0
+                },
+                "bot_natalia": {
+                    "name": "Natalia",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 0,
+                    "total_damage": 474,
+                    "wins": 2,
+                    "losses": 9,
+                    "games_played": 11
+                },
+                "bot_ophelia": {
+                    "name": "Ophelia",
+                    "is_bot": true,
+                    "league": "02",
+                    "points": 389,
+                    "total_damage": 1645,
+                    "wins": 23,
+                    "losses": 15,
+                    "games_played": 38
+                },
+                "bot_phoebe": {
+                    "name": "Phoebe",
+                    "is_bot": true,
+                    "league": "02",
+                    "points": 210,
+                    "total_damage": 2244,
+                    "wins": 24,
+                    "losses": 29,
+                    "games_played": 53
+                },
+                "bot_skye": {
+                    "name": "Skye",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 50,
+                    "total_damage": 0,
+                    "wins": 0,
+                    "losses": 0,
+                    "games_played": 0
+                },
+                "bot_veronica": {
+                    "name": "Veronica",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 50,
+                    "total_damage": 0,
+                    "wins": 0,
+                    "losses": 0,
+                    "games_played": 0
+                },
+                "bot_yasmine": {
+                    "name": "Yasmine",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 115,
+                    "total_damage": 1070,
+                    "wins": 11,
+                    "losses": 14,
+                    "games_played": 25
+                },
+                "bot_zoey": {
+                    "name": "Zoey",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 35,
+                    "total_damage": 1478,
+                    "wins": 11,
+                    "losses": 24,
+                    "games_played": 35
+                },
+                "bot_athena": {
+                    "name": "Athena",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 60,
+                    "total_damage": 2808,
+                    "wins": 25,
+                    "losses": 41,
+                    "games_played": 66
+                },
+                "bot_callista": {
+                    "name": "Callista",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 25,
+                    "total_damage": 1677,
+                    "wins": 13,
+                    "losses": 27,
+                    "games_played": 40
+                },
+                "bot_dahlia": {
+                    "name": "Dahlia",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 50,
+                    "total_damage": 0,
+                    "wins": 0,
+                    "losses": 0,
+                    "games_played": 0
+                },
+                "bot_eden": {
+                    "name": "Eden",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 50,
+                    "total_damage": 0,
+                    "wins": 0,
+                    "losses": 0,
+                    "games_played": 0
+                },
+                "bot_faye": {
+                    "name": "Faye",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 189,
+                    "total_damage": 494,
+                    "wins": 8,
+                    "losses": 3,
+                    "games_played": 11
+                },
+                "bot_genevieve": {
+                    "name": "Genevieve",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 50,
+                    "total_damage": 0,
+                    "wins": 0,
+                    "losses": 0,
+                    "games_played": 0
+                },
+                "bot_hazel": {
+                    "name": "Hazel",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 95,
+                    "total_damage": 1574,
+                    "wins": 15,
+                    "losses": 22,
+                    "games_played": 37
+                },
+                "bot_isla": {
+                    "name": "Isla",
+                    "is_bot": true,
+                    "league": "04",
+                    "points": 610,
+                    "total_damage": 2294,
+                    "wins": 34,
+                    "losses": 19,
+                    "games_played": 53
+                },
+                "bot_juno": {
+                    "name": "Juno",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 50,
+                    "total_damage": 0,
+                    "wins": 0,
+                    "losses": 0,
+                    "games_played": 0
+                },
+                "bot_katia": {
+                    "name": "Katia",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 50,
+                    "total_damage": 0,
+                    "wins": 0,
+                    "losses": 0,
+                    "games_played": 0
+                },
+                "bot_luna": {
+                    "name": "Luna",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 165,
+                    "total_damage": 476,
+                    "wins": 7,
+                    "losses": 4,
+                    "games_played": 11
+                },
+                "bot_nyx": {
+                    "name": "Nyx",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 80,
+                    "total_damage": 1634,
+                    "wins": 15,
+                    "losses": 23,
+                    "games_played": 38
+                },
+                "bot_olive": {
+                    "name": "Olive",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 174,
+                    "total_damage": 2265,
+                    "wins": 21,
+                    "losses": 32,
+                    "games_played": 53
+                },
+                "bot_piper": {
+                    "name": "Piper",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 50,
+                    "total_damage": 0,
+                    "wins": 0,
+                    "losses": 0,
+                    "games_played": 0
+                },
+                "bot_quinn": {
+                    "name": "Quinn",
+                    "is_bot": true,
+                    "league": "04",
+                    "points": 630,
+                    "total_damage": 2918,
+                    "wins": 41,
+                    "losses": 26,
+                    "games_played": 67
+                },
+                "bot_rhiannon": {
+                    "name": "Rhiannon",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 10,
+                    "total_damage": 1738,
+                    "wins": 14,
+                    "losses": 27,
+                    "games_played": 41
+                },
+                "bot_sloane": {
+                    "name": "Sloane",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 50,
+                    "total_damage": 0,
+                    "wins": 0,
+                    "losses": 0,
+                    "games_played": 0
+                },
+                "bot_tessa": {
+                    "name": "Tessa",
+                    "is_bot": true,
+                    "league": "02",
+                    "points": 375,
+                    "total_damage": 1524,
+                    "wins": 21,
+                    "losses": 14,
+                    "games_played": 35
+                },
+                "bot_uma": {
+                    "name": "Uma",
+                    "is_bot": true,
+                    "league": "03",
+                    "points": 575,
+                    "total_damage": 2632,
+                    "wins": 37,
+                    "losses": 24,
+                    "games_played": 61
+                },
+                "bot_vada": {
+                    "name": "Vada",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 60,
+                    "total_damage": 1694,
+                    "wins": 15,
+                    "losses": 25,
+                    "games_played": 40
+                },
+                "bot_willa": {
+                    "name": "Willa",
+                    "is_bot": true,
+                    "league": "03",
+                    "points": 410,
+                    "total_damage": 2342,
+                    "wins": 28,
+                    "losses": 27,
+                    "games_played": 55
+                },
+                "bot_xenia": {
+                    "name": "Xenia",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 50,
+                    "total_damage": 0,
+                    "wins": 0,
+                    "losses": 0,
+                    "games_played": 0
+                },
+                "bot_yara": {
+                    "name": "Yara",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 50,
+                    "total_damage": 0,
+                    "wins": 0,
+                    "losses": 0,
+                    "games_played": 0
+                },
+                "bot_zelda": {
+                    "name": "Zelda",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 50,
+                    "total_damage": 0,
+                    "wins": 0,
+                    "losses": 0,
+                    "games_played": 0
+                },
+                "bot_aria": {
+                    "name": "Aria",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 65,
+                    "total_damage": 1452,
+                    "wins": 13,
+                    "losses": 21,
+                    "games_played": 34
+                },
+                "bot_briar": {
+                    "name": "Briar",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 50,
+                    "total_damage": 0,
+                    "wins": 0,
+                    "losses": 0,
+                    "games_played": 0
+                },
+                "bot_cassia": {
+                    "name": "Cassia",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 50,
+                    "total_damage": 0,
+                    "wins": 0,
+                    "losses": 0,
+                    "games_played": 0
+                },
+                "bot_devon": {
+                    "name": "Devon",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 120,
+                    "total_damage": 1625,
+                    "wins": 16,
+                    "losses": 22,
+                    "games_played": 38
+                },
+                "bot_ember": {
+                    "name": "Ember",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 95,
+                    "total_damage": 895,
+                    "wins": 9,
+                    "losses": 12,
+                    "games_played": 21
+                },
+                "bot_florence": {
+                    "name": "Florence",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 15,
+                    "total_damage": 1237,
+                    "wins": 10,
+                    "losses": 19,
+                    "games_played": 29
+                },
+                "Ember": {
+                    "name": "Ember",
+                    "is_bot": false,
+                    "league": "01",
+                    "points": 35,
+                    "total_damage": 41,
+                    "wins": 0,
+                    "losses": 1,
+                    "games_played": 1
+                },
+                "ClihQueen": {
+                    "name": "ClihQueen",
+                    "is_bot": false,
+                    "league": "01",
+                    "points": 75,
+                    "total_damage": 102,
+                    "wins": 1,
+                    "losses": 0,
+                    "games_played": 1
+                },
+                "PuhQueen": {
+                    "name": "PuhQueen",
+                    "is_bot": false,
+                    "league": "01",
+                    "points": 115,
+                    "total_damage": 1066,
+                    "wins": 5,
+                    "losses": 4,
+                    "games_played": 9
+                },
+                "Scarlett": {
+                    "name": "Scarlett",
+                    "is_bot": false,
+                    "league": "01",
+                    "points": 35,
+                    "total_damage": 116,
+                    "wins": 0,
+                    "losses": 1,
+                    "games_played": 1
+                },
+                "Aria": {
+                    "name": "Aria",
+                    "is_bot": false,
+                    "league": "01",
+                    "points": 35,
+                    "total_damage": 124,
+                    "wins": 0,
+                    "losses": 1,
+                    "games_played": 1
+                },
+                "Zara": {
+                    "name": "Zara",
+                    "is_bot": false,
+                    "league": "01",
+                    "points": 60,
+                    "total_damage": 218,
+                    "wins": 1,
+                    "losses": 1,
+                    "games_played": 2
+                },
+                "Nikita": {
+                    "name": "Nikita",
+                    "is_bot": false,
+                    "league": "01",
+                    "points": 100,
+                    "total_damage": 214,
+                    "wins": 2,
+                    "losses": 0,
+                    "games_played": 2
+                },
+                "Hazel": {
+                    "name": "Hazel",
+                    "is_bot": false,
+                    "league": "01",
+                    "points": 75,
+                    "total_damage": 112,
+                    "wins": 1,
+                    "losses": 0,
+                    "games_played": 1
+                },
+                "Nyx": {
+                    "name": "Nyx",
+                    "is_bot": false,
+                    "league": "01",
+                    "points": 35,
+                    "total_damage": 146,
+                    "wins": 0,
+                    "losses": 1,
+                    "games_played": 1
+                },
+                "Serena": {
+                    "name": "Serena",
+                    "is_bot": false,
+                    "league": "01",
+                    "points": 35,
+                    "total_damage": 112,
+                    "wins": 0,
+                    "losses": 1,
+                    "games_played": 1
+                },
+                "Brielle": {
+                    "name": "Brielle",
+                    "is_bot": false,
+                    "league": "01",
+                    "points": 35,
+                    "total_damage": 132,
+                    "wins": 0,
+                    "losses": 1,
+                    "games_played": 1
+                }
+            }
+        }
+    }
+}

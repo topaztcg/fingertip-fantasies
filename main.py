@@ -1,5 +1,8 @@
 import pygame
 import sys
+import subprocess
+import atexit
+import os
 
 
 from screens.main_menu import show_main_menu
@@ -8,7 +11,9 @@ from screens.profile_screen import show_profile_screen
 from screens.collection_screen import show_collection_screen
 from screens.deck_screen import show_deck_screen
 from screens.gameplay_screen import show_gameplay_screen
+from screens.leaderboard_screen import show_leaderboard_screen
 from ui_components import update_animations
+from leaderboard_manager import LeaderboardManager
 
 # NO REPLAY IMPORTS HERE
 from user_manager import UserManager
@@ -33,6 +38,13 @@ GAME_STATE = {
 
 
 def main():
+    sim_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "background_simulator.py")
+    try:
+        sim_proc = subprocess.Popen([sys.executable, sim_path])
+        atexit.register(lambda: sim_proc.terminate() if sim_proc.poll() is None else None)
+    except Exception as e:
+        print("Failed to start simulator:", e)
+
     current_scene = "MAIN_MENU"
     user_mgr = UserManager()
     card_mgr = CardManager()
@@ -62,14 +74,18 @@ def main():
                 if GAME_STATE["current_user"] != "Guest":
                     result = show_profile_screen(screen, GAME_STATE["current_user"])
 
-                    if result and isinstance(result, tuple) and result[0] == "UPDATE_USER":
-                        new_name = result[1]
-                        GAME_STATE["current_user"] = new_name
-                        raw = user_mgr.get_avatar_image(new_name)
-                        if raw:
-                            GAME_STATE["avatar_surf"] = pygame.transform.scale(raw, (130, 130))
-                        else:
-                            GAME_STATE["avatar_surf"] = None
+                    if result and isinstance(result, tuple):
+                        if result[0] == "UPDATE_USER":
+                            new_name = result[1]
+                            GAME_STATE["current_user"] = new_name
+                            raw = user_mgr.get_avatar_image(new_name)
+                            if raw:
+                                GAME_STATE["avatar_surf"] = pygame.transform.scale(raw, (130, 130))
+                            else:
+                                GAME_STATE["avatar_surf"] = None
+                        elif result[0] == "OPEN_LEADERBOARD":
+                            current_scene = "LEADERBOARD_DIRECT"
+                            GAME_STATE["target_league"] = result[1]
 
             elif choice == "COLLECTION":
                 show_collection_screen(screen)
@@ -80,9 +96,38 @@ def main():
                 else:
                     show_deck_screen(screen, GAME_STATE["current_user"])
 
-            # --- ACHIEVEMENTS PLACEHOLDER ---
-            elif choice == "ACHIEVEMENTS":
-                print("Achievements feature is currently disabled.")
+            # --- ACHIEVEMENTS / LEADERBOARD ---
+            elif choice == "LEADERBOARD" or current_scene == "LEADERBOARD_DIRECT":
+                current_target_league = GAME_STATE.pop("target_league", None)
+                if current_scene == "LEADERBOARD_DIRECT":
+                    current_scene = "MAIN_MENU" # reset state so we don't get stuck
+                
+                while True:
+                    lb_res = show_leaderboard_screen(screen, GAME_STATE["current_user"], initial_league=current_target_league)
+                    if isinstance(lb_res, tuple) and lb_res[0] == "OPEN_PROFILE":
+                        target_user = lb_res[1]
+                        # We pass the target user. If it's a bot, profile screen handles it gracefully.
+                        res = show_profile_screen(screen, target_user)
+                        
+                        if res and isinstance(res, tuple):
+                            if res[0] == "UPDATE_USER":
+                                # Only update current_user if the user edited their own profile
+                                if target_user == GAME_STATE["current_user"]:
+                                    new_name = res[1]
+                                    GAME_STATE["current_user"] = new_name
+                                    raw = user_mgr.get_avatar_image(new_name)
+                                    if raw:
+                                        GAME_STATE["avatar_surf"] = pygame.transform.scale(raw, (130, 130))
+                                    else:
+                                        GAME_STATE["avatar_surf"] = None
+                                current_target_league = None # Default reload
+                            elif res[0] == "OPEN_LEADERBOARD":
+                                current_target_league = res[1]
+                        else:
+                            # User closed profile via Back button, keep current_target_league unchanged to return to same screen
+                            pass
+                    else:
+                        break # Back button on Leaderboard returns to Main Menu
 
             elif choice == "PLAY":
                 if GAME_STATE["current_user"] == "Guest":
@@ -106,9 +151,18 @@ def main():
                                 player_deck_data.append(found)
 
                         if len(player_deck_data) < 3:
-                            print(f"Deck '{first_deck_name}' is invalid (Less than 3 cards).")
+                            print(f"Deck '{active_name}' is invalid (Less than 3 cards).")
                         else:
-                            show_gameplay_screen(screen, player_deck_data, GAME_STATE["current_user"])
+                            lb_mgr = LeaderboardManager()
+                            opp = lb_mgr.find_match(GAME_STATE["current_user"])
+                            
+                            if opp and opp.get("is_bot"):
+                                lb_mgr.lock_bot(opp["name"])
+                                
+                            show_gameplay_screen(screen, player_deck_data, GAME_STATE["current_user"], opp)
+                            
+                            if opp and opp.get("is_bot"):
+                                lb_mgr.unlock_bot(opp["name"])
 
         elif current_scene == "LOGIN_SCREEN":
             result, data = show_login_screen(screen)

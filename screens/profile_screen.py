@@ -4,7 +4,7 @@ import sys
 import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from tkinter import filedialog
-from ui_components import Button, InputBox, TEXT_COLOR, BG_FALLBACK, PROFILE_BG, BUTTON_BORDER, get_font, update_animations, spawn_particles, update_juice, draw_juice_overlays
+from ui_components import Button, InputBox, TEXT_COLOR, BG_FALLBACK, PROFILE_BG, BUTTON_BORDER, get_font, update_animations, spawn_particles, update_juice, draw_juice_overlays, COLOR_PASSIVE, TEXT_SHADOW
 from user_manager import UserManager
 
 
@@ -19,27 +19,65 @@ def get_image_from_pc():
     return file_path
 
 
-def show_profile_screen(screen, username):
+def show_profile_screen(screen, player_id, is_own_profile=True):
     clock = pygame.time.Clock()
     user_mgr = UserManager()
-
-    original_username = username
-    raw_avatar = user_mgr.get_avatar_image(username)
-    stats = user_mgr.get_user_stats(username)
+    
+    from leaderboard_manager import LeaderboardManager
+    lb_mgr = LeaderboardManager()
+    
+    # Get REAL stats from LeaderboardManager
+    p_data = lb_mgr.get_player_data(player_id)
+    is_bot = p_data.get("is_bot", False)
+    display_name = p_data.get("name", player_id)
+    
+    original_username = display_name
+            
+    if is_bot:
+        is_own_profile = False
+        bot_config = lb_mgr.fake_players.get(player_id)
+        raw_avatar = None
+        if bot_config and bot_config.get("pfp_path") and os.path.exists(bot_config["pfp_path"]):
+            raw_avatar = pygame.image.load(bot_config["pfp_path"]).convert_alpha()
+        stats = {}
+    else:
+        raw_avatar = user_mgr.get_avatar_image(player_id)
+        stats = user_mgr.get_user_stats(player_id)
+        
+    stats["wins"] = p_data.get("wins", stats.get("wins", 0))
+    stats["losses"] = p_data.get("losses", stats.get("losses", 0))
+    stats["games_played"] = p_data.get("games_played", stats.get("games_played", 0))
+    
+    global_rank = lb_mgr.get_player_rank(player_id)
+    
+    league_id = p_data.get("league", "unranked")
+    league_name = league_id.upper()
+    for l in lb_mgr.leagues:
+        if l["id"] == league_id:
+            league_name = l["name"]
+            break
+            
+    league_rank = lb_mgr.get_player_league_rank(player_id, league_id)
+    
+    stats["global_rank"] = global_rank
+    stats["league_id"] = league_id
+    stats["league_name"] = league_name
+    stats["league_rank"] = league_rank
 
     editing_mode = False
     viewing_fullscreen = False
+    league_rect = pygame.Rect(-1000, -1000, 0, 0)
 
     temp_avatar_surf = None
     # Input box now uses theme colors automatically from ui_components
-    input_name = InputBox(0, 0, 300, 50, text=username)
+    input_name = InputBox(0, 0, 300, 50, text=original_username)
 
     def get_display_avatar(raw, temp):
         source = temp if temp else raw
         if source:
             return pygame.transform.scale(source, (350, 350))
         s = pygame.Surface((350, 350))
-        s.fill((60, 20, 80))  # Dark Purple placeholder
+        s.fill(COLOR_PASSIVE)  # Soft Lilac placeholder
         return s
 
     def get_fullscreen_avatar(raw, temp):
@@ -48,11 +86,11 @@ def show_profile_screen(screen, username):
             return pygame.transform.scale(source, (900, 900))
         return None
 
-    card_w, card_h = 800, 600
+    card_w, card_h = 1000, 700
     card_rect = pygame.Rect((screen.get_width() - card_w) // 2, (screen.get_height() - card_h) // 2, card_w, card_h)
 
     # Shift Avatar down to clear the name
-    avatar_rect = pygame.Rect(card_rect.x + 50, card_rect.y + 140, 350, 350)
+    avatar_rect = pygame.Rect(card_rect.x + 80, card_rect.y + 160, 350, 350)
     
     input_name.rect.x = card_rect.x + 50
     input_name.rect.y = card_rect.y + 40
@@ -118,12 +156,16 @@ def show_profile_screen(screen, username):
                                     status_msg = "Error loading image"
 
                     else:
-                        if btn_edit.check_input(mouse_pos):
+                        if is_own_profile and btn_edit.check_input(mouse_pos):
                             editing_mode = True
                             status_msg = ""
 
                         if avatar_rect.collidepoint(mouse_pos):
                             viewing_fullscreen = True
+                            
+                        # Check League click
+                        if league_rect.collidepoint(mouse_pos):
+                            return ("OPEN_LEADERBOARD", stats.get("league_id", "unranked"))
 
         if viewing_fullscreen:
             screen.fill((0, 0, 0))
@@ -141,7 +183,7 @@ def show_profile_screen(screen, username):
             # Dark overlay
             overlay = pygame.Surface((screen.get_width(), screen.get_height()))
             overlay.set_alpha(150)
-            overlay.fill((10, 5, 20))
+            overlay.fill(BG_FALLBACK)
             screen.blit(overlay, (0, 0))
 
             # Card BG - Use Panel Style
@@ -172,7 +214,7 @@ def show_profile_screen(screen, username):
                 # Draw a semi transparent band at bottom of avatar
                 upload_band = pygame.Surface((350, 50))
                 upload_band.set_alpha(200)
-                upload_band.fill((0, 0, 0))
+                upload_band.fill(PROFILE_BG)
                 screen.blit(upload_band, (avatar_rect.x, avatar_rect.bottom - 50))
 
                 hint = font_small.render("CLICK TO UPLOAD", True, (255, 255, 255))
@@ -180,7 +222,7 @@ def show_profile_screen(screen, username):
             else:
                 # Render Username with Shadow/Outline for pop
                 name_surf = font_name.render(original_username, True, TEXT_COLOR)
-                name_shad = font_name.render(original_username, True, (100, 40, 80))
+                name_shad = font_name.render(original_username, True, TEXT_SHADOW)
                 
                 # Position
                 name_pos = (card_rect.x + 50, name_y)
@@ -188,7 +230,7 @@ def show_profile_screen(screen, username):
                 screen.blit(name_surf, name_pos)
 
             # Stats Panel (Right Side)
-            stats_x = avatar_rect.right + 40
+            stats_x = avatar_rect.right + 80
             stats_y = avatar_rect.y
             stats_w = card_rect.right - stats_x - 40
             stats_h = avatar_rect.height
@@ -196,27 +238,38 @@ def show_profile_screen(screen, username):
             # Semi-transparent stats background
             stats_bg = pygame.Surface((stats_w, stats_h))
             stats_bg.set_alpha(50)
-            stats_bg.fill((255, 200, 220)) # Light Pink tint
+            stats_bg.fill(COLOR_PASSIVE) # Soft Lilac tint
             screen.blit(stats_bg, (stats_x, stats_y))
             pygame.draw.rect(screen, BUTTON_BORDER, (stats_x, stats_y, stats_w, stats_h), 2, border_radius=10)
 
             stats_list = [
-                ("Rank", stats.get('rank', 'N/A')),
+                ("Global Rank", f"#{stats.get('global_rank', 'N/A')}"),
+                ("League", f"{stats.get('league_name', 'N/A')} (#{stats.get('league_rank', 'N/A')})"),
                 ("Wins", str(stats.get('wins', 0))),
                 ("Losses", str(stats.get('losses', 0))),
                 ("Games", str(stats.get('games_played', 0)))
             ]
             
             for i, (label, val) in enumerate(stats_list):
-                line_y = stats_y + 30 + (i * 70)
+                line_y = stats_y + 25 + (i * 55)
                 
-                # Label (Pink)
-                lbl_surf = font_stats.render(f"{label}:", True, (255, 180, 220))
+                # Label
+                lbl_col = (255, 180, 220)
+                if label == "League": lbl_col = (200, 200, 255) # distinguish it
+                lbl_surf = font_stats.render(f"{label}:", True, lbl_col)
                 screen.blit(lbl_surf, (stats_x + 20, line_y))
                 
-                # Value (White)
+                # Value
                 val_surf = font_stats.render(val, True, TEXT_COLOR)
-                screen.blit(val_surf, (stats_x + 20 + lbl_surf.get_width() + 15, line_y))
+                val_x = stats_x + 20 + lbl_surf.get_width() + 15
+                screen.blit(val_surf, (val_x, line_y))
+                
+                if label == "League":
+                    # Capture rect for clicking
+                    league_rect = pygame.Rect(stats_x + 20, line_y, lbl_surf.get_width() + 15 + val_surf.get_width(), 40)
+                    # Draw a subtle underline on hover
+                    if league_rect.collidepoint(mouse_pos):
+                        pygame.draw.line(screen, (200, 200, 255), (stats_x + 20, line_y + 35), (val_x + val_surf.get_width(), line_y + 35), 2)
 
             if status_msg:
                 msg = font_small.render(status_msg, True, (255, 100, 100))
@@ -230,8 +283,9 @@ def show_profile_screen(screen, username):
             else:
                 # Update Edit Button Position dynamically to align with Username
                 # But keep it simple for now, fixed position top right is okay
-                btn_edit.change_color(mouse_pos)
-                btn_edit.update(screen)
+                if is_own_profile:
+                    btn_edit.change_color(mouse_pos)
+                    btn_edit.update(screen)
 
             btn_back.change_color(mouse_pos)
             btn_back.update(screen)

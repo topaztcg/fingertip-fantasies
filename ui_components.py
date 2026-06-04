@@ -8,16 +8,16 @@ import random
 pygame.font.init()
 
 # --- THE SOFT GIRL PALETTE (UPDATED) ---
-BG_FALLBACK = (45, 25, 50)
-BUTTON_BASE = (255, 160, 200)   # Hot Pastel Pink
-BUTTON_HOVER = (255, 200, 230)  # Light Pink
-BUTTON_BORDER = (255, 240, 250) # Near White Pink
+BG_FALLBACK = (28, 15, 28)      # Deep Violet-Plum
+BUTTON_BASE = (230, 110, 150)   # Seductive Rose Pink
+BUTTON_HOVER = (245, 140, 180)  # Lighter Rose
+BUTTON_BORDER = (255, 180, 210) # Soft Rose-Gold line
 TEXT_COLOR = (255, 245, 255)    # Soft White with Pink tint
-INPUT_BG = (255, 250, 255)
+INPUT_BG = (20, 10, 20)         # Fallback bg
 COLOR_ACTIVE = (255, 105, 180)  # Hot Pink
-COLOR_PASSIVE = (200, 150, 200) # Soft Lilac
-PROFILE_BG = (70, 40, 80)       # Keep dark for contrast
-TEXT_SHADOW = (100, 40, 80)     # Deep Plum for text shadows
+COLOR_PASSIVE = (200, 150, 180) # Muted Mauve
+PROFILE_BG = (45, 25, 45)       # Sleek Glass Panel
+TEXT_SHADOW = (40, 15, 40)      # Deep Plum for crisp text shadows
 
 # --- ANIMATION ENGINE ---
 class Tween:
@@ -368,9 +368,9 @@ def draw_panel(surf, x, y, w, h):
     if panel_patch and panel_patch.valid:
         panel_patch.draw(surf, (x, y, w, h))
     else:
-        # Fallback
-        pygame.draw.rect(surf, (40, 20, 60), r)
-        pygame.draw.rect(surf, (100, 50, 100), r, 3)
+        # Sleek, flat panel with thin border
+        pygame.draw.rect(surf, PROFILE_BG, r, border_radius=18)
+        pygame.draw.rect(surf, BUTTON_BORDER, r, 1, border_radius=18)
 
 
 
@@ -405,7 +405,7 @@ class FadeLayer:
         if self.alpha > 0: screen.blit(self.surf, (0, 0))
 
 
-# --- BUTTON CLASS (UPDATED FOR DYNAMIC TEXT) ---
+# --- BUTTON CLASS (UPDATED FOR SOFT GIRL AESTHETIC) ---
 class Button:
     def __init__(self, text, x, y, width, height, font_size=35):
         self.text = text
@@ -422,18 +422,28 @@ class Button:
         self.font = self.recalculate_font()
 
     def recalculate_font(self):
-        """Reduces font size until text fits inside the button width."""
+        """Reduces font size until text fits inside the button width, but respects a minimum size."""
         current_size = self.base_font_size
-        padding = 30  # Pixel buffer on sides
+        padding = 40  # 20px buffer on each side
+        min_font_size = max(18, int(self.base_font_size * 0.6)) # Don't shrink below 60% of base or 18px
 
-        while current_size > 10:  # Don't go smaller than 10px
+        while current_size > min_font_size:
             temp_font = get_font(current_size)
             w, h = temp_font.size(self.text)
             if w < (self.rect.width - padding):
                 return temp_font
-            current_size -= 2  # Shrink and retry
+            current_size -= 2
 
-        return get_font(10)  # Minimal fallback
+        # If it still doesn't fit, expand the rect!
+        final_font = get_font(current_size)
+        w, h = final_font.size(self.text)
+        if w > (self.rect.width - padding):
+            # Center-aligned expansion (expand both sides)
+            diff = w - (self.rect.width - padding)
+            self.rect.width += diff
+            self.rect.x -= diff // 2
+            
+        return final_font
 
     def check_input(self, pos):
         return self.rect.collidepoint(pos)
@@ -476,14 +486,24 @@ class Button:
             scaled = pygame.transform.scale(img, (w, h))
             screen.blit(scaled, draw_rect)
         else:
-            pygame.draw.rect(screen, self.cur_col, draw_rect, border_radius=15)
-            pygame.draw.rect(screen, BUTTON_BORDER, draw_rect, 3, border_radius=15)
+            # Subtle Drop shadow instead of retro box shadow
+            shadow_rect = draw_rect.copy()
+            shadow_rect.y += 4
+            s_surf = pygame.Surface((w, h), pygame.SRCALPHA)
+            pygame.draw.rect(s_surf, (0, 0, 0, 40), s_surf.get_rect(), border_radius=25)
+            screen.blit(s_surf, (shadow_rect.x, shadow_rect.y))
+            
+            # Base button - sleek and flat
+            pygame.draw.rect(screen, self.cur_col, draw_rect, border_radius=25)
+            
+            # Subtle 1px Border (Glass style)
+            pygame.draw.rect(screen, BUTTON_BORDER, draw_rect, 1, border_radius=25)
 
         # Draw Text (Centered)
-        # Shadow
-        shadow = self.font.render(self.text, True, (80, 40, 80))
-        shadow_rect = shadow.get_rect(center=(center[0] + 2, center[1] + 2))
-        screen.blit(shadow, shadow_rect)
+        # Crisp, single drop shadow instead of messy 5-way blur
+        shadow = self.font.render(self.text, True, TEXT_SHADOW)
+        s_rect = shadow.get_rect(center=(center[0], center[1] + 2))
+        screen.blit(shadow, s_rect)
         
         # Main Text
         txt = self.font.render(self.text, True, TEXT_COLOR)
@@ -521,11 +541,11 @@ class InputBox:
         # Decide what to show
         if not self.text and not self.active and self.placeholder:
             # Show Placeholder
-            self.txt_surface = self.font.render(self.placeholder, True, (150, 130, 160))
+            self.txt_surface = self.font.render(self.placeholder, True, COLOR_PASSIVE)
         else:
             # Show Actual Text (or stars)
             to_show = "*" * len(self.text) if self.is_password else self.text
-            self.txt_surface = self.font.render(to_show, True, (50, 20, 50)) # Dark Purple text for contrast on light BG
+            self.txt_surface = self.font.render(to_show, True, TEXT_COLOR) # Light text for dark BG
 
     def handle_event(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN:
@@ -561,15 +581,17 @@ class InputBox:
         # 1. Glow (if active)
         if self.glow_alpha > 1:
             glow_surf = pygame.Surface((self.rect.width + 10, self.rect.height + 10), pygame.SRCALPHA)
-            pygame.draw.rect(glow_surf, (*COLOR_ACTIVE, int(self.glow_alpha)), glow_surf.get_rect(), border_radius=12)
+            pygame.draw.rect(glow_surf, (*COLOR_ACTIVE, int(self.glow_alpha * 0.4)), glow_surf.get_rect(), border_radius=15)
             screen.blit(glow_surf, (self.rect.x - 5, self.rect.y - 5))
 
-        # 2. Background
-        pygame.draw.rect(screen, INPUT_BG, self.rect, border_radius=10)
+        # 2. Dark Glass Background
+        bg_surf = pygame.Surface((self.rect.width, self.rect.height), pygame.SRCALPHA)
+        pygame.draw.rect(bg_surf, (0, 0, 0, 120), bg_surf.get_rect(), border_radius=12)
+        screen.blit(bg_surf, (self.rect.x, self.rect.y))
         
-        # 3. Border
+        # 3. Delicate Border
         border_c = COLOR_ACTIVE if self.active else COLOR_PASSIVE
-        pygame.draw.rect(screen, border_c, self.rect, 2, border_radius=10)
+        pygame.draw.rect(screen, border_c, self.rect, 1 if not self.active else 2, border_radius=12)
         
         # 4. Text
         # Center vertically

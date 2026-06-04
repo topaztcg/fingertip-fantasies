@@ -118,10 +118,13 @@ class UserManager:
 
     def get_avatar_image(self, username):
         user = self.users.get(username)
+        if not user:
+            return None
+            
         # Check for both keys just in case old data exists
         avatar_data = user.get("avatar_base64") or user.get("avatar")
 
-        if not user or not avatar_data:
+        if not avatar_data:
             return None
         try:
             image_bytes = base64.b64decode(avatar_data)

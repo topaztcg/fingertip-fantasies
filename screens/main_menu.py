@@ -24,7 +24,7 @@ def show_main_menu(screen, current_user, avatar_surf=None):
         except Exception as e:
             print(f"Error loading background: {e}")
 
-    btn_width, btn_height, gap = 350, 75, 25
+    btn_width, btn_height, gap = 400, 75, 40
     center_x = screen.get_width() // 2 - (btn_width // 2)
 
     # Calculate total height to center the block of buttons
@@ -34,8 +34,8 @@ def show_main_menu(screen, current_user, avatar_surf=None):
     # Center vertically but offset slightly down to accommodate Title
     start_y = (screen.get_height() // 2) - (total_height // 2) + 60
 
-    # Renamed "REPLAYS" to "ACHIEVEMENTS" here
-    button_labels = ["PLAY", "CARD DECKS", "COLLECTION", "ACHIEVEMENTS", "SETTINGS", "QUIT"]
+    # Renamed "REPLAYS"/"ACHIEVEMENTS" to "LEADERBOARD" here
+    button_labels = ["PLAY", "CARD DECKS", "COLLECTION", "LEADERBOARD", "SETTINGS", "QUIT"]
     menu_buttons = []
 
     for i, label in enumerate(button_labels):

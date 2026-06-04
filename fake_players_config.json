@@ -1,0 +1,505 @@
+{
+    "simulation_enabled": true,
+    "bots": [
+        {
+            "id": "bot_scarlett",
+            "name": "Scarlett",
+            "pfp_path": "E:\\Downloads\\Gemini_Generated_Image_j2f8itj2f8itj2f8.png"
+        },
+        {
+            "id": "bot_lexi",
+            "name": "Lexi",
+            "pfp_path": "E:\\Downloads\\Gemini_Generated_Image_j2f8itj2f8itj2f8.png"
+        },
+        {
+            "id": "bot_roxanne",
+            "name": "Roxanne",
+            "pfp_path": "E:\\Downloads\\Gemini_Generated_Image_j2f8itj2f8itj2f8.png"
+        },
+        {
+            "id": "bot_adriana",
+            "name": "Adriana",
+            "pfp_path": "E:\\Downloads\\Gemini_Generated_Image_j2f8itj2f8itj2f8.png"
+        },
+        {
+            "id": "bot_jade",
+            "name": "Jade",
+            "pfp_path": "E:\\Downloads\\Gemini_Generated_Image_j2f8itj2f8itj2f8.png"
+        },
+        {
+            "id": "bot_raven",
+            "name": "Raven",
+            "pfp_path": "E:\\Downloads\\Gemini_Generated_Image_j2f8itj2f8itj2f8.png"
+        },
+        {
+            "id": "bot_bianca",
+            "name": "Bianca",
+            "pfp_path": "E:\\Downloads\\Gemini_Generated_Image_j2f8itj2f8itj2f8.png"
+        },
+        {
+            "id": "bot_sienna",
+            "name": "Sienna",
+            "pfp_path": "E:\\Downloads\\Gemini_Generated_Image_j2f8itj2f8itj2f8.png"
+        },
+        {
+            "id": "bot_stella",
+            "name": "Stella",
+            "pfp_path": "E:\\Downloads\\Gemini_Generated_Image_j2f8itj2f8itj2f8.png"
+        },
+        {
+            "id": "bot_maya",
+            "name": "Maya",
+            "pfp_path": "E:\\Downloads\\Gemini_Generated_Image_j2f8itj2f8itj2f8.png"
+        },
+        {
+            "id": "bot_selene",
+            "name": "Selene",
+            "pfp_path": "E:\\Downloads\\Gemini_Generated_Image_j2f8itj2f8itj2f8.png"
+        },
+        {
+            "id": "bot_lola",
+            "name": "Lola",
+            "pfp_path": "E:\\Downloads\\Gemini_Generated_Image_j2f8itj2f8itj2f8.png"
+        },
+        {
+            "id": "bot_giselle",
+            "name": "Giselle",
+            "pfp_path": "E:\\Downloads\\Gemini_Generated_Image_j2f8itj2f8itj2f8.png"
+        },
+        {
+            "id": "bot_talia",
+            "name": "Talia",
+            "pfp_path": "E:\\Downloads\\Gemini_Generated_Image_j2f8itj2f8itj2f8.png"
+        },
+        {
+            "id": "bot_ivy",
+            "name": "Ivy",
+            "pfp_path": "E:\\Downloads\\Gemini_Generated_Image_j2f8itj2f8itj2f8.png"
+        },
+        {
+            "id": "bot_fiona",
+            "name": "Fiona",
+            "pfp_path": "E:\\Downloads\\Gemini_Generated_Image_j2f8itj2f8itj2f8.png"
+        },
+        {
+            "id": "bot_vixen",
+            "name": "Vixen",
+            "pfp_path": "E:\\Downloads\\Gemini_Generated_Image_j2f8itj2f8itj2f8.png"
+        },
+        {
+            "id": "bot_margo",
+            "name": "Margo",
+            "pfp_path": "E:\\Downloads\\Gemini_Generated_Image_j2f8itj2f8itj2f8.png"
+        },
+        {
+            "id": "bot_layla",
+            "name": "Layla",
+            "pfp_path": "E:\\Downloads\\Gemini_Generated_Image_j2f8itj2f8itj2f8.png"
+        },
+        {
+            "id": "bot_cleo",
+            "name": "Cleo",
+            "pfp_path": "E:\\Downloads\\Gemini_Generated_Image_j2f8itj2f8itj2f8.png"
+        },
+        {
+            "id": "bot_zara",
+            "name": "Zara",
+            "pfp_path": "E:\\Downloads\\Gemini_Generated_Image_j2f8itj2f8itj2f8.png"
+        },
+        {
+            "id": "bot_sasha",
+            "name": "Sasha",
+            "pfp_path": "E:\\Downloads\\Gemini_Generated_Image_j2f8itj2f8itj2f8.png"
+        },
+        {
+            "id": "bot_amber",
+            "name": "Amber",
+            "pfp_path": "E:\\Downloads\\Gemini_Generated_Image_j2f8itj2f8itj2f8.png"
+        },
+        {
+            "id": "bot_melody",
+            "name": "Melody",
+            "pfp_path": "E:\\Downloads\\Gemini_Generated_Image_j2f8itj2f8itj2f8.png"
+        },
+        {
+            "id": "bot_nikita",
+            "name": "Nikita",
+            "pfp_path": "E:\\Downloads\\Gemini_Generated_Image_j2f8itj2f8itj2f8.png"
+        },
+        {
+            "id": "bot_lexa",
+            "name": "Lexa",
+            "pfp_path": "E:\\Downloads\\Gemini_Generated_Image_j2f8itj2f8itj2f8.png"
+        },
+        {
+            "id": "bot_jasmine",
+            "name": "Jasmine",
+            "pfp_path": "E:\\Downloads\\Gemini_Generated_Image_j2f8itj2f8itj2f8.png"
+        },
+        {
+            "id": "bot_claudia",
+            "name": "Claudia",
+            "pfp_path": "E:\\Downloads\\Gemini_Generated_Image_j2f8itj2f8itj2f8.png"
+        },
+        {
+            "id": "bot_sabrina",
+            "name": "Sabrina",
+            "pfp_path": "E:\\Downloads\\Gemini_Generated_Image_j2f8itj2f8itj2f8.png"
+        },
+        {
+            "id": "bot_valerie",
+            "name": "Valerie",
+            "pfp_path": "E:\\Downloads\\Gemini_Generated_Image_j2f8itj2f8itj2f8.png"
+        },
+        {
+            "id": "bot_monica",
+            "name": "Monica",
+            "pfp_path": "E:\\Downloads\\Gemini_Generated_Image_j2f8itj2f8itj2f8.png"
+        },
+        {
+            "id": "bot_serena",
+            "name": "Serena",
+            "pfp_path": "E:\\Downloads\\Gemini_Generated_Image_j2f8itj2f8itj2f8.png"
+        },
+        {
+            "id": "bot_nadia",
+            "name": "Nadia",
+            "pfp_path": "E:\\Downloads\\Gemini_Generated_Image_j2f8itj2f8itj2f8.png"
+        },
+        {
+            "id": "bot_tara",
+            "name": "Tara",
+            "pfp_path": "E:\\Downloads\\Gemini_Generated_Image_j2f8itj2f8itj2f8.png"
+        },
+        {
+            "id": "bot_macy",
+            "name": "Macy",
+            "pfp_path": "E:\\Downloads\\Gemini_Generated_Image_j2f8itj2f8itj2f8.png"
+        },
+        {
+            "id": "bot_estelle",
+            "name": "Estelle",
+            "pfp_path": "E:\\Downloads\\Gemini_Generated_Image_j2f8itj2f8itj2f8.png"
+        },
+        {
+            "id": "bot_elektra",
+            "name": "Elektra",
+            "pfp_path": "E:\\Downloads\\Gemini_Generated_Image_j2f8itj2f8itj2f8.png"
+        },
+        {
+            "id": "bot_delilah",
+            "name": "Delilah",
+            "pfp_path": "E:\\Downloads\\Gemini_Generated_Image_j2f8itj2f8itj2f8.png"
+        },
+        {
+            "id": "bot_brielle",
+            "name": "Brielle",
+            "pfp_path": "E:\\Downloads\\Gemini_Generated_Image_j2f8itj2f8itj2f8.png"
+        },
+        {
+            "id": "bot_callie",
+            "name": "Callie",
+            "pfp_path": "E:\\Downloads\\Gemini_Generated_Image_j2f8itj2f8itj2f8.png"
+        },
+        {
+            "id": "bot_freya",
+            "name": "Freya",
+            "pfp_path": "E:\\Downloads\\Gemini_Generated_Image_j2f8itj2f8itj2f8.png"
+        },
+        {
+            "id": "bot_kali",
+            "name": "Kali",
+            "pfp_path": "E:\\Downloads\\Gemini_Generated_Image_j2f8itj2f8itj2f8.png"
+        },
+        {
+            "id": "bot_paris",
+            "name": "Paris",
+            "pfp_path": "E:\\Downloads\\Gemini_Generated_Image_j2f8itj2f8itj2f8.png"
+        },
+        {
+            "id": "bot_simone",
+            "name": "Simone",
+            "pfp_path": "E:\\Downloads\\Gemini_Generated_Image_j2f8itj2f8itj2f8.png"
+        },
+        {
+            "id": "bot_vanessa",
+            "name": "Vanessa",
+            "pfp_path": "E:\\Downloads\\Gemini_Generated_Image_j2f8itj2f8itj2f8.png"
+        },
+        {
+            "id": "bot_ruby",
+            "name": "Ruby",
+            "pfp_path": "E:\\Downloads\\Gemini_Generated_Image_j2f8itj2f8itj2f8.png"
+        },
+        {
+            "id": "bot_eliza",
+            "name": "Eliza",
+            "pfp_path": "E:\\Downloads\\Gemini_Generated_Image_j2f8itj2f8itj2f8.png"
+        },
+        {
+            "id": "bot_blair",
+            "name": "Blair",
+            "pfp_path": "E:\\Downloads\\Gemini_Generated_Image_j2f8itj2f8itj2f8.png"
+        },
+        {
+            "id": "bot_harlow",
+            "name": "Harlow",
+            "pfp_path": "E:\\Downloads\\Gemini_Generated_Image_j2f8itj2f8itj2f8.png"
+        },
+        {
+            "id": "bot_gia",
+            "name": "Gia",
+            "pfp_path": "E:\\Downloads\\Gemini_Generated_Image_j2f8itj2f8itj2f8.png"
+        },
+        {
+            "id": "bot_saffron",
+            "name": "Saffron",
+            "pfp_path": "E:\\Downloads\\Gemini_Generated_Image_j2f8itj2f8itj2f8.png"
+        },
+        {
+            "id": "bot_lilah",
+            "name": "Lilah",
+            "pfp_path": "E:\\Downloads\\Gemini_Generated_Image_j2f8itj2f8itj2f8.png"
+        },
+        {
+            "id": "bot_misty",
+            "name": "Misty",
+            "pfp_path": "E:\\Downloads\\Gemini_Generated_Image_j2f8itj2f8itj2f8.png"
+        },
+        {
+            "id": "bot_kendall",
+            "name": "Kendall",
+            "pfp_path": "E:\\Downloads\\Gemini_Generated_Image_j2f8itj2f8itj2f8.png"
+        },
+        {
+            "id": "bot_reina",
+            "name": "Reina",
+            "pfp_path": "E:\\Downloads\\Gemini_Generated_Image_j2f8itj2f8itj2f8.png"
+        },
+        {
+            "id": "bot_diamond",
+            "name": "Diamond",
+            "pfp_path": "E:\\Downloads\\Gemini_Generated_Image_j2f8itj2f8itj2f8.png"
+        },
+        {
+            "id": "bot_mira",
+            "name": "Mira",
+            "pfp_path": "E:\\Downloads\\Gemini_Generated_Image_j2f8itj2f8itj2f8.png"
+        },
+        {
+            "id": "bot_indigo",
+            "name": "Indigo",
+            "pfp_path": "E:\\Downloads\\Gemini_Generated_Image_j2f8itj2f8itj2f8.png"
+        },
+        {
+            "id": "bot_angelina",
+            "name": "Angelina",
+            "pfp_path": "E:\\Downloads\\Gemini_Generated_Image_j2f8itj2f8itj2f8.png"
+        },
+        {
+            "id": "bot_belle",
+            "name": "Belle",
+            "pfp_path": "E:\\Downloads\\Gemini_Generated_Image_j2f8itj2f8itj2f8.png"
+        },
+        {
+            "id": "bot_candice",
+            "name": "Candice",
+            "pfp_path": "E:\\Downloads\\Gemini_Generated_Image_j2f8itj2f8itj2f8.png"
+        },
+        {
+            "id": "bot_kiana",
+            "name": "Kiana",
+            "pfp_path": "E:\\Downloads\\Gemini_Generated_Image_j2f8itj2f8itj2f8.png"
+        },
+        {
+            "id": "bot_natalia",
+            "name": "Natalia",
+            "pfp_path": "E:\\Downloads\\Gemini_Generated_Image_j2f8itj2f8itj2f8.png"
+        },
+        {
+            "id": "bot_ophelia",
+            "name": "Ophelia",
+            "pfp_path": "E:\\Downloads\\Gemini_Generated_Image_j2f8itj2f8itj2f8.png"
+        },
+        {
+            "id": "bot_phoebe",
+            "name": "Phoebe",
+            "pfp_path": "E:\\Downloads\\Gemini_Generated_Image_j2f8itj2f8itj2f8.png"
+        },
+        {
+            "id": "bot_skye",
+            "name": "Skye",
+            "pfp_path": "E:\\Downloads\\Gemini_Generated_Image_j2f8itj2f8itj2f8.png"
+        },
+        {
+            "id": "bot_veronica",
+            "name": "Veronica",
+            "pfp_path": "E:\\Downloads\\Gemini_Generated_Image_j2f8itj2f8itj2f8.png"
+        },
+        {
+            "id": "bot_yasmine",
+            "name": "Yasmine",
+            "pfp_path": "E:\\Downloads\\Gemini_Generated_Image_j2f8itj2f8itj2f8.png"
+        },
+        {
+            "id": "bot_zoey",
+            "name": "Zoey",
+            "pfp_path": "E:\\Downloads\\Gemini_Generated_Image_j2f8itj2f8itj2f8.png"
+        },
+        {
+            "id": "bot_athena",
+            "name": "Athena",
+            "pfp_path": "E:\\Downloads\\Gemini_Generated_Image_j2f8itj2f8itj2f8.png"
+        },
+        {
+            "id": "bot_callista",
+            "name": "Callista",
+            "pfp_path": "E:\\Downloads\\Gemini_Generated_Image_j2f8itj2f8itj2f8.png"
+        },
+        {
+            "id": "bot_dahlia",
+            "name": "Dahlia",
+            "pfp_path": "E:\\Downloads\\Gemini_Generated_Image_j2f8itj2f8itj2f8.png"
+        },
+        {
+            "id": "bot_eden",
+            "name": "Eden",
+            "pfp_path": "E:\\Downloads\\Gemini_Generated_Image_j2f8itj2f8itj2f8.png"
+        },
+        {
+            "id": "bot_faye",
+            "name": "Faye",
+            "pfp_path": "E:\\Downloads\\Gemini_Generated_Image_j2f8itj2f8itj2f8.png"
+        },
+        {
+            "id": "bot_genevieve",
+            "name": "Genevieve",
+            "pfp_path": "E:\\Downloads\\Gemini_Generated_Image_j2f8itj2f8itj2f8.png"
+        },
+        {
+            "id": "bot_hazel",
+            "name": "Hazel",
+            "pfp_path": "E:\\Downloads\\Gemini_Generated_Image_j2f8itj2f8itj2f8.png"
+        },
+        {
+            "id": "bot_isla",
+            "name": "Isla",
+            "pfp_path": "E:\\Downloads\\Gemini_Generated_Image_j2f8itj2f8itj2f8.png"
+        },
+        {
+            "id": "bot_juno",
+            "name": "Juno",
+            "pfp_path": "E:\\Downloads\\Gemini_Generated_Image_j2f8itj2f8itj2f8.png"
+        },
+        {
+            "id": "bot_katia",
+            "name": "Katia",
+            "pfp_path": "E:\\Downloads\\Gemini_Generated_Image_j2f8itj2f8itj2f8.png"
+        },
+        {
+            "id": "bot_luna",
+            "name": "Luna",
+            "pfp_path": "E:\\Downloads\\Gemini_Generated_Image_j2f8itj2f8itj2f8.png"
+        },
+        {
+            "id": "bot_mira",
+            "name": "Mira",
+            "pfp_path": "E:\\Downloads\\Gemini_Generated_Image_j2f8itj2f8itj2f8.png"
+        },
+        {
+            "id": "bot_nyx",
+            "name": "Nyx",
+            "pfp_path": "E:\\Downloads\\Gemini_Generated_Image_j2f8itj2f8itj2f8.png"
+        },
+        {
+            "id": "bot_olive",
+            "name": "Olive",
+            "pfp_path": "E:\\Downloads\\Gemini_Generated_Image_j2f8itj2f8itj2f8.png"
+        },
+        {
+            "id": "bot_piper",
+            "name": "Piper",
+            "pfp_path": "E:\\Downloads\\Gemini_Generated_Image_j2f8itj2f8itj2f8.png"
+        },
+        {
+            "id": "bot_quinn",
+            "name": "Quinn",
+            "pfp_path": "E:\\Downloads\\Gemini_Generated_Image_j2f8itj2f8itj2f8.png"
+        },
+        {
+            "id": "bot_rhiannon",
+            "name": "Rhiannon",
+            "pfp_path": "E:\\Downloads\\Gemini_Generated_Image_j2f8itj2f8itj2f8.png"
+        },
+        {
+            "id": "bot_sloane",
+            "name": "Sloane",
+            "pfp_path": "E:\\Downloads\\Gemini_Generated_Image_j2f8itj2f8itj2f8.png"
+        },
+        {
+            "id": "bot_tessa",
+            "name": "Tessa",
+            "pfp_path": "E:\\Downloads\\Gemini_Generated_Image_j2f8itj2f8itj2f8.png"
+        },
+        {
+            "id": "bot_uma",
+            "name": "Uma",
+            "pfp_path": "E:\\Downloads\\Gemini_Generated_Image_j2f8itj2f8itj2f8.png"
+        },
+        {
+            "id": "bot_vada",
+            "name": "Vada",
+            "pfp_path": "E:\\Downloads\\Gemini_Generated_Image_j2f8itj2f8itj2f8.png"
+        },
+        {
+            "id": "bot_willa",
+            "name": "Willa",
+            "pfp_path": "E:\\Downloads\\Gemini_Generated_Image_j2f8itj2f8itj2f8.png"
+        },
+        {
+            "id": "bot_xenia",
+            "name": "Xenia",
+            "pfp_path": "E:\\Downloads\\Gemini_Generated_Image_j2f8itj2f8itj2f8.png"
+        },
+        {
+            "id": "bot_yara",
+            "name": "Yara",
+            "pfp_path": "E:\\Downloads\\Gemini_Generated_Image_j2f8itj2f8itj2f8.png"
+        },
+        {
+            "id": "bot_zelda",
+            "name": "Zelda",
+            "pfp_path": "E:\\Downloads\\Gemini_Generated_Image_j2f8itj2f8itj2f8.png"
+        },
+        {
+            "id": "bot_aria",
+            "name": "Aria",
+            "pfp_path": "E:\\Downloads\\Gemini_Generated_Image_j2f8itj2f8itj2f8.png"
+        },
+        {
+            "id": "bot_briar",
+            "name": "Briar",
+            "pfp_path": "E:\\Downloads\\Gemini_Generated_Image_j2f8itj2f8itj2f8.png"
+        },
+        {
+            "id": "bot_cassia",
+            "name": "Cassia",
+            "pfp_path": "E:\\Downloads\\Gemini_Generated_Image_j2f8itj2f8itj2f8.png"
+        },
+        {
+            "id": "bot_devon",
+            "name": "Devon",
+            "pfp_path": "E:\\Downloads\\Gemini_Generated_Image_j2f8itj2f8itj2f8.png"
+        },
+        {
+            "id": "bot_ember",
+            "name": "Ember",
+            "pfp_path": "E:\\Downloads\\Gemini_Generated_Image_j2f8itj2f8itj2f8.png"
+        },
+        {
+            "id": "bot_florence",
+            "name": "Florence",
+            "pfp_path": "E:\\Downloads\\Gemini_Generated_Image_j2f8itj2f8itj2f8.png"
+        }
+    ]
+}

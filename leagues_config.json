@@ -1,0 +1,44 @@
+[
+    {
+        "id": "01",
+        "name": "Wet Girl I",
+        "order": 1,
+        "min_pts": 0,
+        "max_pts": 199
+    },
+    {
+        "id": "02",
+        "name": "Wet Girl II",
+        "order": 2,
+        "min_pts": 200,
+        "max_pts": 399
+    },
+    {
+        "id": "03",
+        "name": "Wet Girl III",
+        "order": 3,
+        "min_pts": 400,
+        "max_pts": 599
+    },
+    {
+        "id": "04",
+        "name": "Finger Girl I",
+        "order": 4,
+        "min_pts": 600,
+        "max_pts": 799
+    },
+    {
+        "id": "05",
+        "name": "Finger Girl II",
+        "order": 5,
+        "min_pts": 800,
+        "max_pts": 999
+    },
+    {
+        "id": "06",
+        "name": "Fingerl Girl III",
+        "order": 6,
+        "min_pts": 1000,
+        "max_pts": 1119
+    }
+]
