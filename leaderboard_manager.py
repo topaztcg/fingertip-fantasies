@@ -156,11 +156,15 @@ class LeaderboardManager:
             else:
                 player_data["points"] = curr_league.get("min_pts", 0) # Bottomed out
 
-    def record_match(self, player_id, is_win, damage_dealt):
+    def record_match(self, player_id, is_win, damage_dealt, opponent_name="Unknown", mvp_card=None):
         p_data = self.get_player_data(player_id)
         
+        # Original points logic
+        old_points = p_data["points"]
         pts_change = 25 if is_win else -15
         p_data["points"] = max(0, p_data["points"] + pts_change)
+        actual_change = p_data["points"] - old_points
+        
         p_data["total_damage"] += damage_dealt
         
         p_data["games_played"] = p_data.get("games_played", 0) + 1
@@ -168,6 +172,22 @@ class LeaderboardManager:
             p_data["wins"] = p_data.get("wins", 0) + 1
         else:
             p_data["losses"] = p_data.get("losses", 0) + 1
+            
+        # Match History Tracking
+        if "match_history" not in p_data:
+            p_data["match_history"] = []
+            
+        p_data["match_history"].append({
+            "opponent": opponent_name,
+            "win": is_win,
+            "points_change": actual_change,
+            "mvp_card": mvp_card,
+            "timestamp": time.time()
+        })
+        
+        # Keep only the last 30 matches
+        if len(p_data["match_history"]) > 30:
+            p_data["match_history"] = p_data["match_history"][-30:]
         
         self.check_promotion_demotion(p_data)
         self.save_data()

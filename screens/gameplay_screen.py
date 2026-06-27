@@ -1094,12 +1094,20 @@ def show_gameplay_screen(screen, player_deck_data, current_user, opp=None):
         if state == "GAME_OVER" and not match_recorded:
             total_dmg = sum(c.total_damage_dealt for c in player_cards)
             is_win = (winner_team == "PLAYER")
-            lb_mgr.record_match(current_user, is_win, total_dmg)
+            
+            p_mvp = max(player_cards, key=lambda c: c.total_damage_dealt) if player_cards else None
+            p_mvp_id = p_mvp.data["id"] if p_mvp else None
+            opp_name = opp["name"] if opp else "Unknown"
+            
+            lb_mgr.record_match(current_user, is_win, total_dmg, opp_name, p_mvp_id)
             
             # Record Enemy Match
             if opp and opp.get("is_bot"):
                 enemy_dmg = sum(c.total_damage_dealt for c in enemy_cards)
-                lb_mgr.record_match(opp["name"], not is_win, enemy_dmg)
+                e_mvp = max(enemy_cards, key=lambda c: c.total_damage_dealt) if enemy_cards else None
+                e_mvp_id = e_mvp.data["id"] if e_mvp else None
+                
+                lb_mgr.record_match(opp["id"], not is_win, enemy_dmg, current_user, e_mvp_id)
                 
             match_recorded = True
             
@@ -1164,7 +1172,9 @@ def show_gameplay_screen(screen, player_deck_data, current_user, opp=None):
                                 show_profile_screen(screen, current_user)
                                 continue
                             if p2_rect.collidepoint(mouse_pos):
-                                show_profile_screen(screen, enemy_id)
+                                enemy_id = opp["id"] if opp else None
+                                if enemy_id:
+                                    show_profile_screen(screen, enemy_id)
                                 continue
 
                     if inspected_entity: inspected_entity = None; continue

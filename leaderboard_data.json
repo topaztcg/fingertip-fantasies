@@ -1,5 +1,5 @@
 {
-    "current_season": "2026-05",
+    "current_season": "2026-06",
     "seasons": {
         "2026-05": {
             "players": {
@@ -993,16 +993,6 @@
                     "losses": 19,
                     "games_played": 29
                 },
-                "Ember": {
-                    "name": "Ember",
-                    "is_bot": false,
-                    "league": "01",
-                    "points": 35,
-                    "total_damage": 41,
-                    "wins": 0,
-                    "losses": 1,
-                    "games_played": 1
-                },
                 "ClihQueen": {
                     "name": "ClihQueen",
                     "is_bot": false,
@@ -1022,86 +1012,2819 @@
                     "wins": 5,
                     "losses": 4,
                     "games_played": 9
-                },
-                "Scarlett": {
+                }
+            }
+        },
+        "2026-06": {
+            "players": {
+                "bot_scarlett": {
                     "name": "Scarlett",
-                    "is_bot": false,
+                    "is_bot": true,
                     "league": "01",
                     "points": 35,
-                    "total_damage": 116,
-                    "wins": 0,
+                    "total_damage": 140,
+                    "games_played": 1,
                     "losses": 1,
-                    "games_played": 1
+                    "match_history": [
+                        {
+                            "opponent": "ClihQueen",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "raiden_ei",
+                            "timestamp": 1782521536.6813867
+                        }
+                    ]
                 },
-                "Aria": {
-                    "name": "Aria",
-                    "is_bot": false,
+                "bot_lexi": {
+                    "name": "Lexi",
+                    "is_bot": true,
                     "league": "01",
-                    "points": 35,
-                    "total_damage": 124,
-                    "wins": 0,
-                    "losses": 1,
-                    "games_played": 1
+                    "points": 100,
+                    "total_damage": 93,
+                    "games_played": 2,
+                    "wins": 2,
+                    "match_history": [
+                        {
+                            "opponent": "Roxanne",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "cantarella",
+                            "timestamp": 1782518189.2210839
+                        },
+                        {
+                            "opponent": "Roxanne",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "cantarella",
+                            "timestamp": 1782518558.3791656
+                        }
+                    ]
                 },
-                "Zara": {
-                    "name": "Zara",
-                    "is_bot": false,
+                "bot_roxanne": {
+                    "name": "Roxanne",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 45,
+                    "total_damage": 130,
+                    "games_played": 3,
+                    "losses": 2,
+                    "match_history": [
+                        {
+                            "opponent": "Lexi",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "raiden_ei",
+                            "timestamp": 1782518189.227574
+                        },
+                        {
+                            "opponent": "Lexi",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "topaz",
+                            "timestamp": 1782518558.3861666
+                        },
+                        {
+                            "opponent": "Tara",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "cantarella",
+                            "timestamp": 1782521620.598958
+                        }
+                    ],
+                    "wins": 1
+                },
+                "bot_adriana": {
+                    "name": "Adriana",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 150,
+                    "total_damage": 173,
+                    "games_played": 4,
+                    "wins": 4,
+                    "match_history": [
+                        {
+                            "opponent": "Maya",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "topaz",
+                            "timestamp": 1780600199.9829962
+                        },
+                        {
+                            "opponent": "Maya",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "lara_croft",
+                            "timestamp": 1780600645.9884744
+                        },
+                        {
+                            "opponent": "Maya",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "topaz",
+                            "timestamp": 1780600908.2634943
+                        },
+                        {
+                            "opponent": "Maya",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "cantarella",
+                            "timestamp": 1780601957.5862484
+                        }
+                    ]
+                },
+                "bot_jade": {
+                    "name": "Jade",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 75,
+                    "total_damage": 44,
+                    "games_played": 1,
+                    "wins": 1
+                },
+                "bot_raven": {
+                    "name": "Raven",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 50,
+                    "total_damage": 0
+                },
+                "bot_bianca": {
+                    "name": "Bianca",
+                    "is_bot": true,
                     "league": "01",
                     "points": 60,
-                    "total_damage": 218,
+                    "total_damage": 90,
+                    "games_played": 2,
                     "wins": 1,
-                    "losses": 1,
-                    "games_played": 2
+                    "match_history": [
+                        {
+                            "opponent": "Maya",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "lara_croft",
+                            "timestamp": 1782518189.2355766
+                        },
+                        {
+                            "opponent": "Maya",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "lara_croft",
+                            "timestamp": 1782518558.4021707
+                        }
+                    ],
+                    "losses": 1
                 },
-                "Nikita": {
+                "bot_sienna": {
+                    "name": "Sienna",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 50,
+                    "total_damage": 0
+                },
+                "bot_stella": {
+                    "name": "Stella",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 50,
+                    "total_damage": 0
+                },
+                "bot_maya": {
+                    "name": "Maya",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 70,
+                    "total_damage": 435,
+                    "games_played": 10,
+                    "losses": 6,
+                    "match_history": [
+                        {
+                            "opponent": "Adriana",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "cantarella",
+                            "timestamp": 1780600199.9879963
+                        },
+                        {
+                            "opponent": "Adriana",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "raiden_ei",
+                            "timestamp": 1780600645.9934754
+                        },
+                        {
+                            "opponent": "Adriana",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "topaz",
+                            "timestamp": 1780600908.2694962
+                        },
+                        {
+                            "opponent": "Adriana",
+                            "win": false,
+                            "points_change": -5,
+                            "mvp_card": "cantarella",
+                            "timestamp": 1780601957.5922494
+                        },
+                        {
+                            "opponent": "Giselle",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "cantarella",
+                            "timestamp": 1780604489.483239
+                        },
+                        {
+                            "opponent": "Giselle",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "raiden_ei",
+                            "timestamp": 1780604757.164377
+                        },
+                        {
+                            "opponent": "Giselle",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "lara_croft",
+                            "timestamp": 1780605013.2305164
+                        },
+                        {
+                            "opponent": "Bianca",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "cantarella",
+                            "timestamp": 1782518189.2425776
+                        },
+                        {
+                            "opponent": "Bianca",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "lara_croft",
+                            "timestamp": 1782518558.3941684
+                        },
+                        {
+                            "opponent": "Simone",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "topaz",
+                            "timestamp": 1782521648.7613766
+                        }
+                    ],
+                    "wins": 4
+                },
+                "bot_selene": {
+                    "name": "Selene",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 50,
+                    "total_damage": 0
+                },
+                "bot_lola": {
+                    "name": "Lola",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 50,
+                    "total_damage": 0
+                },
+                "bot_giselle": {
+                    "name": "Giselle",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 45,
+                    "total_damage": 465,
+                    "games_played": 11,
+                    "wins": 4,
+                    "match_history": [
+                        {
+                            "opponent": "Ivy",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "raiden_ei",
+                            "timestamp": 1780600199.9429872
+                        },
+                        {
+                            "opponent": "Ivy",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "raiden_ei",
+                            "timestamp": 1780600645.9994774
+                        },
+                        {
+                            "opponent": "Ivy",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "raiden_ei",
+                            "timestamp": 1780600926.358883
+                        },
+                        {
+                            "opponent": "Ivy",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "lara_croft",
+                            "timestamp": 1780601957.6112554
+                        },
+                        {
+                            "opponent": "Maya",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "topaz",
+                            "timestamp": 1780604489.4892406
+                        },
+                        {
+                            "opponent": "Maya",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "cantarella",
+                            "timestamp": 1780604757.17088
+                        },
+                        {
+                            "opponent": "Maya",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "topaz",
+                            "timestamp": 1780605013.2365177
+                        },
+                        {
+                            "opponent": "Brielle",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "cantarella",
+                            "timestamp": 1780605553.699165
+                        },
+                        {
+                            "opponent": "Brielle",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "cantarella",
+                            "timestamp": 1780606116.1208286
+                        },
+                        {
+                            "opponent": "Brielle",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "topaz",
+                            "timestamp": 1780606548.364999
+                        },
+                        {
+                            "opponent": "Margo",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "raiden_ei",
+                            "timestamp": 1782517814.480453
+                        }
+                    ],
+                    "losses": 7
+                },
+                "bot_talia": {
+                    "name": "Talia",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 35,
+                    "total_damage": 39,
+                    "games_played": 1,
+                    "losses": 1
+                },
+                "bot_ivy": {
+                    "name": "Ivy",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 40,
+                    "total_damage": 256,
+                    "games_played": 6,
+                    "losses": 4,
+                    "match_history": [
+                        {
+                            "opponent": "Giselle",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "raiden_ei",
+                            "timestamp": 1780600199.9469872
+                        },
+                        {
+                            "opponent": "Giselle",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "raiden_ei",
+                            "timestamp": 1780600646.0044782
+                        },
+                        {
+                            "opponent": "Giselle",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "raiden_ei",
+                            "timestamp": 1780600926.352881
+                        },
+                        {
+                            "opponent": "Giselle",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "topaz",
+                            "timestamp": 1780601957.6182559
+                        },
+                        {
+                            "opponent": "Fiona",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "raiden_ei",
+                            "timestamp": 1782518189.532941
+                        },
+                        {
+                            "opponent": "Fiona",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "lara_croft",
+                            "timestamp": 1782518558.698231
+                        }
+                    ],
+                    "wins": 2
+                },
+                "bot_fiona": {
+                    "name": "Fiona",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 60,
+                    "total_damage": 92,
+                    "games_played": 2,
+                    "losses": 1,
+                    "match_history": [
+                        {
+                            "opponent": "Ivy",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "raiden_ei",
+                            "timestamp": 1782518189.539944
+                        },
+                        {
+                            "opponent": "Ivy",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "cantarella",
+                            "timestamp": 1782518558.6902301
+                        }
+                    ],
+                    "wins": 1
+                },
+                "bot_vixen": {
+                    "name": "Vixen",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 60,
+                    "total_damage": 80,
+                    "games_played": 2,
+                    "wins": 1,
+                    "match_history": [
+                        {
+                            "opponent": "Sasha",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "lara_croft",
+                            "timestamp": 1782518189.547945
+                        },
+                        {
+                            "opponent": "Sasha",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "topaz",
+                            "timestamp": 1782518558.714235
+                        }
+                    ],
+                    "losses": 1
+                },
+                "bot_margo": {
+                    "name": "Margo",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 70,
+                    "total_damage": 522,
+                    "games_played": 12,
+                    "losses": 7,
+                    "wins": 5,
+                    "match_history": [
+                        {
+                            "opponent": "Zara",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "raiden_ei",
+                            "timestamp": 1780600199.9619908
+                        },
+                        {
+                            "opponent": "Zara",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "topaz",
+                            "timestamp": 1780600646.307891
+                        },
+                        {
+                            "opponent": "Zara",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "cantarella",
+                            "timestamp": 1780601957.014127
+                        },
+                        {
+                            "opponent": "Zara",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "lara_croft",
+                            "timestamp": 1780602509.3267941
+                        },
+                        {
+                            "opponent": "Zara",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "cantarella",
+                            "timestamp": 1780604489.8157663
+                        },
+                        {
+                            "opponent": "Zara",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "cantarella",
+                            "timestamp": 1780604731.7094598
+                        },
+                        {
+                            "opponent": "Zara",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "cantarella",
+                            "timestamp": 1780604998.1545498
+                        },
+                        {
+                            "opponent": "Zara",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "raiden_ei",
+                            "timestamp": 1780605524.541824
+                        },
+                        {
+                            "opponent": "Zara",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "raiden_ei",
+                            "timestamp": 1780606075.9285538
+                        },
+                        {
+                            "opponent": "Zara",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "topaz",
+                            "timestamp": 1780606548.0404544
+                        },
+                        {
+                            "opponent": "Giselle",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "cantarella",
+                            "timestamp": 1782517814.4574444
+                        }
+                    ]
+                },
+                "bot_layla": {
+                    "name": "Layla",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 75,
+                    "total_damage": 44,
+                    "games_played": 1,
+                    "wins": 1
+                },
+                "bot_cleo": {
+                    "name": "Cleo",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 50,
+                    "total_damage": 0
+                },
+                "bot_zara": {
+                    "name": "Zara",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 150,
+                    "total_damage": 522,
+                    "games_played": 12,
+                    "wins": 7,
+                    "losses": 5,
+                    "match_history": [
+                        {
+                            "opponent": "Margo",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "raiden_ei",
+                            "timestamp": 1780600199.9669936
+                        },
+                        {
+                            "opponent": "Margo",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "raiden_ei",
+                            "timestamp": 1780600646.3028905
+                        },
+                        {
+                            "opponent": "Margo",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "cantarella",
+                            "timestamp": 1780601957.0231287
+                        },
+                        {
+                            "opponent": "Margo",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "cantarella",
+                            "timestamp": 1780602509.3207927
+                        },
+                        {
+                            "opponent": "Margo",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "lara_croft",
+                            "timestamp": 1780604489.8087652
+                        },
+                        {
+                            "opponent": "Margo",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "topaz",
+                            "timestamp": 1780604731.702458
+                        },
+                        {
+                            "opponent": "Margo",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "topaz",
+                            "timestamp": 1780604998.1605513
+                        },
+                        {
+                            "opponent": "Margo",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "lara_croft",
+                            "timestamp": 1780605524.5348237
+                        },
+                        {
+                            "opponent": "Margo",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "raiden_ei",
+                            "timestamp": 1780606075.936097
+                        },
+                        {
+                            "opponent": "Margo",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "topaz",
+                            "timestamp": 1780606548.0324502
+                        },
+                        {
+                            "opponent": "Brielle",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "cantarella",
+                            "timestamp": 1782517814.4954562
+                        }
+                    ]
+                },
+                "bot_sasha": {
+                    "name": "Sasha",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 45,
+                    "total_damage": 124,
+                    "games_played": 3,
+                    "losses": 2,
+                    "match_history": [
+                        {
+                            "opponent": "Vixen",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "lara_croft",
+                            "timestamp": 1782518189.5568683
+                        },
+                        {
+                            "opponent": "Vixen",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "lara_croft",
+                            "timestamp": 1782518558.7062328
+                        },
+                        {
+                            "opponent": "Amber",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "lara_croft",
+                            "timestamp": 1782521201.565416
+                        }
+                    ],
+                    "wins": 1
+                },
+                "bot_amber": {
+                    "name": "Amber",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 70,
+                    "total_damage": 176,
+                    "games_played": 4,
+                    "losses": 2,
+                    "match_history": [
+                        {
+                            "opponent": "Nikita",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "topaz",
+                            "timestamp": 1782518189.5738719
+                        },
+                        {
+                            "opponent": "Nikita",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "topaz",
+                            "timestamp": 1782518558.7296002
+                        },
+                        {
+                            "opponent": "Sasha",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "cantarella",
+                            "timestamp": 1782521201.5574136
+                        },
+                        {
+                            "opponent": "Harlow",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "cantarella",
+                            "timestamp": 1782521594.4787507
+                        }
+                    ],
+                    "wins": 2
+                },
+                "bot_melody": {
+                    "name": "Melody",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 50,
+                    "total_damage": 0
+                },
+                "bot_nikita": {
                     "name": "Nikita",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 125,
+                    "total_damage": 128,
+                    "games_played": 3,
+                    "wins": 3,
+                    "match_history": [
+                        {
+                            "opponent": "Amber",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "raiden_ei",
+                            "timestamp": 1782518189.5668707
+                        },
+                        {
+                            "opponent": "Amber",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "raiden_ei",
+                            "timestamp": 1782518558.7216017
+                        },
+                        {
+                            "opponent": "Skye",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "lara_croft",
+                            "timestamp": 1782521640.702739
+                        }
+                    ]
+                },
+                "bot_lexa": {
+                    "name": "Lexa",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 50,
+                    "total_damage": 0
+                },
+                "bot_jasmine": {
+                    "name": "Jasmine",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 50,
+                    "total_damage": 0
+                },
+                "bot_claudia": {
+                    "name": "Claudia",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 50,
+                    "total_damage": 0
+                },
+                "bot_sabrina": {
+                    "name": "Sabrina",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 50,
+                    "total_damage": 0
+                },
+                "bot_valerie": {
+                    "name": "Valerie",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 50,
+                    "total_damage": 0
+                },
+                "bot_monica": {
+                    "name": "Monica",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 50,
+                    "total_damage": 0
+                },
+                "bot_serena": {
+                    "name": "Serena",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 50,
+                    "total_damage": 0
+                },
+                "bot_nadia": {
+                    "name": "Nadia",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 50,
+                    "total_damage": 0
+                },
+                "bot_tara": {
+                    "name": "Tara",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 130,
+                    "total_damage": 343,
+                    "games_played": 8,
+                    "losses": 3,
+                    "wins": 5,
+                    "match_history": [
+                        {
+                            "opponent": "Estelle",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "raiden_ei",
+                            "timestamp": 1780600199.9729943
+                        },
+                        {
+                            "opponent": "Estelle",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "raiden_ei",
+                            "timestamp": 1780600646.3138936
+                        },
+                        {
+                            "opponent": "Estelle",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "raiden_ei",
+                            "timestamp": 1780601957.0301297
+                        },
+                        {
+                            "opponent": "Estelle",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "lara_croft",
+                            "timestamp": 1782518189.5894437
+                        },
+                        {
+                            "opponent": "Estelle",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "lara_croft",
+                            "timestamp": 1782518558.7546995
+                        },
+                        {
+                            "opponent": "Roxanne",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "raiden_ei",
+                            "timestamp": 1782521620.6069603
+                        },
+                        {
+                            "opponent": "Katia",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "cantarella",
+                            "timestamp": 1782521975.1837819
+                        }
+                    ]
+                },
+                "bot_macy": {
+                    "name": "Macy",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 35,
+                    "total_damage": 41,
+                    "games_played": 1,
+                    "losses": 1
+                },
+                "bot_estelle": {
+                    "name": "Estelle",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 90,
+                    "total_damage": 341,
+                    "games_played": 8,
+                    "wins": 4,
+                    "losses": 4,
+                    "match_history": [
+                        {
+                            "opponent": "Tara",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "cantarella",
+                            "timestamp": 1780600199.9779947
+                        },
+                        {
+                            "opponent": "Tara",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "topaz",
+                            "timestamp": 1780600646.3188944
+                        },
+                        {
+                            "opponent": "Tara",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "cantarella",
+                            "timestamp": 1780601957.039598
+                        },
+                        {
+                            "opponent": "Tara",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "cantarella",
+                            "timestamp": 1782518189.5824409
+                        },
+                        {
+                            "opponent": "Tara",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "lara_croft",
+                            "timestamp": 1782518558.763702
+                        },
+                        {
+                            "opponent": "Katia",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "cantarella",
+                            "timestamp": 1782520954.3772373
+                        },
+                        {
+                            "opponent": "Reina",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "raiden_ei",
+                            "timestamp": 1782521570.349113
+                        }
+                    ]
+                },
+                "bot_elektra": {
+                    "name": "Elektra",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 50,
+                    "total_damage": 0
+                },
+                "bot_delilah": {
+                    "name": "Delilah",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 50,
+                    "total_damage": 0
+                },
+                "bot_brielle": {
+                    "name": "Brielle",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 100,
+                    "total_damage": 441,
+                    "games_played": 10,
+                    "losses": 5,
+                    "match_history": [
+                        {
+                            "opponent": "Kali",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "cantarella",
+                            "timestamp": 1780602509.3387058
+                        },
+                        {
+                            "opponent": "Kali",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "cantarella",
+                            "timestamp": 1780604489.8277693
+                        },
+                        {
+                            "opponent": "Kali",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "lara_croft",
+                            "timestamp": 1780604736.0521364
+                        },
+                        {
+                            "opponent": "Kali",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "cantarella",
+                            "timestamp": 1780605017.2589436
+                        },
+                        {
+                            "opponent": "Giselle",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "lara_croft",
+                            "timestamp": 1780605553.7061503
+                        },
+                        {
+                            "opponent": "Giselle",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "raiden_ei",
+                            "timestamp": 1780606116.112826
+                        },
+                        {
+                            "opponent": "Giselle",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "lara_croft",
+                            "timestamp": 1780606548.3569958
+                        },
+                        {
+                            "opponent": "Zara",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "raiden_ei",
+                            "timestamp": 1782517814.4884546
+                        },
+                        {
+                            "opponent": "Simone",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "topaz",
+                            "timestamp": 1782518189.6044452
+                        },
+                        {
+                            "opponent": "Simone",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "cantarella",
+                            "timestamp": 1782518558.771704
+                        }
+                    ],
+                    "wins": 5
+                },
+                "bot_callie": {
+                    "name": "Callie",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 50,
+                    "total_damage": 0
+                },
+                "bot_freya": {
+                    "name": "Freya",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 50,
+                    "total_damage": 0
+                },
+                "bot_kali": {
+                    "name": "Kali",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 170,
+                    "total_damage": 348,
+                    "games_played": 8,
+                    "losses": 2,
+                    "match_history": [
+                        {
+                            "opponent": "Lilah",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "raiden_ei",
+                            "timestamp": 1780600199.9559898
+                        },
+                        {
+                            "opponent": "Lilah",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "topaz",
+                            "timestamp": 1780600646.3239212
+                        },
+                        {
+                            "opponent": "Lilah",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "raiden_ei",
+                            "timestamp": 1780600906.2437468
+                        },
+                        {
+                            "opponent": "Lilah",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "cantarella",
+                            "timestamp": 1780601957.5726368
+                        },
+                        {
+                            "opponent": "Brielle",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "lara_croft",
+                            "timestamp": 1780602509.3327951
+                        },
+                        {
+                            "opponent": "Brielle",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "raiden_ei",
+                            "timestamp": 1780604489.8217685
+                        },
+                        {
+                            "opponent": "Brielle",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "topaz",
+                            "timestamp": 1780604736.0461347
+                        },
+                        {
+                            "opponent": "Brielle",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "lara_croft",
+                            "timestamp": 1780605017.2659452
+                        }
+                    ],
+                    "wins": 6
+                },
+                "bot_paris": {
+                    "name": "Paris",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 50,
+                    "total_damage": 0
+                },
+                "bot_simone": {
+                    "name": "Simone",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 110,
+                    "total_damage": 170,
+                    "games_played": 4,
+                    "wins": 3,
+                    "match_history": [
+                        {
+                            "opponent": "Brielle",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "cantarella",
+                            "timestamp": 1782518189.5974438
+                        },
+                        {
+                            "opponent": "Brielle",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "lara_croft",
+                            "timestamp": 1782518558.7787058
+                        },
+                        {
+                            "opponent": "Harlow",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "topaz",
+                            "timestamp": 1782521202.7694495
+                        },
+                        {
+                            "opponent": "Maya",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "topaz",
+                            "timestamp": 1782521648.753375
+                        }
+                    ],
+                    "losses": 1
+                },
+                "bot_vanessa": {
+                    "name": "Vanessa",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 50,
+                    "total_damage": 0
+                },
+                "bot_ruby": {
+                    "name": "Ruby",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 50,
+                    "total_damage": 0
+                },
+                "bot_eliza": {
+                    "name": "Eliza",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 50,
+                    "total_damage": 0
+                },
+                "bot_blair": {
+                    "name": "Blair",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 50,
+                    "total_damage": 0
+                },
+                "bot_harlow": {
+                    "name": "Harlow",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 70,
+                    "total_damage": 170,
+                    "games_played": 4,
+                    "wins": 2,
+                    "match_history": [
+                        {
+                            "opponent": "Reina",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "lara_croft",
+                            "timestamp": 1782518189.612448
+                        },
+                        {
+                            "opponent": "Reina",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "raiden_ei",
+                            "timestamp": 1782518558.7872734
+                        },
+                        {
+                            "opponent": "Simone",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "raiden_ei",
+                            "timestamp": 1782521202.7780192
+                        },
+                        {
+                            "opponent": "Amber",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "raiden_ei",
+                            "timestamp": 1782521594.4867523
+                        }
+                    ],
+                    "losses": 2
+                },
+                "bot_gia": {
+                    "name": "Gia",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 50,
+                    "total_damage": 0
+                },
+                "bot_saffron": {
+                    "name": "Saffron",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 60,
+                    "total_damage": 88,
+                    "games_played": 2,
+                    "wins": 1,
+                    "losses": 1
+                },
+                "bot_lilah": {
+                    "name": "Lilah",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 190,
+                    "total_damage": 525,
+                    "games_played": 12,
+                    "wins": 8,
+                    "match_history": [
+                        {
+                            "opponent": "Kali",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "lara_croft",
+                            "timestamp": 1780600199.9509883
+                        },
+                        {
+                            "opponent": "Kali",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "raiden_ei",
+                            "timestamp": 1780600646.3289156
+                        },
+                        {
+                            "opponent": "Kali",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "cantarella",
+                            "timestamp": 1780600906.2497523
+                        },
+                        {
+                            "opponent": "Kali",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "raiden_ei",
+                            "timestamp": 1780601957.5796313
+                        },
+                        {
+                            "opponent": "Misty",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "cantarella",
+                            "timestamp": 1780604489.5032432
+                        },
+                        {
+                            "opponent": "Misty",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "cantarella",
+                            "timestamp": 1780604771.2524357
+                        },
+                        {
+                            "opponent": "Misty",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "cantarella",
+                            "timestamp": 1780605053.4516382
+                        },
+                        {
+                            "opponent": "Misty",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "raiden_ei",
+                            "timestamp": 1780605578.8084645
+                        },
+                        {
+                            "opponent": "Misty",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "lara_croft",
+                            "timestamp": 1780605879.0519109
+                        },
+                        {
+                            "opponent": "Misty",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "lara_croft",
+                            "timestamp": 1780606155.3270795
+                        },
+                        {
+                            "opponent": "Misty",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "lara_croft",
+                            "timestamp": 1780606548.4020066
+                        },
+                        {
+                            "opponent": "Misty",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "cantarella",
+                            "timestamp": 1782517814.9365482
+                        }
+                    ],
+                    "losses": 4
+                },
+                "bot_misty": {
+                    "name": "Misty",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 0,
+                    "total_damage": 589,
+                    "games_played": 12,
+                    "losses": 10,
+                    "match_history": [
+                        {
+                            "opponent": "Kendall",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "lara_croft",
+                            "timestamp": 1780600199.928981
+                        },
+                        {
+                            "opponent": "Kendall",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "raiden_ei",
+                            "timestamp": 1780600646.3339171
+                        },
+                        {
+                            "opponent": "Kendall",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "raiden_ei",
+                            "timestamp": 1780601957.5116582
+                        },
+                        {
+                            "opponent": "Lilah",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "raiden_ei",
+                            "timestamp": 1780604489.4962428
+                        },
+                        {
+                            "opponent": "Lilah",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "raiden_ei",
+                            "timestamp": 1780604771.2594373
+                        },
+                        {
+                            "opponent": "Lilah",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "lara_croft",
+                            "timestamp": 1780605053.45864
+                        },
+                        {
+                            "opponent": "Lilah",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "lara_croft",
+                            "timestamp": 1780605578.8150275
+                        },
+                        {
+                            "opponent": "ClihQueen",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "topaz",
+                            "timestamp": 1780605849.065811
+                        },
+                        {
+                            "opponent": "Lilah",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "lara_croft",
+                            "timestamp": 1780605879.0609133
+                        },
+                        {
+                            "opponent": "Lilah",
+                            "win": false,
+                            "points_change": -10,
+                            "mvp_card": "lara_croft",
+                            "timestamp": 1780606155.3346095
+                        },
+                        {
+                            "opponent": "Lilah",
+                            "win": false,
+                            "points_change": 0,
+                            "mvp_card": "lara_croft",
+                            "timestamp": 1780606548.410008
+                        },
+                        {
+                            "opponent": "Lilah",
+                            "win": false,
+                            "points_change": 0,
+                            "mvp_card": "lara_croft",
+                            "timestamp": 1782517814.9436421
+                        }
+                    ],
+                    "wins": 2
+                },
+                "bot_kendall": {
+                    "name": "Kendall",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 45,
+                    "total_damage": 478,
+                    "games_played": 11,
+                    "wins": 4,
+                    "match_history": [
+                        {
+                            "opponent": "Misty",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "cantarella",
+                            "timestamp": 1780600199.9249804
+                        },
+                        {
+                            "opponent": "Misty",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "lara_croft",
+                            "timestamp": 1780600646.3386307
+                        },
+                        {
+                            "opponent": "Misty",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "raiden_ei",
+                            "timestamp": 1780601957.5056572
+                        },
+                        {
+                            "opponent": "Natalia",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "topaz",
+                            "timestamp": 1780602512.6724966
+                        },
+                        {
+                            "opponent": "Natalia",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "raiden_ei",
+                            "timestamp": 1780604489.8521988
+                        },
+                        {
+                            "opponent": "Natalia",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "lara_croft",
+                            "timestamp": 1780604787.3410392
+                        },
+                        {
+                            "opponent": "Natalia",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "cantarella",
+                            "timestamp": 1780605039.3737
+                        },
+                        {
+                            "opponent": "Natalia",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "lara_croft",
+                            "timestamp": 1780605904.1961794
+                        },
+                        {
+                            "opponent": "Natalia",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "lara_croft",
+                            "timestamp": 1780606146.2715707
+                        },
+                        {
+                            "opponent": "Natalia",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "raiden_ei",
+                            "timestamp": 1780606548.3950052
+                        },
+                        {
+                            "opponent": "Natalia",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "raiden_ei",
+                            "timestamp": 1782517814.9576445
+                        }
+                    ],
+                    "losses": 7
+                },
+                "bot_reina": {
+                    "name": "Reina",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 30,
+                    "total_damage": 172,
+                    "games_played": 4,
+                    "losses": 3,
+                    "match_history": [
+                        {
+                            "opponent": "Harlow",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "topaz",
+                            "timestamp": 1782518189.620449
+                        },
+                        {
+                            "opponent": "Harlow",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "cantarella",
+                            "timestamp": 1782518558.795275
+                        },
+                        {
+                            "opponent": "Skye",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "topaz",
+                            "timestamp": 1782521202.7860208
+                        },
+                        {
+                            "opponent": "Estelle",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "lara_croft",
+                            "timestamp": 1782521570.357115
+                        }
+                    ],
+                    "wins": 1
+                },
+                "bot_diamond": {
+                    "name": "Diamond",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 50,
+                    "total_damage": 0
+                },
+                "bot_mira": {
+                    "name": "Mira",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 170,
+                    "total_damage": 357,
+                    "games_played": 8,
+                    "wins": 6,
+                    "match_history": [
+                        {
+                            "opponent": "Indigo",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "lara_croft",
+                            "timestamp": 1780600199.9919977
+                        },
+                        {
+                            "opponent": "Ember",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "raiden_ei",
+                            "timestamp": 1780600200.0030005
+                        },
+                        {
+                            "opponent": "Indigo",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "cantarella",
+                            "timestamp": 1780600646.343633
+                        },
+                        {
+                            "opponent": "Juno",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "lara_croft",
+                            "timestamp": 1780600646.3806403
+                        },
+                        {
+                            "opponent": "Juno",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "cantarella",
+                            "timestamp": 1780600886.8115392
+                        },
+                        {
+                            "opponent": "Indigo",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "lara_croft",
+                            "timestamp": 1780600921.319283
+                        },
+                        {
+                            "opponent": "Indigo",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "raiden_ei",
+                            "timestamp": 1780601957.598251
+                        }
+                    ],
+                    "losses": 2
+                },
+                "bot_indigo": {
+                    "name": "Indigo",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 0,
+                    "total_damage": 289,
+                    "games_played": 5,
+                    "losses": 5,
+                    "match_history": [
+                        {
+                            "opponent": "Mira",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "raiden_ei",
+                            "timestamp": 1780600199.9979992
+                        },
+                        {
+                            "opponent": "Mira",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "lara_croft",
+                            "timestamp": 1780600646.349633
+                        },
+                        {
+                            "opponent": "Mira",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "topaz",
+                            "timestamp": 1780600921.3252852
+                        },
+                        {
+                            "opponent": "Mira",
+                            "win": false,
+                            "points_change": -5,
+                            "mvp_card": "raiden_ei",
+                            "timestamp": 1780601957.6042523
+                        },
+                        {
+                            "opponent": "ClihQueen",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "raiden_ei",
+                            "timestamp": 1780605502.4816763
+                        }
+                    ],
+                    "wins": 0
+                },
+                "bot_angelina": {
+                    "name": "Angelina",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 60,
+                    "total_damage": 84,
+                    "games_played": 2,
+                    "losses": 1,
+                    "match_history": [
+                        {
+                            "opponent": "Katia",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "raiden_ei",
+                            "timestamp": 1782518189.639454
+                        },
+                        {
+                            "opponent": "Katia",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "raiden_ei",
+                            "timestamp": 1782518558.803277
+                        }
+                    ],
+                    "wins": 1
+                },
+                "bot_belle": {
+                    "name": "Belle",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 50,
+                    "total_damage": 0
+                },
+                "bot_candice": {
+                    "name": "Candice",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 50,
+                    "total_damage": 0
+                },
+                "bot_kiana": {
+                    "name": "Kiana",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 50,
+                    "total_damage": 0
+                },
+                "bot_natalia": {
+                    "name": "Natalia",
+                    "is_bot": true,
+                    "league": "02",
+                    "points": 210,
+                    "total_damage": 470,
+                    "games_played": 11,
+                    "wins": 8,
+                    "match_history": [
+                        {
+                            "opponent": "Veronica",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "raiden_ei",
+                            "timestamp": 1780600199.9149778
+                        },
+                        {
+                            "opponent": "Veronica",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "cantarella",
+                            "timestamp": 1780600646.3556347
+                        },
+                        {
+                            "opponent": "Veronica",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "topaz",
+                            "timestamp": 1780601957.5256617
+                        },
+                        {
+                            "opponent": "Kendall",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "topaz",
+                            "timestamp": 1780602512.6654954
+                        },
+                        {
+                            "opponent": "Kendall",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "raiden_ei",
+                            "timestamp": 1780604489.8461993
+                        },
+                        {
+                            "opponent": "Kendall",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "raiden_ei",
+                            "timestamp": 1780604787.3480384
+                        },
+                        {
+                            "opponent": "Kendall",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "raiden_ei",
+                            "timestamp": 1780605039.3666985
+                        },
+                        {
+                            "opponent": "Kendall",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "raiden_ei",
+                            "timestamp": 1780605904.1866739
+                        },
+                        {
+                            "opponent": "Kendall",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "topaz",
+                            "timestamp": 1780606146.279569
+                        },
+                        {
+                            "opponent": "Kendall",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "raiden_ei",
+                            "timestamp": 1780606548.387003
+                        },
+                        {
+                            "opponent": "Kendall",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "cantarella",
+                            "timestamp": 1782517814.950643
+                        }
+                    ],
+                    "losses": 3
+                },
+                "bot_ophelia": {
+                    "name": "Ophelia",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 50,
+                    "total_damage": 0
+                },
+                "bot_phoebe": {
+                    "name": "Phoebe",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 130,
+                    "total_damage": 346,
+                    "games_played": 8,
+                    "losses": 3,
+                    "match_history": [
+                        {
+                            "opponent": "Skye",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "raiden_ei",
+                            "timestamp": 1780602255.893817
+                        },
+                        {
+                            "opponent": "Skye",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "cantarella",
+                            "timestamp": 1780604489.8027632
+                        },
+                        {
+                            "opponent": "Skye",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "topaz",
+                            "timestamp": 1780604789.3641906
+                        },
+                        {
+                            "opponent": "Skye",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "topaz",
+                            "timestamp": 1780605051.4262214
+                        },
+                        {
+                            "opponent": "Skye",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "topaz",
+                            "timestamp": 1780605543.6464827
+                        },
+                        {
+                            "opponent": "Skye",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "lara_croft",
+                            "timestamp": 1780606121.1527944
+                        },
+                        {
+                            "opponent": "Skye",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "raiden_ei",
+                            "timestamp": 1780606548.3719993
+                        },
+                        {
+                            "opponent": "Skye",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "cantarella",
+                            "timestamp": 1782517814.965646
+                        }
+                    ],
+                    "wins": 5
+                },
+                "bot_skye": {
+                    "name": "Skye",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 30,
+                    "total_damage": 511,
+                    "games_played": 12,
+                    "losses": 8,
+                    "wins": 4,
+                    "match_history": [
+                        {
+                            "opponent": "Phoebe",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "cantarella",
+                            "timestamp": 1780602255.886815
+                        },
+                        {
+                            "opponent": "Phoebe",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "cantarella",
+                            "timestamp": 1780604489.796763
+                        },
+                        {
+                            "opponent": "Phoebe",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "topaz",
+                            "timestamp": 1780604789.3711915
+                        },
+                        {
+                            "opponent": "Phoebe",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "topaz",
+                            "timestamp": 1780605051.4332204
+                        },
+                        {
+                            "opponent": "Phoebe",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "lara_croft",
+                            "timestamp": 1780605543.6404815
+                        },
+                        {
+                            "opponent": "Phoebe",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "lara_croft",
+                            "timestamp": 1780606121.1608002
+                        },
+                        {
+                            "opponent": "Phoebe",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "cantarella",
+                            "timestamp": 1780606548.3790011
+                        },
+                        {
+                            "opponent": "Phoebe",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "topaz",
+                            "timestamp": 1782517814.9726486
+                        },
+                        {
+                            "opponent": "Reina",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "raiden_ei",
+                            "timestamp": 1782521202.795023
+                        },
+                        {
+                            "opponent": "Nikita",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "cantarella",
+                            "timestamp": 1782521640.7107406
+                        }
+                    ]
+                },
+                "bot_veronica": {
+                    "name": "Veronica",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 45,
+                    "total_damage": 120,
+                    "games_played": 3,
+                    "losses": 2,
+                    "match_history": [
+                        {
+                            "opponent": "Natalia",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "topaz",
+                            "timestamp": 1780600199.919979
+                        },
+                        {
+                            "opponent": "Natalia",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "lara_croft",
+                            "timestamp": 1780600646.3596354
+                        },
+                        {
+                            "opponent": "Natalia",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "cantarella",
+                            "timestamp": 1780601957.5186608
+                        }
+                    ],
+                    "wins": 1
+                },
+                "bot_yasmine": {
+                    "name": "Yasmine",
+                    "is_bot": true,
+                    "league": "02",
+                    "points": 260,
+                    "total_damage": 573,
+                    "games_played": 13,
+                    "losses": 3,
+                    "wins": 10,
+                    "match_history": [
+                        {
+                            "opponent": "Zoey",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "cantarella",
+                            "timestamp": 1780600199.6117215
+                        },
+                        {
+                            "opponent": "Zoey",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "topaz",
+                            "timestamp": 1780600646.3706386
+                        },
+                        {
+                            "opponent": "Zoey",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "lara_croft",
+                            "timestamp": 1780600889.1352186
+                        },
+                        {
+                            "opponent": "Zoey",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "cantarella",
+                            "timestamp": 1780601957.545666
+                        },
+                        {
+                            "opponent": "Zoey",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "cantarella",
+                            "timestamp": 1780602518.7015464
+                        },
+                        {
+                            "opponent": "Zoey",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "lara_croft",
+                            "timestamp": 1780604489.8582013
+                        },
+                        {
+                            "opponent": "Zoey",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "cantarella",
+                            "timestamp": 1780604768.222709
+                        },
+                        {
+                            "opponent": "Zoey",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "raiden_ei",
+                            "timestamp": 1780605021.289563
+                        },
+                        {
+                            "opponent": "Quinn",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "cantarella",
+                            "timestamp": 1780605537.601603
+                        },
+                        {
+                            "opponent": "Quinn",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "cantarella",
+                            "timestamp": 1780606060.8357701
+                        },
+                        {
+                            "opponent": "Quinn",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "raiden_ei",
+                            "timestamp": 1780606548.0168705
+                        },
+                        {
+                            "opponent": "Quinn",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "lara_croft",
+                            "timestamp": 1782517814.9806502
+                        }
+                    ]
+                },
+                "bot_zoey": {
+                    "name": "Zoey",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 35,
+                    "total_damage": 377,
+                    "games_played": 9,
+                    "wins": 3,
+                    "losses": 6,
+                    "match_history": [
+                        {
+                            "opponent": "Yasmine",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "lara_croft",
+                            "timestamp": 1780600199.6159415
+                        },
+                        {
+                            "opponent": "Yasmine",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "raiden_ei",
+                            "timestamp": 1780600646.3656368
+                        },
+                        {
+                            "opponent": "Yasmine",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "topaz",
+                            "timestamp": 1780600889.1422207
+                        },
+                        {
+                            "opponent": "Yasmine",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "topaz",
+                            "timestamp": 1780601957.5527864
+                        },
+                        {
+                            "opponent": "Yasmine",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "lara_croft",
+                            "timestamp": 1780602518.7075481
+                        },
+                        {
+                            "opponent": "Yasmine",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "raiden_ei",
+                            "timestamp": 1780604489.8642025
+                        },
+                        {
+                            "opponent": "Yasmine",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "topaz",
+                            "timestamp": 1780604768.2167265
+                        },
+                        {
+                            "opponent": "Yasmine",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "cantarella",
+                            "timestamp": 1780605021.2965648
+                        }
+                    ]
+                },
+                "bot_athena": {
+                    "name": "Athena",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 75,
+                    "total_damage": 43,
+                    "games_played": 1,
+                    "wins": 1
+                },
+                "bot_callista": {
+                    "name": "Callista",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 50,
+                    "total_damage": 0
+                },
+                "bot_dahlia": {
+                    "name": "Dahlia",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 50,
+                    "total_damage": 0
+                },
+                "bot_eden": {
+                    "name": "Eden",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 50,
+                    "total_damage": 0
+                },
+                "bot_faye": {
+                    "name": "Faye",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 50,
+                    "total_damage": 0
+                },
+                "bot_genevieve": {
+                    "name": "Genevieve",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 35,
+                    "total_damage": 41,
+                    "games_played": 1,
+                    "losses": 1
+                },
+                "bot_hazel": {
+                    "name": "Hazel",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 50,
+                    "total_damage": 0
+                },
+                "bot_isla": {
+                    "name": "Isla",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 50,
+                    "total_damage": 0
+                },
+                "bot_juno": {
+                    "name": "Juno",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 160,
+                    "total_damage": 258,
+                    "games_played": 6,
+                    "losses": 1,
+                    "wins": 5,
+                    "match_history": [
+                        {
+                            "opponent": "Rhiannon",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "cantarella",
+                            "timestamp": 1780600199.6037211
+                        },
+                        {
+                            "opponent": "Mira",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "cantarella",
+                            "timestamp": 1780600646.3756392
+                        },
+                        {
+                            "opponent": "Mira",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "cantarella",
+                            "timestamp": 1780600886.8065395
+                        },
+                        {
+                            "opponent": "Ember",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "raiden_ei",
+                            "timestamp": 1780601957.532662
+                        }
+                    ]
+                },
+                "bot_katia": {
+                    "name": "Katia",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 30,
+                    "total_damage": 170,
+                    "games_played": 4,
+                    "wins": 1,
+                    "match_history": [
+                        {
+                            "opponent": "Angelina",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "cantarella",
+                            "timestamp": 1782518189.6294513
+                        },
+                        {
+                            "opponent": "Angelina",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "topaz",
+                            "timestamp": 1782518558.8112779
+                        },
+                        {
+                            "opponent": "Estelle",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "raiden_ei",
+                            "timestamp": 1782520954.3852391
+                        },
+                        {
+                            "opponent": "Tara",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "raiden_ei",
+                            "timestamp": 1782521975.1927843
+                        }
+                    ],
+                    "losses": 3
+                },
+                "bot_luna": {
+                    "name": "Luna",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 50,
+                    "total_damage": 0
+                },
+                "bot_nyx": {
+                    "name": "Nyx",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 50,
+                    "total_damage": 0
+                },
+                "bot_olive": {
+                    "name": "Olive",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 50,
+                    "total_damage": 0
+                },
+                "bot_piper": {
+                    "name": "Piper",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 60,
+                    "total_damage": 87,
+                    "games_played": 2,
+                    "wins": 1,
+                    "match_history": [
+                        {
+                            "opponent": "Zelda",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "lara_croft",
+                            "timestamp": 1782518189.6514637
+                        },
+                        {
+                            "opponent": "Zelda",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "lara_croft",
+                            "timestamp": 1782518558.826552
+                        }
+                    ],
+                    "losses": 1
+                },
+                "bot_quinn": {
+                    "name": "Quinn",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 60,
+                    "total_damage": 428,
+                    "games_played": 10,
+                    "wins": 4,
+                    "match_history": [
+                        {
+                            "opponent": "Briar",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "lara_croft",
+                            "timestamp": 1780602509.633929
+                        },
+                        {
+                            "opponent": "Briar",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "cantarella",
+                            "timestamp": 1780604489.8391967
+                        },
+                        {
+                            "opponent": "Briar",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "raiden_ei",
+                            "timestamp": 1780604737.07416
+                        },
+                        {
+                            "opponent": "Briar",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "lara_croft",
+                            "timestamp": 1780604983.083322
+                        },
+                        {
+                            "opponent": "Briar",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "raiden_ei",
+                            "timestamp": 1780605251.1784205
+                        },
+                        {
+                            "opponent": "Yasmine",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "topaz",
+                            "timestamp": 1780605537.6086051
+                        },
+                        {
+                            "opponent": "Yasmine",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "lara_croft",
+                            "timestamp": 1780606060.8447747
+                        },
+                        {
+                            "opponent": "Yasmine",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "raiden_ei",
+                            "timestamp": 1780606548.0258756
+                        },
+                        {
+                            "opponent": "Yasmine",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "raiden_ei",
+                            "timestamp": 1782517814.987652
+                        }
+                    ],
+                    "losses": 6
+                },
+                "bot_rhiannon": {
+                    "name": "Rhiannon",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 80,
+                    "total_damage": 259,
+                    "games_played": 6,
+                    "wins": 3,
+                    "losses": 3,
+                    "match_history": [
+                        {
+                            "opponent": "Juno",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "topaz",
+                            "timestamp": 1780600199.6077206
+                        },
+                        {
+                            "opponent": "Tessa",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "topaz",
+                            "timestamp": 1780600646.392203
+                        },
+                        {
+                            "opponent": "Briar",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "lara_croft",
+                            "timestamp": 1780600897.188151
+                        },
+                        {
+                            "opponent": "Briar",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "cantarella",
+                            "timestamp": 1780601957.559787
+                        }
+                    ]
+                },
+                "bot_sloane": {
+                    "name": "Sloane",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 50,
+                    "total_damage": 0
+                },
+                "bot_tessa": {
+                    "name": "Tessa",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 45,
+                    "total_damage": 125,
+                    "games_played": 3,
+                    "losses": 2,
+                    "match_history": [
+                        {
+                            "opponent": "Briar",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "lara_croft",
+                            "timestamp": 1780600199.937986
+                        },
+                        {
+                            "opponent": "Rhiannon",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "lara_croft",
+                            "timestamp": 1780600646.3862026
+                        }
+                    ],
+                    "wins": 1
+                },
+                "bot_uma": {
+                    "name": "Uma",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 35,
+                    "total_damage": 37,
+                    "games_played": 1,
+                    "losses": 1
+                },
+                "bot_vada": {
+                    "name": "Vada",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 50,
+                    "total_damage": 0
+                },
+                "bot_willa": {
+                    "name": "Willa",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 50,
+                    "total_damage": 0
+                },
+                "bot_xenia": {
+                    "name": "Xenia",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 50,
+                    "total_damage": 0
+                },
+                "bot_yara": {
+                    "name": "Yara",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 50,
+                    "total_damage": 0
+                },
+                "bot_zelda": {
+                    "name": "Zelda",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 60,
+                    "total_damage": 86,
+                    "games_played": 2,
+                    "losses": 1,
+                    "match_history": [
+                        {
+                            "opponent": "Piper",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "lara_croft",
+                            "timestamp": 1782518189.6594677
+                        },
+                        {
+                            "opponent": "Piper",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "cantarella",
+                            "timestamp": 1782518558.8182795
+                        }
+                    ],
+                    "wins": 1
+                },
+                "bot_aria": {
+                    "name": "Aria",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 75,
+                    "total_damage": 42,
+                    "games_played": 1,
+                    "wins": 1
+                },
+                "bot_briar": {
+                    "name": "Briar",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 60,
+                    "total_damage": 492,
+                    "games_played": 10,
+                    "wins": 4,
+                    "match_history": [
+                        {
+                            "opponent": "Tessa",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "cantarella",
+                            "timestamp": 1780600199.9329844
+                        },
+                        {
+                            "opponent": "Ember",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "raiden_ei",
+                            "timestamp": 1780600646.398142
+                        },
+                        {
+                            "opponent": "Rhiannon",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "cantarella",
+                            "timestamp": 1780600897.1931515
+                        },
+                        {
+                            "opponent": "Rhiannon",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "cantarella",
+                            "timestamp": 1780601957.5657885
+                        },
+                        {
+                            "opponent": "Quinn",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "lara_croft",
+                            "timestamp": 1780602509.6409316
+                        },
+                        {
+                            "opponent": "Quinn",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "topaz",
+                            "timestamp": 1780604489.8332953
+                        },
+                        {
+                            "opponent": "Quinn",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "lara_croft",
+                            "timestamp": 1780604737.081162
+                        },
+                        {
+                            "opponent": "Quinn",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "raiden_ei",
+                            "timestamp": 1780604983.0903232
+                        },
+                        {
+                            "opponent": "Quinn",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "cantarella",
+                            "timestamp": 1780605251.1714182
+                        },
+                        {
+                            "opponent": "ClihQueen",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "topaz",
+                            "timestamp": 1782521929.7583508
+                        }
+                    ],
+                    "losses": 6
+                },
+                "bot_cassia": {
+                    "name": "Cassia",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 50,
+                    "total_damage": 0
+                },
+                "bot_devon": {
+                    "name": "Devon",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 35,
+                    "total_damage": 40,
+                    "games_played": 1,
+                    "losses": 1
+                },
+                "bot_ember": {
+                    "name": "Ember",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 5,
+                    "total_damage": 243,
+                    "games_played": 4,
+                    "losses": 3,
+                    "match_history": [
+                        {
+                            "opponent": "Mira",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "lara_croft",
+                            "timestamp": 1780600200.0080013
+                        },
+                        {
+                            "opponent": "Briar",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "lara_croft",
+                            "timestamp": 1780600646.4031398
+                        },
+                        {
+                            "opponent": "Juno",
+                            "win": false,
+                            "points_change": -15,
+                            "mvp_card": "lara_croft",
+                            "timestamp": 1780601957.539665
+                        },
+                        {
+                            "opponent": "Unknown",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": null,
+                            "timestamp": 1780602255.1856463
+                        }
+                    ],
+                    "wins": 1
+                },
+                "bot_florence": {
+                    "name": "Florence",
+                    "is_bot": true,
+                    "league": "01",
+                    "points": 50,
+                    "total_damage": 0
+                },
+                "PuhQueen": {
+                    "name": "PuhQueen",
+                    "is_bot": false,
+                    "league": "01",
+                    "points": 50,
+                    "total_damage": 0,
+                    "wins": 0,
+                    "losses": 0,
+                    "games_played": 0
+                },
+                "ClihQueen": {
+                    "name": "ClihQueen",
                     "is_bot": false,
                     "league": "01",
                     "points": 100,
-                    "total_damage": 214,
-                    "wins": 2,
-                    "losses": 0,
-                    "games_played": 2
-                },
-                "Hazel": {
-                    "name": "Hazel",
-                    "is_bot": false,
-                    "league": "01",
-                    "points": 75,
-                    "total_damage": 112,
-                    "wins": 1,
-                    "losses": 0,
-                    "games_played": 1
-                },
-                "Nyx": {
-                    "name": "Nyx",
-                    "is_bot": false,
-                    "league": "01",
-                    "points": 35,
-                    "total_damage": 146,
-                    "wins": 0,
-                    "losses": 1,
-                    "games_played": 1
-                },
-                "Serena": {
-                    "name": "Serena",
-                    "is_bot": false,
-                    "league": "01",
-                    "points": 35,
-                    "total_damage": 112,
-                    "wins": 0,
-                    "losses": 1,
-                    "games_played": 1
-                },
-                "Brielle": {
-                    "name": "Brielle",
-                    "is_bot": false,
-                    "league": "01",
-                    "points": 35,
-                    "total_damage": 132,
-                    "wins": 0,
-                    "losses": 1,
-                    "games_played": 1
+                    "total_damage": 958,
+                    "wins": 4,
+                    "losses": 4,
+                    "games_played": 8,
+                    "match_history": [
+                        {
+                            "opponent": "Unknown",
+                            "win": false,
+                            "points_change": -5,
+                            "mvp_card": null,
+                            "timestamp": 1780602255.1736424
+                        },
+                        {
+                            "opponent": "Indigo",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "lara_croft",
+                            "timestamp": 1780605502.4686737
+                        },
+                        {
+                            "opponent": "Misty",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "raiden_ei",
+                            "timestamp": 1780605849.0528085
+                        },
+                        {
+                            "opponent": "Scarlett",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "raiden_ei",
+                            "timestamp": 1782521536.6733851
+                        },
+                        {
+                            "opponent": "Briar",
+                            "win": true,
+                            "points_change": 25,
+                            "mvp_card": "cantarella",
+                            "timestamp": 1782521929.7503493
+                        }
+                    ]
                 }
             }
         }

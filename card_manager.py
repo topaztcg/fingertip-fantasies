@@ -94,3 +94,19 @@ class CardManager:
 
     def get_all_cards(self):
         return self.cards
+
+    def get_card(self, card_id):
+        for c in self.cards:
+            if c["id"] == card_id:
+                return c
+        return None
+
+    def get_card_image(self, card_id):
+        import pygame
+        c = self.get_card(card_id)
+        if c and c.get("image_path") and os.path.exists(c["image_path"]):
+            try:
+                return pygame.image.load(c["image_path"]).convert_alpha()
+            except:
+                pass
+        return None

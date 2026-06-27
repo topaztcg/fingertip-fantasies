@@ -207,6 +207,7 @@ class SimulatorApp:
             self.energy = 0
             self.max_energy = 5
             self.is_dead = False
+            self.damage_dealt = 0
             
         def take_damage(self, amount):
             if self.is_dead: return
@@ -237,8 +238,17 @@ class SimulatorApp:
             t1_alive = [c for c in team1 if not c.is_dead]
             t2_alive = [c for c in team2 if not c.is_dead]
             
-            if not t1_alive: return False, dmg1, dmg2
-            if not t2_alive: return True, dmg1, dmg2
+            def get_mvps():
+                m1 = max(team1, key=lambda c: c.damage_dealt).data.get("id") if team1 else None
+                m2 = max(team2, key=lambda c: c.damage_dealt).data.get("id") if team2 else None
+                return m1, m2
+            
+            if not t1_alive:
+                m1, m2 = get_mvps()
+                return False, dmg1, dmg2, m1, m2
+            if not t2_alive:
+                m1, m2 = get_mvps()
+                return True, dmg1, dmg2, m1, m2
                 
             # Team 1 Attack
             attacker = random.choice(t1_alive)
@@ -253,6 +263,7 @@ class SimulatorApp:
             if cost == 0: attacker.energy = min(5, attacker.energy + 1)
             else: attacker.consume_energy(cost)
             target.take_damage(dmg)
+            attacker.damage_dealt += dmg
             dmg1 += dmg
             
             # Team 2 Attack
@@ -272,11 +283,13 @@ class SimulatorApp:
                     if cost == 0: attacker.energy = min(5, attacker.energy + 1)
                     else: attacker.consume_energy(cost)
                     target.take_damage(dmg)
+                    attacker.damage_dealt += dmg
                     dmg2 += dmg
                     
             round_num += 1
             if round_num > 50:
-                return random.choice([True, False]), dmg1, dmg2 # Coin toss on timeout
+                m1, m2 = get_mvps()
+                return random.choice([True, False]), dmg1, dmg2, m1, m2 # Coin toss on timeout
 
     def is_bot_online(self, bot_id, current_timestamp):
         # Consistent daily schedule hash
@@ -285,11 +298,16 @@ class SimulatorApp:
         hash_input = f"{bot_id}_{day_str}".encode('utf-8')
         h = int(hashlib.md5(hash_input).hexdigest(), 16)
         
-        start_hour = h % 20 # 0 to 19 (so they finish before midnight mostly)
+        start_hour = h % 24 # 0 to 23
         duration = 3 + (h % 3) # 3 to 5 hours
         end_hour = start_hour + duration
         
-        return start_hour <= dt.hour < end_hour
+        # Check standard window or wrapped window
+        if start_hour <= dt.hour < end_hour:
+            return True
+        if end_hour > 24 and dt.hour < (end_hour % 24):
+            return True
+        return False
 
     def simulation_loop(self):
         self.root.after(0, lambda: self.log("Simulation Engine Started. Processing Async Matches...", "system"))
@@ -321,15 +339,32 @@ class SimulatorApp:
                 if curr_time >= m["end_time"]:
                     # Resolve Match
                     b1, b2 = m["bot1_id"], m["bot2_id"]
-                    t1_wins, dmg1, dmg2 = self.resolve_combat()
+                    t1_wins, dmg1, dmg2, mvp1, mvp2 = self.resolve_combat()
                     
                     winner = b1 if t1_wins else b2
                     loser = b2 if t1_wins else b1
                     dmg_w = dmg1 if t1_wins else dmg2
                     dmg_l = dmg2 if t1_wins else dmg1
+                    mvp_w = mvp1 if t1_wins else mvp2
+                    mvp_l = mvp2 if t1_wins else mvp1
                     
-                    lb_mgr.record_match(winner, True, dmg_w)
-                    lb_mgr.record_match(loser, False, dmg_l)
+                    lb_mgr.record_match(winner, True, dmg_w, m["bot2_name"] if t1_wins else m["bot1_name"], mvp_w)
+                    lb_mgr.record_match(loser, False, dmg_l, m["bot1_name"] if t1_wins else m["bot2_name"], mvp_l)
+                    
+                    if "bot_cooldowns" not in self.state:
+                        self.state["bot_cooldowns"] = {}
+                    
+                    gap_time_b1 = random.uniform(1.0, 5.0) * 60
+                    gap_time_b2 = random.uniform(1.0, 5.0) * 60
+                    
+                    self.state["bot_cooldowns"][b1] = {
+                        "next_available": curr_time + gap_time_b1,
+                        "last_opponent": b2
+                    }
+                    self.state["bot_cooldowns"][b2] = {
+                        "next_available": curr_time + gap_time_b2,
+                        "last_opponent": b1
+                    }
                     
                     msg = f"🏆 [RESOLVED] {m['bot1_name']} vs {m['bot2_name']} | Winner: {m['bot1_name'] if t1_wins else m['bot2_name']}"
                     self.root.after(0, lambda m=msg: self.log(m, "win"))
@@ -357,10 +392,8 @@ class SimulatorApp:
                 
             locked_bots = self.state.get("locked_bots", [])
             for lb in locked_bots:
-                # Assuming locked_bots uses bot ID, map it back if needed
-                # Realistically we should look it up from bots list, but simple match for now
                 for b in bots:
-                    if b["id"] == lb:
+                    if b["id"] == lb or b["name"] == lb:
                         bot_status[b["name"]] = "VS PLAYER"
                         break
                 
@@ -383,17 +416,24 @@ class SimulatorApp:
             # LeaderboardManager doesn't track live player matches natively.
             # We will use sim_state.json "locked_bots" which the game can write to.
             locked_bots = self.state.get("locked_bots", [])
-            for lb in locked_bots: busy_bots.add(lb)
+            for lb in locked_bots:
+                for b in bots:
+                    if b["id"] == lb or b["name"] == lb:
+                        busy_bots.add(b["id"])
             
+            cooldowns = self.state.get("bot_cooldowns", {})
             available_bots = []
             for b in bots:
                 if b["id"] not in busy_bots and self.is_bot_online(b["id"], curr_time):
-                    available_bots.append({
-                        "id": b["id"],
-                        "name": b["name"],
-                        "points": points_map.get(b["id"], 50),
-                        "league": league_map.get(b["id"], "unranked")
-                    })
+                    cd = cooldowns.get(b["id"], {})
+                    if curr_time >= cd.get("next_available", 0):
+                        available_bots.append({
+                            "id": b["id"],
+                            "name": b["name"],
+                            "points": points_map.get(b["id"], 50),
+                            "league": league_map.get(b["id"], "unranked"),
+                            "last_opponent": cd.get("last_opponent", None)
+                        })
                     
             # Sort by League, then Points
             available_bots.sort(key=lambda x: (x["league"], x["points"]))
@@ -402,7 +442,19 @@ class SimulatorApp:
             new_matches_started = 0
             while len(available_bots) >= 2:
                 b1 = available_bots.pop(0)
-                b2 = available_bots.pop(0)
+                
+                # Try to find a match that isn't their previous opponent
+                match_idx = -1
+                for i, b2 in enumerate(available_bots):
+                    if b1["last_opponent"] != b2["id"] and b2["last_opponent"] != b1["id"]:
+                        match_idx = i
+                        break
+                        
+                # Fallback to the closest match if all others were their last opponent
+                if match_idx == -1:
+                    match_idx = 0
+                    
+                b2 = available_bots.pop(match_idx)
                 
                 duration_mins = random.uniform(4.0, 5.0)
                 end_time = curr_time + (duration_mins * 60)
